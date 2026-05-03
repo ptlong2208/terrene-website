@@ -46,6 +46,7 @@ export async function fetchStrapiCollection<T>(
 
 /** Resolve a Strapi media URL to an absolute URL. */
 export function strapiMediaUrl(url: string | null | undefined): string {
+    console.log(url);
   if (!url) return "";
   if (url.startsWith("http")) return url;
   return `${STRAPI_URL}${url}`;

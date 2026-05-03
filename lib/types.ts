@@ -51,6 +51,7 @@ export interface TimelineStep {
   step_number: number;
   title: string;
   description: string | null;
+  image: StrapiMedia | null;
 }
 
 export interface ShopProduct {
@@ -58,6 +59,7 @@ export interface ShopProduct {
   name: string;
   category: string;
   price: number;
+  is_new: boolean | null;
   image: StrapiMedia | null;
 }
 
