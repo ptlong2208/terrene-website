@@ -63,10 +63,15 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface HeroComponent {
+  brand_text: string;
+  background_video: StrapiMedia | null;
+}
+
 export interface HomepageData {
   id: number;
   documentId: string;
-  hero: StrapiMedia | null;
+  hero: HeroComponent | null;
   intro_text: string | null;
   quote_text: string | null;
   quote_background: StrapiMedia | null;

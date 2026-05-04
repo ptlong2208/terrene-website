@@ -1,51 +1,38 @@
-import { fetchStrapiSingle, fetchStrapiCollection, strapiMediaUrl } from "@/lib/strapi";
-import type { GlobalData, HomepageData, BlogPost } from "@/lib/types";
-import Image from "next/image";
+import { fetchStrapiSingle, strapiMediaUrl } from "@/lib/strapi";
+import type { GlobalData, HomepageData } from "@/lib/types";
 import Header from "@/app/components/Header";
+import GiantBrandTitle from "@/app/components/GiantBrandTitle";
+import HeroVideo from "@/app/components/HeroVideo";
 
 export default async function Home() {
-  const [global, homepage, blogPosts] = await Promise.all([
+  const [global, homepage] = await Promise.all([
     fetchStrapiSingle<GlobalData>("/api/global", { populate: "*" }),
-    fetchStrapiSingle<HomepageData>("/api/homepage", { populate: "*" }),
-    fetchStrapiCollection<BlogPost>("/api/blog-posts", {
-      populate: "*",
-      "sort[0]": "publishedAt:desc",
-      "pagination[limit]": "3",
+    fetchStrapiSingle<HomepageData>("/api/homepage", {
+      "populate[hero][populate]": "*",
     }),
   ]);
+  console.log(homepage.hero);
 
   return (
     <main className="bg-cream text-dark font-sans overflow-x-hidden">
       <Header
         siteName={global.site_name}
         logo={global.logo}
+        ambientAudio={global.ambient_audio}
         navEmail={global.nav_email ?? undefined}
         navLinks={global.nav_links}
         cartCount={0}
       />
 
-      {/* <section className="relative pt-32 bg-cream">
-        <h1
-          className="w-full text-center text-[24vw] font-extrabold text-dark leading-[0.72] uppercase tracking-tighter"
-          style={{ fontFamily: "'Faculty Glyphic', serif" }}
-        >
-          {global.site_name ?? "TERRENE"}
-        </h1>
+      <section className="hero-birchmore relative pt-22 sm:pt-24 bg-cream overflow-x-clip">
+        <GiantBrandTitle title={homepage.hero?.brand_text ?? global.site_name ?? "TERRENE"} />
 
-        {homepage.hero && (
-          <div className="relative w-full h-screen mt-4 overflow-hidden bg-[#D9D9D9]">
-            <Image
-              src={strapiMediaUrl(homepage.hero.url)}
-              alt="Hero"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+        {homepage.hero?.background_video ? (
+          <HeroVideo src={strapiMediaUrl(homepage.hero.background_video.url)} />
+        ) : null}
       </section>
 
-      {homepage.intro_text && (
+      {/* {homepage.intro_text && (
         <section className="bg-cream flex items-center justify-center min-h-screen px-8">
           <p className="text-[32px] font-normal leading-[1.3] tracking-[-0.04em] text-center max-w-212.5 text-dark">
             {homepage.intro_text}

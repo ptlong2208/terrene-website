@@ -37,7 +37,7 @@
 
   /* Typography */
   --font-sans: var(--font-manrope), 'Manrope', sans-serif;
-  --font-display: 'Faculty Glyphic', serif;
+  --font-display: var(--font-faculty-glyphic), 'Faculty Glyphic', serif;
 
   /* Border radius */
   --radius-card: 12px;

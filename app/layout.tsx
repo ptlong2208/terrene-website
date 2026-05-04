@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Faculty_Glyphic, Manrope } from "next/font/google";
 import "./globals.css";
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const facultyGlyphic = Faculty_Glyphic({
+  variable: "--font-faculty-glyphic",
+  subsets: ["latin"],
+  weight: "400",
   display: "swap",
 });
 
@@ -20,15 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${manrope.variable} antialiased`}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Faculty+Glyphic&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="vi" className={`${manrope.variable} ${facultyGlyphic.variable} antialiased`}>
       <body className="min-h-screen">{children}</body>
     </html>
   );

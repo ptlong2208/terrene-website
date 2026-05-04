@@ -1,39 +1,89 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence, cubicBezier } from 'framer-motion';
 import { ShoppingCart, Phone } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, StrapiMedia } from '@/lib/types';
 import MenuToggleButton from '@/app/components/MenuToggleButton';
+import MusicToggleButton from '@/app/components/MusicToggleButton';
 
 interface HeaderProps {
   siteName: string;
   logo?: StrapiMedia | null;
+  ambientAudio?: StrapiMedia | null;
   navEmail?: string | null;
   navLinks?: NavLink[];
   cartCount?: number;
 }
 
-export default function Header({ siteName, logo, navEmail, navLinks = [], cartCount = 0 }: HeaderProps) {
+export default function Header({ siteName, logo, ambientAudio, navEmail, navLinks = [], cartCount = 0 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioSrc = ambientAudio ? strapiMediaUrl(ambientAudio.url) : '';
 
-  const audioBarVariants = {
-    playing: (i: number) => ({
-      height: [6, 20, 6],
-      transition: {
-        duration: [1.2, 0.8, 1.1, 0.9][i % 4],
-        repeat: Infinity,
-        delay: [0, 0.2, 0.4, 0.1][i % 4],
+  useEffect(() => {
+    if (!headerRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const hideHeaderAnim = gsap.to(headerRef.current, {
+      yPercent: -100,
+      paused: true,
+      duration: 0.4,
+      ease: 'power3.inOut',
+    });
+
+    const headerScrollTrigger = ScrollTrigger.create({
+      start: 0,
+      end: 'max',
+      onUpdate: (self) => {
+        const currentScroll = self.scroll();
+
+        if (currentScroll <= 0) {
+          hideHeaderAnim.reverse();
+          return;
+        }
+
+        const isTimelineTrapped = (window as Window & { isTimelineTrapped?: boolean }).isTimelineTrapped;
+        if (isTimelineTrapped) return;
+
+        if (self.direction === 1) {
+          hideHeaderAnim.play();
+        } else {
+          hideHeaderAnim.reverse();
+        }
       },
-    }),
-    idle: {
-      height: 6,
-      transition: { duration: 0.3 },
-    },
+    });
+
+    return () => {
+      headerScrollTrigger.kill();
+      hideHeaderAnim.kill();
+    };
+  }, []);
+
+  const handleAudioToggle = async () => {
+    const audio = audioRef.current;
+    if (!audio || !audioSrc) return;
+
+    if (audio.paused) {
+      try {
+        await audio.play();
+        setIsAudioPlaying(true);
+      } catch {
+        setIsAudioPlaying(false);
+      }
+      return;
+    }
+
+    audio.pause();
+    setIsAudioPlaying(false);
   };
 
   const overlayVariants = {
@@ -74,7 +124,12 @@ export default function Header({ siteName, logo, navEmail, navLinks = [], cartCo
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-cream px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 flex items-center justify-between">
+      <motion.header
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-cream px-4 py-4 sm:px-6 sm:py-5 md:px-8 md:py-6 flex items-center justify-between"
+      >
+        <audio ref={audioRef} src={audioSrc} loop preload="metadata" />
+
         <div className="flex items-center gap-3 sm:gap-5 md:gap-8 min-w-0">
           <Link href="/" className="sm:hidden flex items-center justify-start">
             {logo && (
@@ -89,44 +144,22 @@ export default function Header({ siteName, logo, navEmail, navLinks = [], cartCo
             )}
           </Link>
 
-          <motion.button
-            onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-            className="bg-none border-none cursor-pointer sm:hidden flex items-center justify-center h-6 px-1.5 opacity-70 hover:opacity-100 transition-opacity"
-            aria-label="Audio"
-          >
-            <div className="flex items-center gap-0.75 h-4">
-              {[0, 1, 2, 3].map((i) => (
-                <motion.div
-                  key={i}
-                  className="w-0.5 h-1.5 bg-dark rounded"
-                  variants={audioBarVariants}
-                  animate={isAudioPlaying ? 'playing' : 'idle'}
-                  custom={i}
-                />
-              ))}
-            </div>
-          </motion.button>
+          <MusicToggleButton
+            isPlaying={isAudioPlaying}
+            onToggle={handleAudioToggle}
+            disabled={!audioSrc}
+            className="sm:hidden"
+          />
 
           <div className="hidden sm:flex items-center gap-3 sm:gap-5 md:gap-8">
             <MenuToggleButton isOpen={isMenuOpen} onToggle={() => setIsMenuOpen(!isMenuOpen)} />
 
-            <motion.button
-              onClick={() => setIsAudioPlaying(!isAudioPlaying)}
-              className="bg-none border-none cursor-pointer flex items-center justify-center h-6 px-1.5 md:px-2 opacity-70 hover:opacity-100 transition-opacity"
-              aria-label="Audio"
-            >
-              <div className="flex items-center gap-0.75 h-4">
-                {[0, 1, 2, 3].map((i) => (
-                  <motion.div
-                    key={i}
-                    className="w-0.5 h-1.5 bg-dark rounded"
-                    variants={audioBarVariants}
-                    animate={isAudioPlaying ? 'playing' : 'idle'}
-                    custom={i}
-                  />
-                ))}
-              </div>
-            </motion.button>
+            <MusicToggleButton
+              isPlaying={isAudioPlaying}
+              onToggle={handleAudioToggle}
+              disabled={!audioSrc}
+              className="md:px-2"
+            />
           </div>
         </div>
 
@@ -168,7 +201,7 @@ export default function Header({ siteName, logo, navEmail, navLinks = [], cartCo
             <MenuToggleButton isOpen={isMenuOpen} onToggle={() => setIsMenuOpen(!isMenuOpen)} compact />
           </div>
         </div>
-      </header>
+      </motion.header>
 
       <AnimatePresence>
         {isMenuOpen && (
