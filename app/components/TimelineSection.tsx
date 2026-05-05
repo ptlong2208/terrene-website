@@ -191,9 +191,9 @@ export default function TimelineSection({ steps, logo, siteName }: Props) {
                       src={strapiMediaUrl(logo.url)}
                       alt={siteName ?? ""}
                       height={34}
-                      width={34}
+                      width={0}
                       className="h-8.5 w-auto object-contain"
-                      style={{ filter: layerColor.color === "#ffffff" ? "brightness(0) invert(1)" : "none" }}
+                      style={{ width: "auto", filter: layerColor.color === "#ffffff" ? "brightness(0) invert(1)" : "none" }}
                     />
                   ) : (
                     <FallbackLogo />

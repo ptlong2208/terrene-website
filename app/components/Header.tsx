@@ -136,9 +136,10 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
               <Image
                 src={strapiMediaUrl(logo.url)}
                 alt={siteName}
-                width={36}
+                width={0}
                 height={36}
                 className="h-9 w-auto"
+                style={{ width: "auto" }}
                 priority
               />
             )}
@@ -168,9 +169,10 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
             <Image
               src={strapiMediaUrl(logo.url)}
               alt={siteName}
-              width={36}
+              width={0}
               height={36}
               className="h-7 sm:h-8 md:h-9 w-auto"
+              style={{ width: "auto" }}
               priority
             />
           )}
