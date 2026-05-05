@@ -137,9 +137,9 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
                 src={strapiMediaUrl(logo.url)}
                 alt={siteName}
                 width={0}
-                height={36}
+                height={0}
                 className="h-9 w-auto"
-                style={{ width: "auto" }}
+                style={{ height: "36px", width: "auto" }}
                 priority
               />
             )}
@@ -170,7 +170,7 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
               src={strapiMediaUrl(logo.url)}
               alt={siteName}
               width={0}
-              height={36}
+              height={0}
               className="h-7 sm:h-8 md:h-9 w-auto"
               style={{ width: "auto" }}
               priority

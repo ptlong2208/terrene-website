@@ -190,7 +190,7 @@ export default function TimelineSection({ steps, logo, siteName }: Props) {
                     <Image
                       src={strapiMediaUrl(logo.url)}
                       alt={siteName ?? ""}
-                      height={34}
+                      height={0}
                       width={0}
                       className="h-8.5 w-auto object-contain"
                       style={{ width: "auto", filter: layerColor.color === "#ffffff" ? "brightness(0) invert(1)" : "none" }}
