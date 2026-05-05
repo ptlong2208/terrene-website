@@ -5,6 +5,8 @@ import GiantBrandTitle from "@/app/components/GiantBrandTitle";
 import HeroVideo from "@/app/components/HeroVideo";
 import IntroTextReveal from "@/app/components/IntroTextReveal";
 import QuoteReveal from "@/app/components/QuoteReveal";
+import SplitTypographySection from "@/app/components/SplitTypographySection";
+import TimelineSection from "@/app/components/TimelineSection";
 
 export default async function Home() {
   const [global, homepage] = await Promise.all([
@@ -12,6 +14,7 @@ export default async function Home() {
     fetchStrapiSingle<HomepageData>("/api/homepage", {
       "populate[quote_background]": "true",
       "populate[hero][populate][0]": "background_video",
+      "populate[timeline_steps][populate][0]": "image",
     }),
   ]);
 
@@ -40,6 +43,19 @@ export default async function Home() {
         <QuoteReveal
           text={homepage.quote_text}
           backgroundUrl={strapiMediaUrl(homepage.quote_background?.url)}
+        />
+      ) : null}
+
+      <SplitTypographySection
+        leftText={homepage.timeline_heading_left ?? "OUR PROCESS"}
+        rightText={homepage.timeline_heading_right ?? "THE GREATER JOURNEY"}
+      />
+
+      {homepage.timeline_steps?.length > 0 ? (
+        <TimelineSection
+          steps={homepage.timeline_steps}
+          logo={global.logo}
+          siteName={global.site_name}
         />
       ) : null}
 

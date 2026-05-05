@@ -16,6 +16,8 @@ export default function SmoothScroll() {
       touchMultiplier: 1,
     });
 
+    (window as unknown as Record<string, unknown>).lenis = lenis;
+
     lenis.on("scroll", ScrollTrigger.update);
 
     const onTick = (time: number) => {
@@ -27,6 +29,7 @@ export default function SmoothScroll() {
 
     return () => {
       gsap.ticker.remove(onTick);
+      delete (window as unknown as Record<string, unknown>).lenis;
       lenis.destroy();
     };
   }, []);

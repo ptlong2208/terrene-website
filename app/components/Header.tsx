@@ -138,7 +138,7 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
                 alt={siteName}
                 width={36}
                 height={36}
-                className="h-9 w-auto filter-[brightness(0)_saturate(100%)] opacity-[0.89]"
+                className="h-9 w-auto"
                 priority
               />
             )}
@@ -170,7 +170,7 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
               alt={siteName}
               width={36}
               height={36}
-              className="h-7 sm:h-8 md:h-9 w-auto filter-[brightness(0)_saturate(100%)] opacity-[0.89]"
+              className="h-7 sm:h-8 md:h-9 w-auto"
               priority
             />
           )}

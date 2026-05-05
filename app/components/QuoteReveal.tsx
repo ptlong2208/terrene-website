@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
@@ -21,7 +20,11 @@ export default function QuoteReveal({ text, backgroundUrl }: QuoteRevealProps) {
     if (!sectionRef.current || !quoteRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (backgroundRef.current) {
+      const mm = gsap.matchMedia();
+
+      mm.add("(max-width: 767px)", () => {
+        if (!backgroundRef.current) return;
+
         gsap.fromTo(
           backgroundRef.current,
           { y: "-8%" },
@@ -36,7 +39,7 @@ export default function QuoteReveal({ text, backgroundUrl }: QuoteRevealProps) {
             },
           }
         );
-      }
+      });
 
       gsap.fromTo(
         quoteRef.current,
@@ -54,6 +57,8 @@ export default function QuoteReveal({ text, backgroundUrl }: QuoteRevealProps) {
           },
         }
       );
+
+      return () => mm.revert();
     }, sectionRef);
 
     return () => ctx.revert();
@@ -62,19 +67,22 @@ export default function QuoteReveal({ text, backgroundUrl }: QuoteRevealProps) {
   return (
     <section className="section-three relative z-11 mt-[calc(300vh+64px)]">
       <div ref={sectionRef} className="relative flex h-screen items-center justify-center overflow-hidden">
-        <div ref={backgroundRef} className="absolute inset-0 scale-[1.12] will-change-transform">
-          {backgroundUrl ? (
-            <Image
-              src={backgroundUrl}
-              alt="Quote background"
-              fill
-              className="object-cover"
-              sizes="100vw"
+        {backgroundUrl ? (
+          <>
+            <div
+              className="absolute inset-0 hidden md:block bg-cover bg-center bg-fixed"
+              style={{ backgroundImage: `url(${backgroundUrl})` }}
             />
-          ) : (
-            <div className="absolute inset-0 bg-[#D9D9D9]" />
-          )}
-        </div>
+            <div ref={backgroundRef} className="absolute inset-0 md:hidden scale-[1.12] will-change-transform">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${backgroundUrl})` }}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="absolute inset-0 bg-[#D9D9D9]" />
+        )}
 
         <div className="quote-container relative z-2 px-6 sm:px-8 md:px-12 lg:px-16 text-center text-white mix-blend-difference">
           <h2
