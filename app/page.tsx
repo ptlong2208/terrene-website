@@ -3,12 +3,15 @@ import type { GlobalData, HomepageData } from "@/lib/types";
 import Header from "@/app/components/Header";
 import GiantBrandTitle from "@/app/components/GiantBrandTitle";
 import HeroVideo from "@/app/components/HeroVideo";
+import IntroTextReveal from "@/app/components/IntroTextReveal";
+import QuoteReveal from "@/app/components/QuoteReveal";
 
 export default async function Home() {
   const [global, homepage] = await Promise.all([
     fetchStrapiSingle<GlobalData>("/api/global", { populate: "*" }),
     fetchStrapiSingle<HomepageData>("/api/homepage", {
-      "populate[hero][populate]": "*",
+      "populate[quote_background]": "true",
+      "populate[hero][populate][0]": "background_video",
     }),
   ]);
 
@@ -31,33 +34,20 @@ export default async function Home() {
         ) : null}
       </section>
 
+      {homepage.intro_text ? <IntroTextReveal text={homepage.intro_text} /> : null}
+
+      {homepage.quote_text ? (
+        <QuoteReveal
+          text={homepage.quote_text}
+          backgroundUrl={strapiMediaUrl(homepage.quote_background?.url)}
+        />
+      ) : null}
+
       {/* {homepage.intro_text && (
         <section className="bg-cream flex items-center justify-center min-h-screen px-8">
           <p className="text-[32px] font-normal leading-[1.3] tracking-[-0.04em] text-center max-w-212.5 text-dark">
             {homepage.intro_text}
           </p>
-        </section>
-      )}
-
-      {homepage.quote_text && (
-        <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
-          {homepage.quote_background ? (
-            <Image
-              src={strapiMediaUrl(homepage.quote_background.url)}
-              alt="Quote background"
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-[#D9D9D9]" />
-          )}
-          <div className="relative z-10 px-16 text-center text-white mix-blend-difference">
-            <blockquote
-              className="text-[3.5vw] font-medium leading-[1.2] tracking-[-0.03em] max-w-250"
-            >
-              {homepage.quote_text}
-            </blockquote>
-          </div>
         </section>
       )}
 

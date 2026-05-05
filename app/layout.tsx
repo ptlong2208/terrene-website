@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Faculty_Glyphic, Manrope } from "next/font/google";
+import SmoothScroll from "@/app/components/SmoothScroll";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -28,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`${manrope.variable} ${facultyGlyphic.variable} antialiased`}>
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <SmoothScroll />
+        {children}
+      </body>
     </html>
   );
 }
