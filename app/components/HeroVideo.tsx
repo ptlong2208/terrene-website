@@ -18,16 +18,51 @@ export default function HeroVideo({ src }: HeroVideoProps) {
     if (!containerRef.current || !videoRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.to(videoRef.current, {
-        y: "30vh",
-        ease: "none",
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add("(max-width: 767px)", () => {
+        gsap.set(videoRef.current, { height: "120vh" });
+        gsap.to(videoRef.current, {
+          y: "20vh",
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
       });
+
+      mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
+        gsap.set(videoRef.current, { height: "124vh" });
+        gsap.to(videoRef.current, {
+          y: "24vh",
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+
+      mm.add("(min-width: 1024px)", () => {
+        gsap.set(videoRef.current, { height: "130vh" });
+        gsap.to(videoRef.current, {
+          y: "30vh",
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+
+      return () => mm.revert();
     });
 
     return () => ctx.revert();
@@ -44,8 +79,7 @@ export default function HeroVideo({ src }: HeroVideoProps) {
         muted
         loop
         playsInline
-        className="hero-video w-full object-cover absolute bottom-0 left-0 will-change-transform"
-        style={{ height: "130vh" }}
+        className="hero-video w-full object-cover object-center absolute bottom-0 left-0 will-change-transform"
         src={src}
       />
     </div>

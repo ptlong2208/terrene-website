@@ -39,7 +39,7 @@ export default function GiantBrandTitle({ title }: GiantBrandTitleProps) {
   return (
     <h1
       ref={titleRef}
-      className="giant-brand-text w-full text-center text-[clamp(3.75rem,24vw,24rem)] text-dark leading-[0.74] uppercase tracking-tighter whitespace-nowrap font-extrabold px-2 sm:px-0"
+      className="giant-brand-text w-full text-center text-[clamp(3.75rem,24vw,24rem)] text-dark leading-[0.72] uppercase tracking-tighter whitespace-nowrap font-extrabold px-0"
     >
       {title}
     </h1>

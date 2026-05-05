@@ -11,7 +11,6 @@ export default async function Home() {
       "populate[hero][populate]": "*",
     }),
   ]);
-  console.log(homepage.hero);
 
   return (
     <main className="bg-cream text-dark font-sans overflow-x-hidden">
@@ -24,7 +23,7 @@ export default async function Home() {
         cartCount={0}
       />
 
-      <section className="hero-birchmore relative pt-22 sm:pt-24 bg-cream overflow-x-clip">
+      <section className="hero-birchmore relative pt-20 sm:pt-22 md:pt-25 bg-cream overflow-x-clip">
         <GiantBrandTitle title={homepage.hero?.brand_text ?? global.site_name ?? "TERRENE"} />
 
         {homepage.hero?.background_video ? (
