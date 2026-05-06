@@ -65,7 +65,7 @@ body {
   background-color: var(--bg-cream);
   color: var(--text-dark);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 a {

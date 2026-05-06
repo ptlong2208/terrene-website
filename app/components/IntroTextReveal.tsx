@@ -36,6 +36,8 @@ export default function IntroTextReveal({ text }: IntroTextRevealProps) {
       }
     });
 
+    const q = gsap.utils.selector(sectionRef);
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: sectionRef.current,
@@ -55,7 +57,7 @@ export default function IntroTextReveal({ text }: IntroTextRevealProps) {
       });
 
       timeline.to(
-        textEl.querySelectorAll(".scrub-word"),
+        q(".scrub-word"),
         {
           opacity: 1,
           fontWeight: 600,

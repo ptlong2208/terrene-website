@@ -19,7 +19,7 @@ export default async function Home() {
   ]);
 
   return (
-    <main className="bg-cream text-dark font-sans overflow-x-hidden">
+    <main className="bg-cream text-dark font-sans overflow-x-clip">
       <Header
         siteName={global.site_name}
         logo={global.logo}
