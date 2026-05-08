@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence, cubicBezier } from 'framer-motion';
-import { ShoppingCart, Phone } from 'lucide-react';
+import { ShoppingBag, Phone } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { strapiMediaUrl } from '@/lib/strapi';
@@ -184,7 +184,7 @@ export default function Header({ siteName, logo, ambientAudio, navEmail, navLink
             className="bg-none border-none cursor-pointer text-dark flex items-center relative transition-opacity opacity-70 hover:opacity-100"
             aria-label="Shopping Cart"
           >
-            <ShoppingCart className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+            <ShoppingBag className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
             {cartCount > 0 && (
               <span className="absolute -top-1.5 -right-2 bg-matcha text-cream text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                 {cartCount}

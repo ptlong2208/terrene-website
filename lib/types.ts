@@ -54,12 +54,41 @@ export interface TimelineStep {
   image: StrapiMedia | null;
 }
 
+// ---------------------------------------------------------------------------
+// Tag (collection type — reusable across products)
+// ---------------------------------------------------------------------------
+
+export interface Tag {
+  id: number;
+  documentId: string;
+  label: string;
+}
+
+// ---------------------------------------------------------------------------
+// Shop Category (collection type)
+// ---------------------------------------------------------------------------
+
+export interface ShopCategory {
+  id: number;
+  documentId: string;
+  name: string;
+}
+
+// ---------------------------------------------------------------------------
+// Shop Product (collection type)
+// ---------------------------------------------------------------------------
+
 export interface ShopProduct {
   id: number;
-  name: string;
-  category: string;
+  documentId: string;
+  createdAt: string;
+  title: string;
+  category: ShopCategory | null;
+  description: string | null;
   price: number;
-  is_new: boolean | null;
+  original_price: number | null;
+  attribute: string | null;
+  tags: Tag[];
   image: StrapiMedia | null;
 }
 
@@ -78,6 +107,11 @@ export interface HomepageData {
   timeline_heading_left: string | null;
   timeline_heading_right: string | null;
   timeline_steps: TimelineStep[];
+  shop_kicker: string | null;
+  shop_title: string | null;
+  shop_description: string | null;
+  shop_view_all_url: string | null;
+  shop_view_all_label: string | null;
   shop_products: ShopProduct[];
   blog_badge: string | null;
   blog_title: string | null;
