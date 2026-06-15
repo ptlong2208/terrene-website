@@ -36,7 +36,7 @@
   --color-layer-5: var(--layer-5);
 
   /* Typography */
-  --font-sans: var(--font-manrope), 'Manrope', sans-serif;
+  --font-sans: 'Mona Sans Variable', sans-serif;
   --font-display: var(--font-faculty-glyphic), 'Faculty Glyphic', serif;
 
   /* Border radius */
@@ -47,6 +47,111 @@
   /* Letter spacing */
   --tracking-ui: 0.1em;
   --tracking-tag: 0.05em;
+
+  /* Demo-aligned tokens */
+  --brown: #6B4E37;
+  --green-deep: #1D4025;
+  --ink: var(--brown);
+  --gutter: clamp(16px, 2vw, 32px);
+}
+
+/* ─── Layout utilities ─────────────────────────────────────────────────── */
+@utility px-gutter {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+@keyframes sound-bars {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.72;
+  }
+  35% {
+    transform: scaleY(1.12);
+    opacity: 1;
+  }
+  70% {
+    transform: scaleY(0.72);
+    opacity: 0.88;
+  }
+}
+
+.header-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sound-toggle {
+  width: 18px;
+  height: 20px;
+  gap: 2px;
+  display: flex;
+}
+
+.sound-toggle span {
+  width: 2px;
+  border-radius: 999px;
+  background-color: currentColor;
+  transform-origin: center;
+  transition: transform 0.35s ease, opacity 0.2s ease, height 0.35s ease;
+}
+
+.sound-toggle span:nth-child(1) { height: 6px; }
+.sound-toggle span:nth-child(2) { height: 10px; }
+.sound-toggle span:nth-child(3) { height: 14px; }
+.sound-toggle span:nth-child(4) { height: 10px; }
+.sound-toggle span:nth-child(5) { height: 6px; }
+
+.sound-toggle.is-playing span {
+  animation: sound-bars 1.05s ease-in-out infinite;
+}
+
+.sound-toggle.is-playing span:nth-child(1) { animation-delay: -0.2s; }
+.sound-toggle.is-playing span:nth-child(2) { animation-delay: -0.45s; }
+.sound-toggle.is-playing span:nth-child(3) { animation-delay: -0.05s; }
+.sound-toggle.is-playing span:nth-child(4) { animation-delay: -0.35s; }
+.sound-toggle.is-playing span:nth-child(5) { animation-delay: -0.15s; }
+
+/* ─── Menu overlay ───────────────────────────────────────────────────────── */
+/* Positioning, stacking, and color only — all animation handled by GSAP */
+.menu-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brown);
+  line-height: 1;
+  padding: 0;
+}
+.menu-primary-link {
+  display: block;
+  font-size: clamp(20px, 2.4vw, 36px);
+  font-weight: 400;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--brown) 35%, transparent);
+  letter-spacing: -0.02em;
+  transition: color 0.25s ease;
+  text-align: center;
+}
+.menu-primary-link:hover { color: var(--green-deep); opacity: 1; }
+
+.header-cart {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─── Base styles ───────────────────────────────────────────────────────── */
@@ -65,6 +170,7 @@ body {
   background-color: var(--bg-cream);
   color: var(--text-dark);
   font-family: var(--font-sans);
+  letter-spacing: -0.02em;
   overflow-x: clip;
 }
 

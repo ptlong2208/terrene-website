@@ -31,15 +31,34 @@ export interface SocialLink {
 export interface GlobalData {
   id: number;
   documentId: string;
+
+  // Site
   site_name: string;
   site_description: string | null;
   favicon: StrapiMedia | null;
   logo: StrapiMedia | null;
+
+  // Loader / Audio
+  loader_quote: string | null;
+  ambient_audio: StrapiMedia | null;
+  music_consent_text: string | null;
+  music_consent_accept: string | null;
+  music_consent_decline: string | null;
+
+  // Nav
   nav_links: NavLink[];
   nav_email: string | null;
+  nav_shop_link: NavLink | null;
+  nav_cart_label: string | null;
+
+  // Social
   social_links: SocialLink[];
+
+  // Footer
   footer_copyright: string | null;
-  ambient_audio: StrapiMedia | null;
+  footer_newsletter_label: string | null;
+  footer_newsletter_placeholder: string | null;
+  footer_legal_links: NavLink[];
 }
 
 // ---------------------------------------------------------------------------
@@ -92,30 +111,13 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
-export interface HeroComponent {
-  brand_text: string;
-  background_video: StrapiMedia | null;
-}
-
 export interface HomepageData {
   id: number;
   documentId: string;
-  hero: HeroComponent | null;
-  intro_text: string | null;
-  quote_text: string | null;
-  quote_background: StrapiMedia | null;
-  timeline_heading_left: string | null;
-  timeline_heading_right: string | null;
-  timeline_steps: TimelineStep[];
-  shop_kicker: string | null;
-  shop_title: string | null;
-  shop_description: string | null;
-  shop_view_all_url: string | null;
-  shop_view_all_label: string | null;
-  shop_products: ShopProduct[];
-  blog_badge: string | null;
-  blog_title: string | null;
-  blog_description: string | null;
+  hero_title: string | null;
+  hero_description: string | null;
+  hero_background_video: StrapiMedia | null;
+  hero_video_poster: StrapiMedia | null;
 }
 
 // ---------------------------------------------------------------------------

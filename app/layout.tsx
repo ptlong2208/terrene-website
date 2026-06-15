@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import { Faculty_Glyphic, Manrope } from "next/font/google";
+import { Faculty_Glyphic } from "next/font/google";
+import "@fontsource-variable/mona-sans/index.css";
 import SmoothScroll from "@/app/components/SmoothScroll";
 import "./globals.css";
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-});
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: "--font-faculty-glyphic",
@@ -28,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" className={`${manrope.variable} ${facultyGlyphic.variable} antialiased`}>
+    <html lang="vi" className={`${facultyGlyphic.variable} antialiased`}>
       <body className="min-h-screen">
         <SmoothScroll />
         {children}
