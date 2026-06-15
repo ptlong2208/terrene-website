@@ -1,15 +1,12 @@
+import clsx from 'clsx';
+
 interface SlotTextProps {
   text: string;
   className?: string;
 }
 
 export default function SlotText({ text, className }: SlotTextProps) {
-  const classes = [
-    "inline-flex h-[1.35em] overflow-hidden align-top leading-[1.35]",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const classes = clsx('inline-flex h-[1.35em] overflow-hidden align-top leading-[1.35]', className);
 
   return (
     <span className={classes}>

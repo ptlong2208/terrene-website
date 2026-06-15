@@ -31,7 +31,6 @@ function splitIntoLines(
     if (i < wordSpans.length - 1) element.appendChild(document.createTextNode(' '));
   });
 
-  // Sequential grouping with 4px tolerance handles sub-pixel rendering
   const lines: string[][] = [];
   let currentLine: string[] = [];
   let currentTop: number | null = null;
@@ -109,6 +108,24 @@ export function useHeroAnimation({
     let introTl: gsap.core.Timeline | null = null;
     let videoTween: gsap.core.Tween | null = null;
 
+
+    if (videoRef.current) {
+      videoTween = gsap.fromTo(
+        videoRef.current,
+        { yPercent: 7 },
+        {
+          yPercent: -8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: afterHero,
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
+          },
+        },
+      );
+    }
+
     const runAnimation = () => {
       const titleLines = titleRef.current ? splitIntoLines(titleRef.current, restoreFns) : [];
       const descLines = descRef.current ? splitIntoLines(descRef.current, restoreFns) : [];
@@ -134,23 +151,6 @@ export function useHeroAnimation({
           '-=0.72',
         );
       }
-
-      if (videoRef.current) {
-        videoTween = gsap.fromTo(
-          videoRef.current,
-          { yPercent: 7 },
-          {
-            yPercent: -8,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: afterHero,
-              start: 'top bottom',
-              end: 'top top',
-              scrub: true,
-            },
-          },
-        );
-      }
     };
 
     if (document.fonts?.ready) {
@@ -169,6 +169,5 @@ export function useHeroAnimation({
       videoTween?.kill();
       restoreFns.forEach((fn) => fn());
     };
-  // Ref objects are stable — listed for exhaustive-deps compliance only
   }, [sectionRef, titleRef, descRef, videoRef]);
 }
