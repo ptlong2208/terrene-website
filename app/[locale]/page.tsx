@@ -3,12 +3,19 @@ import type { GlobalData, HomepageData } from '@/lib/types';
 import Header from '@/app/components/Header';
 import HeroSection from '@/app/components/HeroSection';
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   const [global, homepage] = await Promise.all([
-    fetchStrapiSingle<GlobalData>('/api/global', { populate: '*' }),
+    fetchStrapiSingle<GlobalData>('/api/global', { populate: '*', locale }),
     fetchStrapiSingle<HomepageData>('/api/homepage', {
       'populate[hero_background_video]': 'true',
       'populate[hero_video_poster]': 'true',
+      locale,
     }),
   ]);
 
