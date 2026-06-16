@@ -7,6 +7,7 @@ import { CustomEase } from 'gsap/CustomEase';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import type { NavLink } from '@/lib/types';
+import SlotText from '@/app/components/SlotText';
 import styles from './MenuOverlay.module.css';
 
 export type MenuState = 'closed' | 'open' | 'closing';
@@ -137,7 +138,7 @@ export default function MenuOverlay({
 
       <div ref={contentRef} className="relative z-4 h-full flex flex-col overflow-hidden">
 
-        <div className="flex items-center justify-end px-gutter h-16 shrink-0">
+        <div className="flex items-center justify-center px-gutter h-16 shrink-0">
           <button type="button" className={styles.closeBtn} onClick={onClose}>
             {t('overlayClose')}
           </button>
@@ -153,8 +154,8 @@ export default function MenuOverlay({
                 animate={menuState}
                 initial="closed"
               >
-                <Link href={link.href} className={styles.primaryLink} onClick={onClose}>
-                  {link.label}
+                <Link href={link.href} className={`group ${styles.primaryLink}`} onClick={onClose}>
+                  <SlotText text={link.label} />
                 </Link>
               </motion.div>
             ))}
