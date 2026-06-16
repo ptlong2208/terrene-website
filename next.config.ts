@@ -1,23 +1,26 @@
-import type { NextConfig } from "next";
+import createNextIntlPlugin from 'next-intl/plugin';
+import type { NextConfig } from 'next';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "1337",
-        pathname: "/**",
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '1337',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "blessed-happiness-3e10a81db6.strapiapp.com",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'blessed-happiness-3e10a81db6.strapiapp.com',
+        pathname: '/**',
       },
       {
-        protocol: "https",
-        hostname: "blessed-happiness-3e10a81db6.media.strapiapp.com",
-        pathname: "/**",
+        protocol: 'https',
+        hostname: 'blessed-happiness-3e10a81db6.media.strapiapp.com',
+        pathname: '/**',
       },
     ],
     dangerouslyAllowSVG: true,
@@ -25,4 +28,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

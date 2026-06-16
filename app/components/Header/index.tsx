@@ -6,7 +6,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, StrapiMedia } from '@/lib/types';
+import { useTranslations } from 'next-intl';
 import MenuOverlay, { type MenuState } from '@/app/components/MenuOverlay';
+import MusicConsentBanner from '@/app/components/MusicConsentBanner';
 import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
 import HeaderLeft from './HeaderLeft';
 import HeaderLogo from './HeaderLogo';
@@ -20,6 +22,9 @@ interface HeaderProps {
   navShopLink?: NavLink;
   navCartLabel?: string;
   cartCount?: number;
+  musicConsentText?: string | null;
+  musicConsentAccept?: string | null;
+  musicConsentDecline?: string | null;
 }
 
 export default function Header({
@@ -30,10 +35,15 @@ export default function Header({
   navShopLink,
   navCartLabel,
   cartCount = 0,
+  musicConsentText,
+  musicConsentAccept,
+  musicConsentDecline,
 }: HeaderProps) {
+  const t = useTranslations('audio');
   const [menuState, setMenuState] = useState<MenuState>('closed');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [hasBg, setHasBg] = useState(false);
+  const [showConsent, setShowConsent] = useState(false);
 
   const headerRef = useRef<HTMLElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -95,20 +105,37 @@ export default function Header({
   const closeMenu = () => setMenuState('closing');
   const handleMenuClosed = useCallback(() => setMenuState('closed'), []);
 
+  useEffect(() => {
+    if (!audioSrc || !musicConsentText || !musicConsentAccept || !musicConsentDecline) return;
+    const timer = setTimeout(() => setShowConsent(true), 2000);
+    return () => clearTimeout(timer);
+  }, [audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
+
+  const playMusic = async () => {
+    const audio = audioRef.current;
+    if (!audio || !audioSrc) return;
+    try {
+      await audio.play();
+      setIsAudioPlaying(true);
+    } catch {
+      setIsAudioPlaying(false);
+    }
+  };
+
   const handleAudioToggle = async () => {
     const audio = audioRef.current;
     if (!audio || !audioSrc) return;
     if (audio.paused) {
-      try {
-        await audio.play();
-        setIsAudioPlaying(true);
-      } catch {
-        setIsAudioPlaying(false);
-      }
+      await playMusic();
     } else {
       audio.pause();
       setIsAudioPlaying(false);
     }
+  };
+
+  const handleConsentAccept = () => {
+    setShowConsent(false);
+    void playMusic();
   };
 
   return (
@@ -142,6 +169,16 @@ export default function Header({
         navLinks={navLinks}
         onClose={closeMenu}
         onClosed={handleMenuClosed}
+      />
+
+      <MusicConsentBanner
+        show={showConsent}
+        dialogLabel={t('consentDialogLabel')}
+        text={musicConsentText ?? ''}
+        acceptLabel={musicConsentAccept ?? ''}
+        declineLabel={musicConsentDecline ?? ''}
+        onAccept={handleConsentAccept}
+        onDecline={() => setShowConsent(false)}
       />
     </>
   );

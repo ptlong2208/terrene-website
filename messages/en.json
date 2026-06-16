@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "mainLabel": "Main navigation",
+    "overlayLabel": "Navigation",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "overlayClose": "Close"
+  },
+  "audio": {
+    "play": "Play music",
+    "pause": "Pause music",
+    "consentDialogLabel": "Background music"
+  },
+  "notFound": {
+    "message": "This page has wandered off the path. Let's get you back to solid ground.",
+    "backHome": "Back to home"
+  }
+}

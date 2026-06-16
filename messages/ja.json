@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "mainLabel": "ナビゲーション",
+    "overlayLabel": "ナビゲーション",
+    "menuOpen": "メニューを開く",
+    "menuClose": "メニューを閉じる",
+    "overlayClose": "閉じる"
+  },
+  "audio": {
+    "play": "音楽を再生",
+    "pause": "音楽を停止",
+    "consentDialogLabel": "バックグラウンドミュージック"
+  },
+  "notFound": {
+    "message": "このページは見つかりませんでした。トップページに戻りましょう。",
+    "backHome": "トップへ戻る"
+  }
+}

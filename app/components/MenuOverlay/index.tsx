@@ -5,6 +5,7 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import type { NavLink } from '@/lib/types';
 import styles from './MenuOverlay.module.css';
 
@@ -44,6 +45,7 @@ export default function MenuOverlay({
   const contentRef = useRef<HTMLDivElement | null>(null);
   const footerRef = useRef<HTMLDivElement | null>(null);
 
+  const t = useTranslations('nav');
   const onClosedRef = useRef(onClosed);
   useEffect(() => { onClosedRef.current = onClosed; });
 
@@ -137,12 +139,12 @@ export default function MenuOverlay({
 
         <div className="flex items-center justify-end px-gutter h-16 shrink-0">
           <button type="button" className={styles.closeBtn} onClick={onClose}>
-            Đóng
+            {t('overlayClose')}
           </button>
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-12 px-gutter pb-5">
-          <nav className="flex flex-col items-center gap-2" aria-label="Overlay navigation">
+          <nav className="flex flex-col items-center gap-2" aria-label={t('overlayLabel')}>
             {navLinks.map((link, i) => (
               <motion.div
                 key={link.id}

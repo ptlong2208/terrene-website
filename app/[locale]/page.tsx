@@ -1,14 +1,14 @@
-import { fetchStrapiSingle, strapiMediaUrl } from "@/lib/strapi";
-import type { GlobalData, HomepageData } from "@/lib/types";
-import Header from "@/app/components/Header";
-import HeroSection from "@/app/components/HeroSection";
+import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
+import type { GlobalData, HomepageData } from '@/lib/types';
+import Header from '@/app/components/Header';
+import HeroSection from '@/app/components/HeroSection';
 
 export default async function Home() {
   const [global, homepage] = await Promise.all([
-    fetchStrapiSingle<GlobalData>("/api/global", { populate: "*" }),
-    fetchStrapiSingle<HomepageData>("/api/homepage", {
-      "populate[hero_background_video]": "true",
-      "populate[hero_video_poster]": "true",
+    fetchStrapiSingle<GlobalData>('/api/global', { populate: '*' }),
+    fetchStrapiSingle<HomepageData>('/api/homepage', {
+      'populate[hero_background_video]': 'true',
+      'populate[hero_video_poster]': 'true',
     }),
   ]);
 
@@ -22,6 +22,9 @@ export default async function Home() {
         navShopLink={global.nav_shop_link ?? undefined}
         navCartLabel={global.nav_cart_label ?? undefined}
         cartCount={0}
+        musicConsentText={global.music_consent_text}
+        musicConsentAccept={global.music_consent_accept}
+        musicConsentDecline={global.music_consent_decline}
       />
 
       <HeroSection

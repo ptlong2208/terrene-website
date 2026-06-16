@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "mainLabel": "Điều hướng chính",
+    "overlayLabel": "Điều hướng",
+    "menuOpen": "Mở menu",
+    "menuClose": "Đóng menu",
+    "overlayClose": "Đóng"
+  },
+  "audio": {
+    "play": "Bật nhạc",
+    "pause": "Tắt nhạc",
+    "consentDialogLabel": "Bật nhạc nền"
+  },
+  "notFound": {
+    "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
+    "backHome": "Về trang chủ"
+  }
+}

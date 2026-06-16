@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ShoppingBag, Store } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { NavLink } from '@/lib/types';
 import SlotText from '@/app/components/SlotText';
 
@@ -16,12 +17,13 @@ export default function HeaderRight({
   navCartLabel,
   cartCount = 0,
 }: HeaderRightProps) {
+  const t = useTranslations('nav');
   const cartText = `${navCartLabel} [${cartCount}]`;
 
   return (
     <nav
       className="flex items-center gap-5 md:gap-6 justify-end justify-self-end"
-      aria-label="Main navigation"
+      aria-label={t('mainLabel')}
     >
       {navShopLink && (
         <Link
