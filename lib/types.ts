@@ -24,6 +24,11 @@ export interface SocialLink {
   url: string;
 }
 
+export interface TextItem {
+  id: number;
+  text: string;
+}
+
 // ---------------------------------------------------------------------------
 // Global (single type)
 // ---------------------------------------------------------------------------
@@ -118,6 +123,24 @@ export interface HomepageData {
   hero_description: string | null;
   hero_background_video: StrapiMedia | null;
   hero_video_poster: StrapiMedia | null;
+}
+
+// ---------------------------------------------------------------------------
+// Coming Soon (single type)
+// ---------------------------------------------------------------------------
+
+export interface ComingSoonData {
+  id: number;
+  documentId: string;
+  seo_title: string | null;
+  seo_description: string | null;
+  quote: string | null;
+  words: TextItem[];
+  label: string | null;
+  form_heading: string | null;
+  submit_label: string | null;
+  email_placeholder: string | null;
+  success_message: string | null;
 }
 
 // ---------------------------------------------------------------------------

@@ -11,6 +11,10 @@
     "pause": "音楽を停止",
     "consentDialogLabel": "バックグラウンドミュージック"
   },
+  "comingSoon": {
+    "seoTitle": "Terrene — もうすぐオープン",
+    "seoDescription": "素敵なものが育っています。ウェイトリストに登録して、いち早くお知らせを受け取りましょう。"
+  },
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"

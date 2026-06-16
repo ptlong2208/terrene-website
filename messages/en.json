@@ -11,6 +11,10 @@
     "pause": "Pause music",
     "consentDialogLabel": "Background music"
   },
+  "comingSoon": {
+    "seoTitle": "Terrene — Coming Soon",
+    "seoDescription": "Something beautiful is growing. Join the waitlist to be the first to know."
+  },
   "notFound": {
     "message": "This page has wandered off the path. Let's get you back to solid ground.",
     "backHome": "Back to home"
