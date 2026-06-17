@@ -129,7 +129,7 @@ export default function MenuOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-1100 text-(--brown)"
+      className="fixed inset-0 z-1100 text-(--brown) invisible"
       aria-hidden={menuState === 'closed'}
     >
       <div ref={curtain1Ref} className="absolute inset-0 z-1 bg-(--brown) origin-top" />

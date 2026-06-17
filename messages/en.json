@@ -11,6 +11,13 @@
     "pause": "Pause music",
     "consentDialogLabel": "Background music"
   },
+  "validation": {
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "alreadySubscribed": "This email is already on the list.",
+    "serverError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please try again."
+  },
   "comingSoon": {
     "seoTitle": "Terrene — Coming Soon",
     "seoDescription": "Something beautiful is growing. Join the waitlist to be the first to know."

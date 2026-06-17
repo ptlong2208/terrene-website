@@ -11,6 +11,13 @@
     "pause": "音楽を停止",
     "consentDialogLabel": "バックグラウンドミュージック"
   },
+  "validation": {
+    "emailRequired": "メールアドレスを入力してください。",
+    "emailInvalid": "有効なメールアドレスを入力してください。",
+    "alreadySubscribed": "このメールアドレスはすでに登録されています。",
+    "serverError": "エラーが発生しました。もう一度お試しください。",
+    "networkError": "接続エラーです。もう一度お試しください。"
+  },
   "comingSoon": {
     "seoTitle": "Terrene — もうすぐオープン",
     "seoDescription": "素敵なものが育っています。ウェイトリストに登録して、いち早くお知らせを受け取りましょう。"

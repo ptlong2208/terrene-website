@@ -1,30 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState, useActionState } from 'react';
-import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
+import TerreneLogo from '@/app/components/TerreneLogo';
 import SlotText from '@/app/components/SlotText';
 import { subscribeToWishlist } from '@/app/actions/wishlist';
 import type { ComingSoonData } from '@/lib/types';
 
-interface LogoProp {
-  url: string;
-  alt: string;
-  width: number;
-  height: number;
-}
-
 interface ComingSoonContentProps {
   siteName: string;
-  footerCopyright: string | null;
-  logo: LogoProp | null;
   data: ComingSoonData | null;
 }
 
 export default function ComingSoonContent({
   siteName,
-  footerCopyright,
-  logo,
   data,
 }: ComingSoonContentProps) {
   const {
@@ -39,6 +29,7 @@ export default function ComingSoonContent({
 
   const words = wordItems?.map(w => w.text) ?? [];
 
+  const t = useTranslations('validation');
   const rootRef = useRef<HTMLDivElement>(null);
   const [wordIdx, setWordIdx] = useState(0);
   const [state, action, isPending] = useActionState(subscribeToWishlist, null);
@@ -73,15 +64,10 @@ export default function ComingSoonContent({
         className="flex flex-col items-center"
         style={{ gap: 'clamp(8px,1.2vh,12px)' }}
       >
-        {logo && (
-          <Image
-            src={logo.url}
-            alt={logo.alt}
-            width={logo.width}
-            height={logo.height}
-            className="h-6.5 w-auto object-contain"
-          />
-        )}
+        <TerreneLogo
+          className="h-6.5 w-auto text-(--green-deep)"
+          aria-label={siteName}
+        />
         <span
           className="font-display text-[clamp(16px,2.6vw,34px)] font-normal leading-none tracking-[-0.03em] lowercase text-(--green-deep)"
         >
@@ -134,6 +120,7 @@ export default function ComingSoonContent({
           <>
             <form
               action={action}
+              noValidate
               className="flex flex-col w-full"
               style={{ gap: 'clamp(8px,1.2vh,12px)' }}
             >
@@ -145,12 +132,16 @@ export default function ComingSoonContent({
                   name="email"
                   type="email"
                   placeholder={emailPlaceholder ?? undefined}
-                  required
                   autoComplete="email"
                   disabled={isPending}
                   className="w-full bg-transparent border-none outline-none text-[12px] font-light text-(--green-deep) tracking-[-0.01em] text-center placeholder:text-(--green-deep)/30 disabled:opacity-50"
                 />
               </div>
+              {state && 'error' in state && (
+                <p className="text-[11px] tracking-[-0.02em] text-red-600/80 text-center">
+                  {t(state.error as Parameters<typeof t>[0])}
+                </p>
+              )}
               {submitLabel && (
                 <button
                   type="submit"
@@ -162,12 +153,6 @@ export default function ComingSoonContent({
                 </button>
               )}
             </form>
-
-            {state && 'error' in state && (
-              <p className="text-[11px] tracking-[-0.02em] text-red-600/80 text-center">
-                {state.error}
-              </p>
-            )}
           </>
         ) : (
           <p className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
@@ -176,11 +161,9 @@ export default function ComingSoonContent({
         )}
       </div>
 
-      {footerCopyright && (
-        <footer data-reveal="" className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
-          {footerCopyright}
-        </footer>
-      )}
+      <footer data-reveal="" className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
+        © {siteName} {new Date().getFullYear()}
+      </footer>
     </div>
   );
 }

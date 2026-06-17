@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import ComingSoonContent from '@/app/components/ComingSoonContent';
-import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
+import { fetchStrapiSingle } from '@/lib/strapi';
 import type { ComingSoonData, GlobalData } from '@/lib/types';
 
 type Props = { params: Promise<{ locale: string }> };
@@ -31,35 +31,16 @@ export default async function ComingSoonPage({ params }: Props) {
   const { locale } = await params;
 
   const [global, comingSoon] = await Promise.all([
-    fetchStrapiSingle<Pick<GlobalData, 'site_name' | 'footer_copyright' | 'logo'>>(
+    fetchStrapiSingle<Pick<GlobalData, 'site_name'>>(
       '/api/global',
-      {
-        'fields[0]': 'site_name',
-        'fields[1]': 'footer_copyright',
-        'populate[logo][fields][0]': 'url',
-        'populate[logo][fields][1]': 'alternativeText',
-        'populate[logo][fields][2]': 'width',
-        'populate[logo][fields][3]': 'height',
-        locale,
-      },
+      { 'fields[0]': 'site_name', locale },
     ),
     fetchComingSoonData(locale).catch(() => null),
   ]);
 
-  const logo = global.logo
-    ? {
-        url: strapiMediaUrl(global.logo.url),
-        alt: global.logo.alternativeText ?? global.site_name,
-        width: global.logo.width ?? 80,
-        height: global.logo.height ?? 26,
-      }
-    : null;
-
   return (
     <ComingSoonContent
       siteName={global.site_name}
-      footerCopyright={global.footer_copyright}
-      logo={logo}
       data={comingSoon}
     />
   );

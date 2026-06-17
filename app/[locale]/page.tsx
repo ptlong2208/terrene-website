@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
 import type { GlobalData, HomepageData } from '@/lib/types';
 import Header from '@/app/components/Header';
@@ -9,6 +10,7 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  // redirect(`/${locale}/coming-soon`);
 
   const [global, homepage] = await Promise.all([
     fetchStrapiSingle<GlobalData>('/api/global', { populate: '*', locale }),
@@ -23,7 +25,6 @@ export default async function Home({
     <main className="bg-cream text-dark font-sans overflow-x-clip">
       <Header
         siteName={global.site_name}
-        logo={global.logo ?? undefined}
         ambientAudio={global.ambient_audio ?? undefined}
         navLinks={global.nav_links}
         navShopLink={global.nav_shop_link ?? undefined}

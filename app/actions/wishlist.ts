@@ -1,8 +1,6 @@
 'use server';
 
-// Requires a `WaitlistEntry` collection type in Strapi with:
-//   - email (string, required, unique)
-// And public `create` permission enabled on the collection.
+import { emailSchema } from '@/lib/validateEmail';
 
 export type WishlistState =
   | { success: true }
@@ -13,27 +11,43 @@ export async function subscribeToWishlist(
   _prevState: WishlistState,
   formData: FormData,
 ): Promise<WishlistState> {
-  const email = (formData.get('email') as string | null)?.trim();
-  if (!email) return { error: 'Email is required.' };
+  const result = emailSchema.safeParse({ email: formData.get('email') });
+  if (!result.success) return { error: result.error.issues[0].message };
+  const { email } = result.data;
 
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? '';
+  const apiKey = process.env.BREVO_API_KEY ?? '';
+  const listId = process.env.BREVO_LIST_ID ? Number(process.env.BREVO_LIST_ID) : undefined;
+  console.log(listId);
 
   try {
-    const res = await fetch(`${STRAPI_URL}/api/waitlist-entries`, {
+    const res = await fetch(process.env.BREVO_API_URL ?? 'https://api.brevo.com/v3/contacts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ data: { email } }),
+      headers: {
+        'api-key': apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        ...(listId ? { listIds: [listId] } : {}),
+        updateEnabled: false,
+      }),
       cache: 'no-store',
     });
 
+
     if (!res.ok) {
-      // Strapi returns 400 when unique constraint is violated
-      if (res.status === 400) return { error: 'This email is already on the list.' };
-      return { error: 'Something went wrong. Please try again.' };
+      console.log('Brevo API error:', res.status, await res.text());
+      if (res.status === 400) {
+        const body = await res.json().catch(() => ({}));
+
+        if (body?.code === 'duplicate_parameter') return { error: 'alreadySubscribed' };
+      }
+      return { error: 'serverError' };
     }
 
     return { success: true };
   } catch {
-    return { error: 'Network error. Please try again.' };
+    return { error: 'networkError' };
   }
 }

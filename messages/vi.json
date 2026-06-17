@@ -11,6 +11,13 @@
     "pause": "Tắt nhạc",
     "consentDialogLabel": "Bật nhạc nền"
   },
+  "validation": {
+    "emailRequired": "Vui lòng nhập email.",
+    "emailInvalid": "Email không hợp lệ.",
+    "alreadySubscribed": "Email này đã đăng ký rồi.",
+    "serverError": "Có lỗi xảy ra. Vui lòng thử lại.",
+    "networkError": "Lỗi kết nối. Vui lòng thử lại."
+  },
   "comingSoon": {
     "seoTitle": "Terrene — Sắp Ra Mắt",
     "seoDescription": "Điều gì đó tuyệt vời đang được ươm mầm. Đăng ký để nhận thông báo sớm nhất."

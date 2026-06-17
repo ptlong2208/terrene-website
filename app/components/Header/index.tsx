@@ -16,7 +16,6 @@ import HeaderRight from './HeaderRight';
 
 interface HeaderProps {
   siteName: string;
-  logo?: StrapiMedia;
   ambientAudio?: StrapiMedia;
   navLinks?: NavLink[];
   navShopLink?: NavLink;
@@ -29,7 +28,6 @@ interface HeaderProps {
 
 export default function Header({
   siteName,
-  logo,
   ambientAudio,
   navLinks = [],
   navShopLink,
@@ -155,7 +153,7 @@ export default function Header({
           onMenuToggle={menuState === 'open' ? closeMenu : openMenu}
         />
 
-        <HeaderLogo siteName={siteName} logo={logo} hasBg={hasBg} />
+        <HeaderLogo siteName={siteName} />
 
         <HeaderRight
           navShopLink={navShopLink}
