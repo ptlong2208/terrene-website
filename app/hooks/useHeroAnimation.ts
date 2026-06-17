@@ -101,8 +101,6 @@ export function useHeroAnimation({
     gsap.registerPlugin(ScrollTrigger);
 
     const section = sectionRef.current;
-    const afterHero = section.nextElementSibling ?? section;
-
     const restoreFns: Array<() => void> = [];
     let isActive = true;
     let introTl: gsap.core.Timeline | null = null;
@@ -112,14 +110,14 @@ export function useHeroAnimation({
     if (videoRef.current) {
       videoTween = gsap.fromTo(
         videoRef.current,
-        { yPercent: 7 },
+        { yPercent: 0 },
         {
           yPercent: -8,
           ease: 'none',
           scrollTrigger: {
-            trigger: afterHero,
-            start: 'top bottom',
-            end: 'top top',
+            trigger: section,
+            start: 'top top',
+            end: 'bottom top',
             scrub: true,
           },
         },
