@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useActionState } from 'react';
+import { useEffect, useRef, useState, useActionState, Fragment } from 'react';
 import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import TerreneLogo from '@/app/components/TerreneLogo';
@@ -77,8 +77,13 @@ export default function ComingSoonContent({
 
       {(quote || words.length > 0) && (
         <div data-reveal="" className="flex flex-col items-center">
-          <p className="text-[clamp(26px,2.8vw,44px)] font-light leading-[1.3] tracking-[-0.02em] text-(--green-deep) text-center flex flex-wrap items-baseline justify-center gap-[0.28em]">
-            {quote}&nbsp;
+          <p className="text-[clamp(26px,2.8vw,44px)] font-light leading-[1.3] tracking-[-0.02em] text-(--green-deep) text-center">
+            {quote?.split(', ').map((part, i, arr) => (
+              <Fragment key={i}>
+                {part}{i < arr.length - 1 ? ',' : ' '}
+                {i < arr.length - 1 && <><br className="md:hidden" />{' '}</>}
+              </Fragment>
+            ))}
             {words.length > 0 && (
               <span
                 className="overflow-hidden h-[1.4em] w-[4.8em] inline-block align-bottom"

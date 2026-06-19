@@ -12,7 +12,7 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  redirect(`/${locale}/coming-soon`);
+  redirect('/vi/coming-soon');
 
   const [t, global, homepage] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),
