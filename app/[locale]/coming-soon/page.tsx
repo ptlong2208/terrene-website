@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import ComingSoonContent from '@/app/components/ComingSoonContent';
+import Preloader from '@/app/components/Preloader';
 import { fetchStrapiSingle } from '@/lib/strapi';
 import type { ComingSoonData, GlobalData } from '@/lib/types';
 
@@ -30,18 +31,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ComingSoonPage({ params }: Props) {
   const { locale } = await params;
 
-  const [global, comingSoon] = await Promise.all([
-    fetchStrapiSingle<Pick<GlobalData, 'site_name'>>(
+  const [t, global, comingSoon] = await Promise.all([
+    getTranslations({ locale, namespace: 'preloader' }),
+    fetchStrapiSingle<Pick<GlobalData, 'site_name' | 'loader_quote'>>(
       '/api/global',
-      { 'fields[0]': 'site_name', locale },
+      { 'fields[0]': 'site_name', 'fields[1]': 'loader_quote', locale },
     ),
     fetchComingSoonData(locale).catch(() => null),
   ]);
 
   return (
-    <ComingSoonContent
-      siteName={global.site_name}
-      data={comingSoon}
-    />
+    <>
+      <Preloader siteName={global.site_name} quote={global.loader_quote ?? t('quote')} />
+      <ComingSoonContent siteName={global.site_name} data={comingSoon} />
+    </>
   );
 }

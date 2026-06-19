@@ -22,6 +22,9 @@
     "seoTitle": "Terrene — Sắp Ra Mắt",
     "seoDescription": "Điều gì đó tuyệt vời đang được ươm mầm. Đăng ký để nhận thông báo sớm nhất."
   },
+  "preloader": {
+    "quote": "Đánh chậm thôi — sáng sớm còn đó mà."
+  },
   "notFound": {
     "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
     "backHome": "Về trang chủ"
