@@ -1,0 +1,12 @@
+name: Keep Strapi Alive
+
+on:
+  schedule:
+    - cron: '*/14 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Strapi health
+        run: curl -sf "${{ secrets.STRAPI_URL }}/_health" || true
