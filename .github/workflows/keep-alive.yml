@@ -2,7 +2,7 @@ name: Keep Strapi Alive
 
 on:
   schedule:
-    - cron: '*/14 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   ping:
