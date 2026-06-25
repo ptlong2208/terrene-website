@@ -33,7 +33,7 @@ export default function HeaderRight({
           <span className="hidden md:block">
             <SlotText text={navShopLink.label} />
           </span>
-          <Store size={18} strokeWidth={1.5} className="md:hidden" />
+          <Store size={24} strokeWidth={1.5} className="md:hidden" />
         </Link>
       )}
       <button
@@ -44,7 +44,7 @@ export default function HeaderRight({
         <span className="hidden md:block">
           <SlotText text={cartText} />
         </span>
-        <ShoppingBag size={18} strokeWidth={1.5} className="md:hidden" />
+        <ShoppingBag size={24} strokeWidth={1.5} className="md:hidden" />
       </button>
     </nav>
   );
