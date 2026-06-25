@@ -29,7 +29,7 @@ export default async function Home({
   return (
     <>
       <Preloader siteName={global.site_name} quote={global.loader_quote ?? t('quote')} />
-      <main className="bg-cream text-dark font-sans overflow-x-clip">
+      <main className="bg-cream text-ink-soft font-sans overflow-x-clip">
         <Header
           siteName={global.site_name}
           ambientAudio={global.ambient_audio ?? undefined}
