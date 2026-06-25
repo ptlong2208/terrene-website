@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import MenuOverlay, { type MenuState } from '@/app/components/MenuOverlay';
 import MusicConsentBanner from '@/app/components/MusicConsentBanner';
 import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import HeaderLeft from './HeaderLeft';
 import HeaderLogo from './HeaderLogo';
 import HeaderRight from './HeaderRight';
@@ -42,6 +43,7 @@ export default function Header({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [hasBg, setHasBg] = useState(false);
   const [showConsent, setShowConsent] = useState(false);
+  const preloaderDone = usePreloaderDone();
 
   const headerRef = useRef<HTMLElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -104,10 +106,10 @@ export default function Header({
   const handleMenuClosed = useCallback(() => setMenuState('closed'), []);
 
   useEffect(() => {
-    if (!audioSrc || !musicConsentText || !musicConsentAccept || !musicConsentDecline) return;
+    if (!preloaderDone || !audioSrc || !musicConsentText || !musicConsentAccept || !musicConsentDecline) return;
     const timer = setTimeout(() => setShowConsent(true), 2000);
     return () => clearTimeout(timer);
-  }, [audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
+  }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
 
   const playMusic = async () => {
     const audio = audioRef.current;

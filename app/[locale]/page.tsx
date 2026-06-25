@@ -4,7 +4,6 @@ import type { GlobalData, HomepageData } from '@/lib/types';
 import Header from '@/app/components/Header';
 import HeroSection from '@/app/components/HeroSection';
 import Preloader from '@/app/components/Preloader';
-import { redirect } from 'next/navigation';
 
 export default async function Home({
   params,
@@ -12,7 +11,6 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  redirect('/vi/coming-soon');
 
   const [t, global, homepage] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),

@@ -3,6 +3,7 @@
 import { type RefObject, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 
 // Splits an element's text into visual lines by measuring offsetTop of each
 // word, grouping consecutive words within 4px (matches reference tolerance).
@@ -92,8 +93,10 @@ export function useHeroAnimation({
   descRef,
   videoRef,
 }: HeroAnimationRefs): void {
+  const preloaderDone = usePreloaderDone();
+
   useEffect(() => {
-    if (!sectionRef.current) return;
+    if (!preloaderDone || !sectionRef.current) return;
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) return;
@@ -127,6 +130,11 @@ export function useHeroAnimation({
     const runAnimation = () => {
       const titleLines = titleRef.current ? splitIntoLines(titleRef.current, restoreFns) : [];
       const descLines = descRef.current ? splitIntoLines(descRef.current, restoreFns) : [];
+
+      // Make elements visible — lines are already clipped to yPercent 110 so
+      // nothing shows until the timeline plays
+      if (titleRef.current) gsap.set(titleRef.current, { opacity: 1 });
+      if (descRef.current) gsap.set(descRef.current, { opacity: 1 });
 
       if (titleLines.length) gsap.set(titleLines, { yPercent: 110 });
       if (descLines.length) gsap.set(descLines, { yPercent: 110 });
@@ -167,5 +175,5 @@ export function useHeroAnimation({
       videoTween?.kill();
       restoreFns.forEach((fn) => fn());
     };
-  }, [sectionRef, titleRef, descRef, videoRef]);
+  }, [sectionRef, titleRef, descRef, videoRef, preloaderDone]);
 }

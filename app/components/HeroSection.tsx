@@ -58,7 +58,7 @@ export default function HeroSection({
         {title ? (
           <h1
             ref={titleRef}
-            className="max-w-[16ch] text-balance break-keep hyphens-none font-[380] tracking-[-0.02em] text-[2.25rem] sm:text-[2.875rem] lg:text-[3.5rem] xl:text-[4.25rem] leading-[1.1] lg:leading-[1.08]"
+            className="opacity-0 max-w-[16ch] text-balance break-keep hyphens-none font-[380] tracking-[-0.02em] text-[2.25rem] sm:text-[2.875rem] lg:text-[3.5rem] xl:text-[4.25rem] leading-[1.1] lg:leading-[1.08]"
           >
             {title}
           </h1>
@@ -69,7 +69,8 @@ export default function HeroSection({
         {description ? (
           <p
             ref={descRef}
-            className="max-w-152 lg:max-w-[46ch] lg:justify-self-end text-pretty text-[0.875rem] sm:text-[0.9375rem] lg:text-[1rem] leading-[1.58] lg:leading-[1.62] text-cream/86"
+            style={{ opacity: 0 }}
+            className="opacity-0 max-w-152 lg:max-w-[46ch] lg:justify-self-end text-pretty text-[0.875rem] sm:text-[0.9375rem] lg:text-[1rem] leading-[1.58] lg:leading-[1.62] text-cream/86"
           >
             {description}
           </p>
