@@ -24,6 +24,11 @@
   --brown: #6B4E37;
   --green-deep: #1D4025;
   --gutter: clamp(16px, 2vw, 32px);
+
+  /* Ink scale — matches reference --ink / --ink-soft / --ink-faint */
+  --color-ink:       #6B4E37;
+  --color-ink-soft:  color-mix(in srgb, #6B4E37 55%, transparent);
+  --color-ink-faint: color-mix(in srgb, #6B4E37 28%, transparent);
 }
 
 /* ─── Layout utilities ─────────────────────────────────────────────────── */
@@ -58,10 +63,6 @@ a {
   color: inherit;
   text-decoration: none;
   transition: opacity 0.3s ease;
-}
-
-a:hover {
-  opacity: 0.5;
 }
 
 ul {

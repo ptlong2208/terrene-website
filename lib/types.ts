@@ -116,6 +116,12 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface SectionHeaderData {
+  id: number;
+  kicker: string | null;
+  title: string | null;
+}
+
 export interface HomepageData {
   id: number;
   documentId: string;
@@ -123,6 +129,11 @@ export interface HomepageData {
   hero_description: string | null;
   hero_background_video: StrapiMedia | null;
   hero_video_poster: StrapiMedia | null;
+  story_header: SectionHeaderData | null;
+  story_image: StrapiMedia | null;
+  story_side_label: string | null;
+  story_body: string | null;
+  story_cta: NavLink | null;
 }
 
 // ---------------------------------------------------------------------------

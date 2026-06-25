@@ -3,6 +3,7 @@ import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
 import type { GlobalData, HomepageData } from '@/lib/types';
 import Header from '@/app/components/Header';
 import HeroSection from '@/app/components/HeroSection';
+import StorySection from '@/app/components/StorySection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -18,6 +19,9 @@ export default async function Home({
     fetchStrapiSingle<HomepageData>('/api/homepage', {
       'populate[hero_background_video]': 'true',
       'populate[hero_video_poster]': 'true',
+      'populate[story_header]': 'true',
+      'populate[story_image]': 'true',
+      'populate[story_cta]': 'true',
       locale,
     }),
   ]);
@@ -44,6 +48,15 @@ export default async function Home({
           posterUrl={strapiMediaUrl(homepage.hero_video_poster?.url)}
           posterAlt={homepage.hero_title ?? undefined}
         />
+        <div className="relative z-1 bg-cream">
+          <StorySection
+            header={homepage.story_header}
+            image={homepage.story_image}
+            sideLabel={homepage.story_side_label}
+            body={homepage.story_body}
+            cta={homepage.story_cta}
+          />
+        </div>
       </main>
     </>
   );
