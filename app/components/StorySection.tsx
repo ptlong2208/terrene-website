@@ -86,6 +86,8 @@ export default function StorySection({
       if (!isActive) return;
       paragraphs.forEach((p) => {
         const lines = splitIntoLines(p, restoreFns);
+        // Lines are wrapped in overflow:hidden — safe to restore opacity
+        gsap.set(p, { opacity: 1 });
         if (!lines.length) return;
         gsap.set(lines, { yPercent: 110 });
         tweens.push(
@@ -113,6 +115,7 @@ export default function StorySection({
         t.kill();
       });
       restoreFns.forEach((fn) => fn());
+      if (paragraphs.length) gsap.set(paragraphs, { clearProps: 'opacity' });
     };
   }, [preloaderDone]);
 
@@ -123,7 +126,7 @@ export default function StorySection({
     >
       <div
         ref={imgWrapRef}
-        className="relative w-[min(38vw,480px)] max-md:w-[88vw] aspect-5/4 mx-auto mb-[clamp(32px,4vh,52px)] overflow-hidden"
+        className="relative w-[min(38vw,480px)] max-md:w-[88vw] aspect-5/4 mx-auto mb-[clamp(32px,4vh,52px)] overflow-hidden opacity-0"
       >
         {image ? (
           <Image
@@ -145,7 +148,7 @@ export default function StorySection({
             <TerreneLogo className="size-3.75 shrink-0" />
             <span
               ref={sideLabelTextRef}
-              className="text-[11px] font-medium tracking-[0.14em] uppercase"
+              className="text-[11px] font-medium tracking-[0.14em] uppercase opacity-0"
             >
               {sideLabel}
             </span>
@@ -156,7 +159,7 @@ export default function StorySection({
           {body?.split('\n\n').map((para, i) => (
             <p
               key={i}
-              className={`text-[clamp(14px,1.15vw,17px)] font-normal leading-[1.72] text-ink-soft${i > 0 ? ' mt-[clamp(16px,2vh,28px)]' : ''}`}
+              className={`text-[clamp(14px,1.15vw,17px)] font-normal leading-[1.72] text-ink-soft opacity-0${i > 0 ? ' mt-[clamp(16px,2vh,28px)]' : ''}`}
             >
               {para}
             </p>

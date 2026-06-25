@@ -38,35 +38,37 @@
 }
 
 /* ─── Base styles ───────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-body {
-  background-color: var(--bg-cream);
-  color: var(--text-dark);
-  font-family: var(--font-sans);
-  letter-spacing: -0.02em;
-  overflow-x: clip;
-}
+  body {
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
+    overflow-x: clip;
+  }
 
-body.is-locked { overflow: hidden; }
+  body.is-locked { overflow: hidden; }
 
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: opacity 0.3s ease;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 }

@@ -37,6 +37,8 @@ export function useLineReveal<T extends HTMLElement>(
     const run = () => {
       if (!isActive || !el) return;
       const lines = splitIntoLines(el, restoreFns);
+      // Lines are wrapped in overflow:hidden — restoring opacity shows nothing until yPercent animates
+      gsap.set(el, { opacity: 1 });
       if (!lines.length) return;
       gsap.set(lines, { yPercent: 110 });
       tween = gsap.to(lines, {
@@ -59,6 +61,7 @@ export function useLineReveal<T extends HTMLElement>(
       tween?.scrollTrigger?.kill();
       tween?.kill();
       restoreFns.forEach((fn) => fn());
+      gsap.set(el, { clearProps: 'opacity' });
     };
   }, [ref, preloaderDone, start, duration, stagger, ease]);
 }

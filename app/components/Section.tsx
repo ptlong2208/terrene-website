@@ -46,7 +46,7 @@ export default function Section({
               <TerreneLogo className="size-3.75 shrink-0" />
               <span
                 ref={kickerTextRef}
-                className="text-[11px] font-medium tracking-[0.14em] uppercase"
+                className="text-[11px] font-medium tracking-[0.14em] uppercase opacity-0"
               >
                 {kicker}
               </span>
@@ -55,7 +55,7 @@ export default function Section({
           {title && (
             <h2
               ref={titleRef}
-              className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.12] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep)${titleClassName ? ` ${titleClassName}` : ''}`}
+              className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.12] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep) opacity-0${titleClassName ? ` ${titleClassName}` : ''}`}
             >
               {title}
             </h2>
