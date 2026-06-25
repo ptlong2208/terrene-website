@@ -27,8 +27,13 @@ export default function SmoothScroll() {
     gsap.ticker.add(onTick);
     gsap.ticker.lagSmoothing(0);
 
+    lenis.stop();
+    const onPreloaderDone = () => lenis.start();
+    window.addEventListener('preloader:complete', onPreloaderDone, { once: true });
+
     return () => {
       gsap.ticker.remove(onTick);
+      window.removeEventListener('preloader:complete', onPreloaderDone);
       delete (window as unknown as Record<string, unknown>).lenis;
       lenis.destroy();
     };

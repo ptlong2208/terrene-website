@@ -24,6 +24,8 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
     const count = countRef.current;
     if (!loader || !mark || !brandLine || !quoteLine || !count) return;
 
+    document.body.classList.add('is-locked');
+
     gsap.set(mark, { scale: 0.7, rotation: -90 });
     gsap.set(brandLine, { yPercent: 110, visibility: 'visible' });
     gsap.set(quoteLine, { yPercent: 110, visibility: 'visible' });
@@ -32,6 +34,7 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
 
     const tl = gsap.timeline({
       onComplete: () => {
+        document.body.classList.remove('is-locked');
         gsap.set(loader, { display: 'none' });
         window.dispatchEvent(new CustomEvent('preloader:complete'));
       },
@@ -52,7 +55,10 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
       .to(mark, { opacity: 0, y: -24, duration: 0.5, ease: 'power2.in' }, '<')
       .to(loader, { yPercent: -100, duration: 1, ease: 'expo.inOut' }, '-=0.25');
 
-    return () => { tl.kill(); };
+    return () => {
+      tl.kill();
+      document.body.classList.remove('is-locked');
+    };
   }, []);
 
   return (
