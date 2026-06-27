@@ -9,7 +9,6 @@ import CtaLink from '@/app/components/CtaLink';
 import TerreneLogo from '@/app/components/TerreneLogo';
 import { useLineReveal } from '@/app/hooks/useLineReveal';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { splitIntoLines } from '@/app/utils/splitLines';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, SectionHeaderData, StrapiMedia } from '@/lib/types';
 
@@ -34,8 +33,7 @@ export default function StorySection({
   const paragraphsRef = useRef<HTMLDivElement>(null);
   const preloaderDone = usePreloaderDone();
 
-  // Side label text: body-copy line reveal
-  useLineReveal(sideLabelTextRef, { start: 'top 86%', duration: 0.9, stagger: 0.055 });
+  useLineReveal(sideLabelTextRef, { start: 'top 86%', duration: 0.9 });
 
   useEffect(() => {
     if (!preloaderDone) return;
@@ -49,7 +47,6 @@ export default function StorySection({
       : [];
 
     let isActive = true;
-    const restoreFns: Array<() => void> = [];
     const tweens: gsap.core.Tween[] = [];
 
     // Image clip-path reveal
@@ -81,31 +78,23 @@ export default function StorySection({
       }
     }
 
-    // Paragraph per-line reveal (waits for font metrics)
-    const runParaAnimation = () => {
-      if (!isActive) return;
-      paragraphs.forEach((p) => {
-        const lines = splitIntoLines(p, restoreFns);
-        // Lines are wrapped in overflow:hidden — safe to restore opacity
-        gsap.set(p, { opacity: 1 });
-        if (!lines.length) return;
-        gsap.set(lines, { yPercent: 110 });
-        tweens.push(
-          gsap.to(lines, {
-            yPercent: 0,
-            duration: 0.9,
-            stagger: 0.055,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: p, start: 'top 86%', once: true },
-          }),
-        );
-      });
-    };
-
-    if (document.fonts?.ready) {
-      void document.fonts.ready.then(runParaAnimation);
-    } else {
-      runParaAnimation();
+    // Per-paragraph fade-up with stagger
+    if (paragraphs.length && isActive) {
+      gsap.set(paragraphs, { y: 24, opacity: 0 });
+      tweens.push(
+        gsap.to(paragraphs, {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: paragraphsRef.current,
+            start: 'top 86%',
+            once: true,
+          },
+        }),
+      );
     }
 
     return () => {
@@ -114,8 +103,7 @@ export default function StorySection({
         t.scrollTrigger?.kill();
         t.kill();
       });
-      restoreFns.forEach((fn) => fn());
-      if (paragraphs.length) gsap.set(paragraphs, { clearProps: 'opacity' });
+      if (paragraphs.length) gsap.set(paragraphs, { clearProps: 'opacity,y' });
     };
   }, [preloaderDone]);
 

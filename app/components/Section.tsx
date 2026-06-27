@@ -28,8 +28,8 @@ export default function Section({
   const kickerTextRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  useLineReveal(kickerTextRef, { start: 'top 86%', duration: 0.9, stagger: 0.055 });
-  useLineReveal(titleRef, { start: 'top 82%', duration: 1.1, stagger: 0.09 });
+  useLineReveal(kickerTextRef, { start: 'top 86%', duration: 0.9 });
+  useLineReveal(titleRef, { start: 'top 82%', duration: 1.1 });
 
   return (
     <section
