@@ -55,7 +55,7 @@ export default function Section({
           {title && (
             <h2
               ref={titleRef}
-              className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.12] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep) opacity-0${titleClassName ? ` ${titleClassName}` : ''}`}
+              className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.1] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep) opacity-0${titleClassName ? ` ${titleClassName}` : ''}`}
             >
               {title}
             </h2>

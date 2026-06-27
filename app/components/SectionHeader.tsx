@@ -27,7 +27,7 @@ export default function SectionHeader({
       )}
       {title && (
         <h2
-          className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.12] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep)${titleClassName ? ` ${titleClassName}` : ''}`}
+          className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.1] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep)${titleClassName ? ` ${titleClassName}` : ''}`}
         >
           {title}
         </h2>

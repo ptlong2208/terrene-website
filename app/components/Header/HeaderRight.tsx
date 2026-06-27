@@ -38,7 +38,7 @@ export default function HeaderRight({
       )}
       <button
         type="button"
-        className="group inline-flex items-center whitespace-nowrap tabular-nums text-[18px] md:text-base font-normal leading-none bg-transparent border-0 cursor-pointer p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92]"
+        className="group inline-flex items-center whitespace-nowrap text-[18px] md:text-base font-normal leading-none bg-transparent border-0 cursor-pointer p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92]"
         aria-label={cartText}
       >
         <span className="hidden md:block">

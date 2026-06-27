@@ -147,7 +147,7 @@ export default function StorySection({
           {body?.split('\n\n').map((para, i) => (
             <p
               key={i}
-              className={`text-[clamp(14px,1.15vw,17px)] font-normal leading-[1.72] text-ink-soft opacity-0${i > 0 ? ' mt-[clamp(16px,2vh,28px)]' : ''}`}
+              className={`text-[clamp(14px,1.15vw,17px)] font-normal leading-normal text-ink-soft opacity-0${i > 0 ? ' mt-[clamp(16px,2vh,28px)]' : ''}`}
             >
               {para}
             </p>
