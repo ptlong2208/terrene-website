@@ -134,6 +134,7 @@ export interface HomepageData {
   story_side_label: string | null;
   story_body: string | null;
   story_cta: NavLink | null;
+  shop_header: SectionHeaderData | null;
 }
 
 // ---------------------------------------------------------------------------

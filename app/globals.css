@@ -37,6 +37,11 @@
   padding-right: var(--gutter);
 }
 
+@utility -mx-gutter {
+  margin-left: calc(var(--gutter) * -1);
+  margin-right: calc(var(--gutter) * -1);
+}
+
 /* ─── Base styles ───────────────────────────────────────────────────────── */
 @layer base {
   *,

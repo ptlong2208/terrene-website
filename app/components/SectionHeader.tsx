@@ -1,4 +1,8 @@
+'use client';
+
+import { useRef } from 'react';
 import TerreneLogo from '@/app/components/TerreneLogo';
+import { useLineReveal } from '@/app/hooks/useLineReveal';
 
 interface SectionHeaderProps {
   kicker?: string | null;
@@ -13,21 +17,31 @@ export default function SectionHeader({
   kickerClassName,
   titleClassName,
 }: SectionHeaderProps) {
+  const kickerRef = useRef<HTMLSpanElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useLineReveal(kickerRef, { start: 'top 86%', duration: 0.9 });
+  useLineReveal(titleRef, { start: 'top 82%', duration: 1.1 });
+
   if (!kicker && !title) return null;
 
   return (
-    <div>
+    <div className="flex flex-col gap-[clamp(12px,1.4vw,20px)]">
       {kicker && (
         <div className={`flex items-center gap-2.5 text-ink-soft${kickerClassName ? ` ${kickerClassName}` : ''}`}>
           <TerreneLogo className="size-3.75 shrink-0" />
-          <span className="text-[11px] font-medium tracking-[0.14em] uppercase">
+          <span
+            ref={kickerRef}
+            className="text-[11px] font-medium tracking-[0.14em] uppercase opacity-0"
+          >
             {kicker}
           </span>
         </div>
       )}
       {title && (
         <h2
-          className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.1] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep)${titleClassName ? ` ${titleClassName}` : ''}`}
+          ref={titleRef}
+          className={`font-[380] text-[clamp(28px,3.2vw,54px)] leading-[1.1] tracking-[-0.02em] max-w-[15em] text-balance text-(--green-deep) opacity-0${titleClassName ? ` ${titleClassName}` : ''}`}
         >
           {title}
         </h2>

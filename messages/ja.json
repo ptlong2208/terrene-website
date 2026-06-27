@@ -25,6 +25,10 @@
   "preloader": {
     "quote": "ゆっくりと点てて——朝はまだ待っている。"
   },
+  "shop": {
+    "viewProduct": "詳細を見る",
+    "viewAll": "すべての商品を見る"
+  },
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"

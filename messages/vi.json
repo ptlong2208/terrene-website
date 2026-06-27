@@ -25,6 +25,10 @@
   "preloader": {
     "quote": "Đánh chậm thôi — sáng sớm còn đó mà."
   },
+  "shop": {
+    "viewProduct": "Xem chi tiết",
+    "viewAll": "Xem tất cả sản phẩm"
+  },
   "notFound": {
     "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
     "backHome": "Về trang chủ"

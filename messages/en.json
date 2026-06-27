@@ -25,6 +25,10 @@
   "preloader": {
     "quote": "Whisk slowly — the morning can wait."
   },
+  "shop": {
+    "viewProduct": "View details",
+    "viewAll": "View all products"
+  },
   "notFound": {
     "message": "This page has wandered off the path. Let's get you back to solid ground.",
     "backHome": "Back to home"
