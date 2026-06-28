@@ -117,6 +117,12 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface BenefitItem {
+  id: number;
+  title: string;
+  description: string | null;
+}
+
 export interface SectionHeaderData {
   id: number;
   kicker: string | null;
@@ -137,6 +143,8 @@ export interface HomepageData {
   story_cta: NavLink | null;
   shop_header: SectionHeaderData | null;
   shop_products: ShopProduct[];
+  benefits_header: SectionHeaderData | null;
+  benefits_items: BenefitItem[];
 }
 
 // ---------------------------------------------------------------------------

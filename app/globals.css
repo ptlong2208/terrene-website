@@ -29,6 +29,7 @@
   --color-ink:       #6B4E37;
   --color-ink-soft:  color-mix(in srgb, #6B4E37 55%, transparent);
   --color-ink-faint: color-mix(in srgb, #6B4E37 28%, transparent);
+  --color-line:      color-mix(in srgb, var(--brown) 14%, transparent);
 }
 
 /* ─── Layout utilities ─────────────────────────────────────────────────── */

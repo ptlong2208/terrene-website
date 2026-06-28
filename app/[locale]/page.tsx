@@ -5,6 +5,7 @@ import Header from '@/app/components/Header';
 import HeroSection from '@/app/components/HeroSection';
 import StorySection from '@/app/components/StorySection';
 import FeaturedProductsSection from '@/app/components/FeaturedProductsSection';
+import BenefitsSection from '@/app/components/BenefitsSection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -27,6 +28,8 @@ export default async function Home({
       'populate[shop_products][populate][image]': 'true',
       'populate[shop_products][populate][tags]': 'true',
       'populate[shop_products][populate][category]': 'true',
+      'populate[benefits_header]': 'true',
+      'populate[benefits_items]': 'true',
       locale,
     }),
   ]);
@@ -64,6 +67,10 @@ export default async function Home({
           <FeaturedProductsSection
             header={homepage.shop_header}
             products={homepage.shop_products.slice(0, 6)}
+          />
+          <BenefitsSection
+            header={homepage.benefits_header}
+            items={homepage.benefits_items}
           />
         </div>
       </main>
