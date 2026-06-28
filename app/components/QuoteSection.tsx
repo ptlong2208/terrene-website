@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from 'react';
 import Section from '@/app/components/Section';
-import TerreneLogo from '@/app/components/TerreneLogo';
+import TerreneElement from '@/app/components/TerreneElement';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -48,7 +48,7 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
     <Section ref={sectionRef} className="items-center text-center max-md:min-h-0 max-md:py-20">
       <div className="max-w-185 mx-auto">
         <div ref={iconRef} className="mb-[clamp(28px,4vh,44px)] opacity-0">
-          <TerreneLogo className="size-9.5 mx-auto" />
+          <TerreneElement className="size-9.5 mx-auto" />
         </div>
 
         {quote && (

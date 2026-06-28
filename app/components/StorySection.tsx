@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Section from '@/app/components/Section';
 import CtaLink from '@/app/components/CtaLink';
-import TerreneLogo from '@/app/components/TerreneLogo';
+import TerreneElement from '@/app/components/TerreneElement';
 import { useLineReveal } from '@/app/hooks/useLineReveal';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import { strapiMediaUrl } from '@/lib/strapi';
@@ -134,7 +134,7 @@ export default function StorySection({
       <div className="w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw] mx-auto">
         {sideLabel && (
           <div className="flex items-center gap-2.5 text-ink-faint mb-4.5">
-            <TerreneLogo className="size-3.75 shrink-0" />
+            <TerreneElement className="size-3.75 shrink-0" />
             <span
               ref={sideLabelTextRef}
               className="text-[11px] font-medium tracking-[0.14em] uppercase opacity-0"
