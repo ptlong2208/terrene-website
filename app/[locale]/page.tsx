@@ -11,6 +11,8 @@ import QuoteSection from '@/app/components/QuoteSection';
 import PartnersSection from '@/app/components/PartnersSection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
 import JournalSection from '@/app/components/JournalSection';
+import CtaSection from '@/app/components/CtaSection';
+import Footer from '@/app/components/Footer';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -45,6 +47,8 @@ export default async function Home({
       'populate[journal_header]': 'true',
       'populate[journal_view_all]': 'true',
       'populate[journal_posts][populate][cover_image]': 'true',
+      'populate[cta_header]': 'true',
+      'populate[cta_link]': 'true',
       locale,
     }),
   ]);
@@ -109,6 +113,11 @@ export default async function Home({
             viewAll={homepage.journal_view_all}
             posts={homepage.journal_posts}
           />
+          <CtaSection
+            header={homepage.cta_header}
+            link={homepage.cta_link}
+          />
+          <Footer />
         </div>
       </main>
     </>

@@ -190,6 +190,8 @@ export interface HomepageData {
   journal_header: SectionHeaderData | null;
   journal_view_all: NavLink | null;
   journal_posts: JournalPost[];
+  cta_header: SectionHeaderData | null;
+  cta_link: NavLink | null;
 }
 
 // ---------------------------------------------------------------------------
