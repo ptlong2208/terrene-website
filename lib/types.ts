@@ -117,6 +117,13 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface ProcessStep {
+  id: number;
+  name: string;
+  description: string | null;
+  image: StrapiMedia | null;
+}
+
 export interface BenefitItem {
   id: number;
   title: string;
@@ -145,6 +152,11 @@ export interface HomepageData {
   shop_products: ShopProduct[];
   benefits_header: SectionHeaderData | null;
   benefits_items: BenefitItem[];
+  process_header: SectionHeaderData | null;
+  process_steps: ProcessStep[];
+  process_cta: NavLink | null;
+  quote_text: string | null;
+  quote_attribution: string | null;
 }
 
 // ---------------------------------------------------------------------------

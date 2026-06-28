@@ -6,6 +6,8 @@ import HeroSection from '@/app/components/HeroSection';
 import StorySection from '@/app/components/StorySection';
 import FeaturedProductsSection from '@/app/components/FeaturedProductsSection';
 import BenefitsSection from '@/app/components/BenefitsSection';
+import ProcessSection from '@/app/components/ProcessSection';
+import QuoteSection from '@/app/components/QuoteSection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -30,6 +32,9 @@ export default async function Home({
       'populate[shop_products][populate][category]': 'true',
       'populate[benefits_header]': 'true',
       'populate[benefits_items]': 'true',
+      'populate[process_header]': 'true',
+      'populate[process_steps][populate][image]': 'true',
+      'populate[process_cta]': 'true',
       locale,
     }),
   ]);
@@ -71,6 +76,15 @@ export default async function Home({
           <BenefitsSection
             header={homepage.benefits_header}
             items={homepage.benefits_items}
+          />
+          <ProcessSection
+            header={homepage.process_header}
+            steps={homepage.process_steps}
+            cta={homepage.process_cta}
+          />
+          <QuoteSection
+            quote={homepage.quote_text}
+            attribution={homepage.quote_attribution}
           />
         </div>
       </main>

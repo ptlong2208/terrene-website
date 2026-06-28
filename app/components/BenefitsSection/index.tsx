@@ -20,13 +20,15 @@ export default function BenefitsSection({ header, items = [] }: BenefitsSectionP
   useEffect(() => {
     if (!preloaderDone || !gridRef.current) return;
     gsap.registerPlugin(ScrollTrigger);
-    const cards = gridRef.current.querySelectorAll('article');
+    const grid = gridRef.current;
+    const cards = grid.querySelectorAll('article');
     gsap.set(cards, { y: 20, opacity: 0 });
     const tween = gsap.to(cards, {
       y: 0, opacity: 1, duration: 0.85, stagger: 0.12, ease: 'power3.out',
-      scrollTrigger: { trigger: gridRef.current, start: 'top 80%', once: true },
+      onStart: () => gsap.set(grid, { opacity: 1 }),
+      scrollTrigger: { trigger: grid, start: 'top 80%', once: true },
     });
-    return () => { tween.scrollTrigger?.kill(); tween.kill(); gsap.set(cards, { clearProps: 'opacity,y' }); };
+    return () => { tween.scrollTrigger?.kill(); tween.kill(); gsap.set([grid, ...Array.from(cards)], { clearProps: 'all' }); };
   }, [preloaderDone]);
 
   if (!items.length) return null;
@@ -39,7 +41,7 @@ export default function BenefitsSection({ header, items = [] }: BenefitsSectionP
     >
       <div
         ref={gridRef}
-        className="grid grid-cols-4 gap-[clamp(24px,3vw,48px)] max-[860px]:grid-cols-2 max-[560px]:grid-cols-1"
+        className="grid grid-cols-4 gap-[clamp(24px,3vw,48px)] max-[860px]:grid-cols-2 max-[560px]:grid-cols-1 opacity-0"
       >
         {items.map((item, i) => (
           <BenefitCard key={item.id} item={item} index={i} />
