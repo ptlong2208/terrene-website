@@ -140,7 +140,6 @@ export interface PartnerItem {
   name: string;
   description: string | null;
   url: string | null;
-  image: StrapiMedia | null;
 }
 
 export interface ProcessStep {

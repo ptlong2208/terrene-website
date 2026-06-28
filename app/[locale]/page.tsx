@@ -41,7 +41,7 @@ export default async function Home({
       'populate[process_steps][populate][image]': 'true',
       'populate[process_cta]': 'true',
       'populate[partners_header]': 'true',
-      'populate[partners_items][populate][image]': 'true',
+      'populate[partners_items]': 'true',
       'populate[testimonials_header]': 'true',
       'populate[testimonials_items][populate][image]': 'true',
       'populate[journal_header]': 'true',
