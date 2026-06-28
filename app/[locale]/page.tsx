@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
-import { fetchStrapiSingle, fetchStrapiCollection, strapiMediaUrl } from '@/lib/strapi';
-import type { GlobalData, HomepageData, ShopProduct } from '@/lib/types';
+import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
+import type { GlobalData, HomepageData } from '@/lib/types';
 import Header from '@/app/components/Header';
 import HeroSection from '@/app/components/HeroSection';
 import StorySection from '@/app/components/StorySection';
@@ -14,7 +14,7 @@ export default async function Home({
 }) {
   const { locale } = await params;
 
-  const [t, global, homepage, products] = await Promise.all([
+  const [t, global, homepage] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),
     fetchStrapiSingle<GlobalData>('/api/global', { populate: '*', locale }),
     fetchStrapiSingle<HomepageData>('/api/homepage', {
@@ -24,12 +24,9 @@ export default async function Home({
       'populate[story_image]': 'true',
       'populate[story_cta]': 'true',
       'populate[shop_header]': 'true',
-      locale,
-    }),
-    fetchStrapiCollection<ShopProduct>('/api/shop-products', {
-      'populate[image]': 'true',
-      'populate[category]': 'true',
-      'populate[tags]': 'true',
+      'populate[shop_products][populate][image]': 'true',
+      'populate[shop_products][populate][tags]': 'true',
+      'populate[shop_products][populate][category]': 'true',
       locale,
     }),
   ]);
@@ -66,7 +63,7 @@ export default async function Home({
           />
           <FeaturedProductsSection
             header={homepage.shop_header}
-            products={products}
+            products={homepage.shop_products.slice(0, 6)}
           />
         </div>
       </main>

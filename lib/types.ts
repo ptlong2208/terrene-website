@@ -107,6 +107,7 @@ export interface ShopProduct {
   documentId: string;
   createdAt: string;
   title: string;
+  slug: string;
   category: ShopCategory | null;
   description: string | null;
   price: number;
@@ -135,6 +136,7 @@ export interface HomepageData {
   story_body: string | null;
   story_cta: NavLink | null;
   shop_header: SectionHeaderData | null;
+  shop_products: ShopProduct[];
 }
 
 // ---------------------------------------------------------------------------

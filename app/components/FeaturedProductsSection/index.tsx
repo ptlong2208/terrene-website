@@ -32,13 +32,13 @@ export default function FeaturedProductsSection({
       <div className="-mx-gutter overflow-hidden group/marquee">
         <div className={`flex w-max motion-reduce:animate-none group-hover/marquee:[animation-play-state:paused] ${styles.track}`}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} href="/" viewProductLabel={t('viewProduct')} />
+            <ProductCard key={product.id} product={product} href={`/shop/${product.slug}`} viewProductLabel={t('viewProduct')} />
           ))}
           {products.map((product) => (
             <ProductCard
               key={`dup-${product.id}`}
               product={product}
-              href="/"
+              href={`/shop/${product.slug}`}
               tabIndex={-1}
               ariaHidden={true}
               viewProductLabel={t('viewProduct')}
