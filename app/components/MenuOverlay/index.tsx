@@ -139,8 +139,8 @@ export default function MenuOverlay({
       <div ref={contentRef} className="relative z-4 h-full flex flex-col overflow-hidden">
 
         <div className="flex items-center justify-center px-gutter h-16 shrink-0">
-          <button type="button" className={styles.closeBtn} onClick={onClose}>
-            {t('overlayClose')}
+          <button type="button" className={`${styles.closeBtn} group`} onClick={onClose}>
+            <SlotText text={t('overlayClose')} />
           </button>
         </div>
 

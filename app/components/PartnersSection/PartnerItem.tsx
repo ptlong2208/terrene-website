@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
+import SlotText from '@/app/components/SlotText';
 import type { PartnerItem as PartnerItemType } from '@/lib/types';
 
 interface PartnerItemProps {
@@ -35,10 +36,11 @@ export default function PartnerItem({ item, visitLabel }: PartnerItemProps) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] font-semibold tracking-[0.08em] uppercase whitespace-nowrap text-cream group-hover/partner:text-(--green-deep) hover:opacity-55 transition-opacity duration-250"
+              className="group inline-flex items-center text-[11px] font-semibold tracking-[0.08em] uppercase whitespace-nowrap text-cream group-hover/partner:text-(--green-deep) transition-colors duration-220"
               onClick={(e) => e.stopPropagation()}
             >
-              {visitLabel}
+              <SlotText text={visitLabel} />
+              <SlotText text="↗" className="ml-1.5" />
             </Link>
           )}
 
