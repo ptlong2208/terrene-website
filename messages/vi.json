@@ -32,6 +32,10 @@
   "partners": {
     "visit": "Ghé thăm ↗"
   },
+  "testimonials": {
+    "prev": "Đánh giá trước",
+    "next": "Đánh giá tiếp theo"
+  },
   "notFound": {
     "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
     "backHome": "Về trang chủ"

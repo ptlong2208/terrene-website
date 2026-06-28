@@ -32,6 +32,10 @@
   "partners": {
     "visit": "訪問する ↗"
   },
+  "testimonials": {
+    "prev": "前のレビュー",
+    "next": "次のレビュー"
+  },
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"

@@ -117,6 +117,14 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface TestimonialItem {
+  id: number;
+  quote: string;
+  name: string;
+  role: string | null;
+  image: StrapiMedia | null;
+}
+
 export interface PartnerItem {
   id: number;
   name: string;
@@ -167,6 +175,8 @@ export interface HomepageData {
   quote_attribution: string | null;
   partners_header: SectionHeaderData | null;
   partners_items: PartnerItem[];
+  testimonials_header: SectionHeaderData | null;
+  testimonials_items: TestimonialItem[];
 }
 
 // ---------------------------------------------------------------------------

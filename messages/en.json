@@ -32,6 +32,10 @@
   "partners": {
     "visit": "Visit ↗"
   },
+  "testimonials": {
+    "prev": "Previous review",
+    "next": "Next review"
+  },
   "notFound": {
     "message": "This page has wandered off the path. Let's get you back to solid ground.",
     "backHome": "Back to home"

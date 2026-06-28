@@ -9,6 +9,7 @@ import BenefitsSection from '@/app/components/BenefitsSection';
 import ProcessSection from '@/app/components/ProcessSection';
 import QuoteSection from '@/app/components/QuoteSection';
 import PartnersSection from '@/app/components/PartnersSection';
+import TestimonialsSection from '@/app/components/TestimonialsSection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -38,6 +39,8 @@ export default async function Home({
       'populate[process_cta]': 'true',
       'populate[partners_header]': 'true',
       'populate[partners_items][populate][image]': 'true',
+      'populate[testimonials_header]': 'true',
+      'populate[testimonials_items][populate][image]': 'true',
       locale,
     }),
   ]);
@@ -92,6 +95,10 @@ export default async function Home({
           <PartnersSection
             header={homepage.partners_header}
             partners={homepage.partners_items}
+          />
+          <TestimonialsSection
+            header={homepage.testimonials_header}
+            testimonials={homepage.testimonials_items}
           />
         </div>
       </main>
