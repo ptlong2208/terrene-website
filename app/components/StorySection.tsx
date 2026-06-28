@@ -111,11 +111,11 @@ export default function StorySection({
     <Section
       title={header?.title}
       titleClassName="mb-[clamp(40px,6vh,72px)]"
-      className="max-md:min-h-0"
+      className="max-lg:min-h-0"
     >
       <div
         ref={imgWrapRef}
-        className="relative w-[min(38vw,480px)] max-md:w-[88vw] aspect-5/4 mx-auto mb-[clamp(32px,4vh,52px)] overflow-hidden opacity-0"
+        className="relative w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw] aspect-5/4 mx-auto mb-[clamp(32px,4vh,52px)] overflow-hidden opacity-0"
       >
         {image ? (
           <Image
@@ -131,7 +131,7 @@ export default function StorySection({
         )}
       </div>
 
-      <div className="w-[min(38vw,480px)] max-md:w-[88vw] mx-auto">
+      <div className="w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw] mx-auto">
         {sideLabel && (
           <div className="flex items-center gap-2.5 text-ink-faint mb-4.5">
             <TerreneLogo className="size-3.75 shrink-0" />

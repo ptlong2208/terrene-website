@@ -24,7 +24,7 @@ export default function ProductCard({
       href={href}
       tabIndex={tabIndex}
       aria-hidden={ariaHidden}
-      className="group relative w-[clamp(320px,34vw,500px)] aspect-4/5 shrink-0 overflow-hidden block mr-4 bg-[#E8E3D5] no-underline"
+      className="group relative w-[clamp(320px,34vw,500px)] max-md:w-[75vw] aspect-4/5 shrink-0 overflow-hidden block mr-4 bg-[#E8E3D5] no-underline"
     >
       {product.image && (
         <Image
@@ -32,7 +32,7 @@ export default function ProductCard({
           alt={product.image.alternativeText ?? product.title}
           fill
           className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.04]"
-          sizes="(max-width: 600px) 78vw, clamp(320px, 34vw, 500px)"
+          sizes="(max-width: 768px) 75vw, clamp(320px, 34vw, 500px)"
         />
       )}
 
