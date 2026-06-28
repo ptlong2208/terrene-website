@@ -117,6 +117,16 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface JournalPost {
+  id: number;
+  documentId: string;
+  title: string;
+  slug: string;
+  cover_image: StrapiMedia | null;
+  published_date: string | null;
+  excerpt: string | null;
+}
+
 export interface TestimonialItem {
   id: number;
   quote: string;
@@ -177,6 +187,9 @@ export interface HomepageData {
   partners_items: PartnerItem[];
   testimonials_header: SectionHeaderData | null;
   testimonials_items: TestimonialItem[];
+  journal_header: SectionHeaderData | null;
+  journal_view_all: NavLink | null;
+  journal_posts: JournalPost[];
 }
 
 // ---------------------------------------------------------------------------

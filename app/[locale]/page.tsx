@@ -10,6 +10,7 @@ import ProcessSection from '@/app/components/ProcessSection';
 import QuoteSection from '@/app/components/QuoteSection';
 import PartnersSection from '@/app/components/PartnersSection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
+import JournalSection from '@/app/components/JournalSection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -41,6 +42,9 @@ export default async function Home({
       'populate[partners_items][populate][image]': 'true',
       'populate[testimonials_header]': 'true',
       'populate[testimonials_items][populate][image]': 'true',
+      'populate[journal_header]': 'true',
+      'populate[journal_view_all]': 'true',
+      'populate[journal_posts][populate][cover_image]': 'true',
       locale,
     }),
   ]);
@@ -99,6 +103,11 @@ export default async function Home({
           <TestimonialsSection
             header={homepage.testimonials_header}
             testimonials={homepage.testimonials_items}
+          />
+          <JournalSection
+            header={homepage.journal_header}
+            viewAll={homepage.journal_view_all}
+            posts={homepage.journal_posts}
           />
         </div>
       </main>
