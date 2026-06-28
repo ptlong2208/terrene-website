@@ -56,13 +56,11 @@ export default function ComingSoonContent({
   return (
     <div
       ref={rootRef}
-      className="flex flex-col items-center justify-center min-h-svh px-gutter"
-      style={{ gap: 'clamp(56px,8.5vh,96px)', paddingTop: 'clamp(72px,11vh,120px)', paddingBottom: 'clamp(72px,11vh,120px)' }}
+      className="flex flex-col items-center justify-center min-h-svh px-gutter gap-[clamp(56px,8.5vh,96px)] pt-[clamp(72px,11vh,120px)] pb-[clamp(72px,11vh,120px)]"
     >
       <div
         data-reveal=""
-        className="flex flex-col items-center"
-        style={{ gap: 'clamp(8px,1.2vh,12px)' }}
+        className="flex flex-col items-center gap-[clamp(8px,1.2vh,12px)]"
       >
         <TerreneLogo
           className="h-6.5 w-auto text-(--green-deep)"
@@ -106,8 +104,7 @@ export default function ComingSoonContent({
 
       <div
         data-reveal=""
-        className="flex flex-col items-center w-full max-w-[320px]"
-        style={{ gap: 'clamp(20px,3vh,32px)' }}
+        className="flex flex-col items-center w-full max-w-[320px] gap-[clamp(20px,3vh,32px)]"
       >
         {label && (
           <span className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
@@ -126,12 +123,10 @@ export default function ComingSoonContent({
             <form
               action={action}
               noValidate
-              className="flex flex-col w-full"
-              style={{ gap: 'clamp(8px,1.2vh,12px)' }}
+              className="flex flex-col w-full gap-[clamp(8px,1.2vh,12px)]"
             >
               <div
-                className="border-b border-(--green-deep)/15 transition-[border-color] duration-250 focus-within:border-(--green-deep)"
-                style={{ paddingBottom: 'clamp(8px,1.2vh,12px)' }}
+                className="border-b border-(--green-deep)/15 transition-[border-color] duration-250 focus-within:border-(--green-deep) pb-[clamp(8px,1.2vh,12px)]"
               >
                 <input
                   name="email"
@@ -151,8 +146,7 @@ export default function ComingSoonContent({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="group w-full flex justify-center items-center overflow-hidden bg-(--green-deep) text-cream border-0 cursor-pointer text-[16px] tracking-[-0.02em] transition-opacity duration-200 hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed"
-                  style={{ padding: 'clamp(13px,1.6vh,15px)' }}
+                  className="group w-full flex justify-center items-center overflow-hidden bg-(--green-deep) text-cream border-0 cursor-pointer text-[16px] tracking-[-0.02em] transition-opacity duration-200 hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed p-[clamp(13px,1.6vh,15px)]"
                 >
                   <SlotText text={submitLabel} />
                 </button>

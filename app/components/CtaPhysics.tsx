@@ -172,8 +172,7 @@ export default function CtaPhysics({ className }: CtaPhysicsProps) {
     <div
       ref={wrapRef}
       aria-hidden="true"
-      className={`absolute inset-0 overflow-hidden max-md:hidden${className ? ` ${className}` : ''}`}
-      style={{ touchAction: 'pan-y' }}
+      className={`absolute inset-0 overflow-hidden max-md:hidden touch-pan-y${className ? ` ${className}` : ''}`}
     />
   );
 }

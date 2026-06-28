@@ -65,10 +65,8 @@ export default function ProcessSection({ header, steps = [], cta }: ProcessSecti
             src={strapiMediaUrl(step.image.url)}
             alt={step.image.alternativeText ?? step.name}
             fill
-            className="object-cover scale-125 transition-opacity duration-300"
-            style={{ opacity: i === activeIndex ? 1 : 0 }}
+            className={`object-cover scale-125 transition-opacity duration-300 ${i === activeIndex ? 'opacity-100' : 'opacity-0'}`}
             sizes="(max-width: 1024px) 100vw, 42vw"
-            priority={i === 0}
           />
         ))}
       </div>
