@@ -117,6 +117,14 @@ export interface ShopProduct {
   image: StrapiMedia | null;
 }
 
+export interface PartnerItem {
+  id: number;
+  name: string;
+  description: string | null;
+  url: string | null;
+  image: StrapiMedia | null;
+}
+
 export interface ProcessStep {
   id: number;
   name: string;
@@ -157,6 +165,8 @@ export interface HomepageData {
   process_cta: NavLink | null;
   quote_text: string | null;
   quote_attribution: string | null;
+  partners_header: SectionHeaderData | null;
+  partners_items: PartnerItem[];
 }
 
 // ---------------------------------------------------------------------------

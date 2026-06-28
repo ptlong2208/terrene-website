@@ -20,39 +20,41 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
   const preloaderDone = usePreloaderDone();
 
   useEffect(() => {
-    if (!preloaderDone || !sectionRef.current || !iconRef.current) return;
+    const section = sectionRef.current;
+    const icon = iconRef.current;
+    if (!preloaderDone || !section || !icon) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const targets = [blockquoteRef.current, attrRef.current].filter(Boolean);
-    gsap.set(iconRef.current, { opacity: 0, scale: 0.78, rotation: -18 });
+    gsap.set(icon, { opacity: 0, scale: 0.78, rotation: -18 });
     gsap.set(targets, { opacity: 0, y: 34 });
 
     const tl = gsap.timeline({
-      scrollTrigger: { trigger: sectionRef.current, start: 'top 76%', once: true },
+      scrollTrigger: { trigger: section, start: 'top 76%', once: true },
     })
-      .to(iconRef.current, { opacity: 0.3, scale: 1, rotation: 0, duration: 0.7, ease: 'power3.out' })
+      .to(icon, { opacity: 0.3, scale: 1, rotation: 0, duration: 0.7, ease: 'power3.out' })
       .to(targets, { opacity: 1, y: 0, duration: 1, stagger: 0.16, ease: 'power3.out' }, '-=0.25');
 
     return () => {
       tl.scrollTrigger?.kill();
       tl.kill();
-      gsap.set([iconRef.current, ...targets], { clearProps: 'all' });
+      gsap.set([icon, ...targets], { clearProps: 'all' });
     };
   }, [preloaderDone]);
 
   if (!quote && !attribution) return null;
 
   return (
-    <Section ref={sectionRef} className="items-center text-center">
-      <div className="max-w-[740px] mx-auto">
+    <Section ref={sectionRef} className="items-center text-center max-md:min-h-0 max-md:py-20">
+      <div className="max-w-185 mx-auto">
         <div ref={iconRef} className="mb-[clamp(28px,4vh,44px)] opacity-0">
-          <TerreneLogo className="size-[38px] mx-auto" />
+          <TerreneLogo className="size-9.5 mx-auto" />
         </div>
 
         {quote && (
           <blockquote
             ref={blockquoteRef}
-            className="text-[clamp(12px,2vw,28px)] font-[380] leading-[1.25] tracking-[-0.02em] text-(--green-deep) mb-[clamp(20px,2.5vh,30px)] opacity-0"
+            className="text-[clamp(12px,2vw,28px)] font-[380] leading-tight tracking-[-0.02em] text-(--green-deep) mb-[clamp(20px,2.5vh,30px)] opacity-0"
           >
             {quote.split('\n').map((line, i) => (
               <span key={i} className="block whitespace-nowrap">{line}</span>
@@ -63,7 +65,7 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
         {attribution && (
           <p
             ref={attrRef}
-            className="text-[11px] font-[500] tracking-[0.14em] uppercase text-ink-faint opacity-0"
+            className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-faint opacity-0"
           >
             {attribution}
           </p>

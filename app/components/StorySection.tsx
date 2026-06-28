@@ -111,6 +111,7 @@ export default function StorySection({
     <Section
       title={header?.title}
       titleClassName="mb-[clamp(40px,6vh,72px)]"
+      className="max-md:min-h-0"
     >
       <div
         ref={imgWrapRef}

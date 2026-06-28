@@ -12,6 +12,7 @@ interface SectionProps {
   title?: string | null;
   kickerClassName?: string;
   titleClassName?: string;
+  inverted?: boolean;
 }
 
 export default function Section({
@@ -23,6 +24,7 @@ export default function Section({
   title,
   kickerClassName,
   titleClassName,
+  inverted = false,
 }: SectionProps) {
   return (
     <section
@@ -35,6 +37,7 @@ export default function Section({
         title={title}
         kickerClassName={kickerClassName}
         titleClassName={titleClassName}
+        inverted={inverted}
       />
       {children}
     </section>

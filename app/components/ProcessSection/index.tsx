@@ -54,10 +54,10 @@ export default function ProcessSection({ header, steps = [], cta }: ProcessSecti
   if (!steps.length) return null;
 
   return (
-    <section className="min-h-svh grid grid-cols-[42%_1fr] gap-[clamp(40px,6vw,100px)] py-[clamp(80px,10vh,140px)] px-gutter items-start max-[860px]:grid-cols-1">
+    <section className="min-h-svh grid grid-cols-[42%_1fr] gap-[clamp(40px,6vw,100px)] py-[clamp(80px,10vh,140px)] px-gutter items-start max-lg:grid-cols-1 max-lg:min-h-0">
       <div
         ref={mediaRef}
-        className="sticky top-[12vh] h-[min(76vh,800px)] overflow-hidden bg-(--green-deep)/10 [clip-path:inset(100%_0_0_0)] max-[860px]:relative max-[860px]:top-0 max-[860px]:h-[52vh]"
+        className="sticky top-[12vh] aspect-square overflow-hidden bg-(--green-deep)/10 [clip-path:inset(100%_0_0_0)] max-lg:relative max-lg:top-0"
       >
         {steps.map((step, i) => step.image && (
           <Image
@@ -67,7 +67,7 @@ export default function ProcessSection({ header, steps = [], cta }: ProcessSecti
             fill
             className="object-cover scale-125 transition-opacity duration-300"
             style={{ opacity: i === activeIndex ? 1 : 0 }}
-            sizes="(max-width: 860px) 100vw, 42vw"
+            sizes="(max-width: 1024px) 100vw, 42vw"
             priority={i === 0}
           />
         ))}

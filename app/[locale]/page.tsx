@@ -8,6 +8,7 @@ import FeaturedProductsSection from '@/app/components/FeaturedProductsSection';
 import BenefitsSection from '@/app/components/BenefitsSection';
 import ProcessSection from '@/app/components/ProcessSection';
 import QuoteSection from '@/app/components/QuoteSection';
+import PartnersSection from '@/app/components/PartnersSection';
 import Preloader from '@/app/components/Preloader';
 
 export default async function Home({
@@ -35,6 +36,8 @@ export default async function Home({
       'populate[process_header]': 'true',
       'populate[process_steps][populate][image]': 'true',
       'populate[process_cta]': 'true',
+      'populate[partners_header]': 'true',
+      'populate[partners_items][populate][image]': 'true',
       locale,
     }),
   ]);
@@ -85,6 +88,10 @@ export default async function Home({
           <QuoteSection
             quote={homepage.quote_text}
             attribution={homepage.quote_attribution}
+          />
+          <PartnersSection
+            header={homepage.partners_header}
+            partners={homepage.partners_items}
           />
         </div>
       </main>

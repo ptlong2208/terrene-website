@@ -38,10 +38,11 @@ export default function BenefitsSection({ header, items = [] }: BenefitsSectionP
       kicker={header?.kicker}
       title={header?.title}
       titleClassName="mb-18"
+      className="max-md:min-h-0"
     >
       <div
         ref={gridRef}
-        className="grid grid-cols-4 gap-[clamp(24px,3vw,48px)] max-[860px]:grid-cols-2 max-[560px]:grid-cols-1 opacity-0"
+        className="grid grid-cols-4 gap-[clamp(24px,3vw,48px)] max-lg:grid-cols-2 max-md:grid-cols-1 opacity-0"
       >
         {items.map((item, i) => (
           <BenefitCard key={item.id} item={item} index={i} />

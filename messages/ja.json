@@ -29,6 +29,9 @@
     "viewProduct": "詳細を見る",
     "viewAll": "すべての商品を見る"
   },
+  "partners": {
+    "visit": "訪問する ↗"
+  },
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"

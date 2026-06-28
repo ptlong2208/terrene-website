@@ -58,7 +58,7 @@ export default function FeaturedProductsSection({
       kicker={header?.kicker}
       title={header?.title}
       titleClassName="mb-[clamp(18px,2.5vw,32px)]"
-      className="overflow-hidden"
+      className="overflow-hidden max-md:min-h-0"
     >
       <div
         ref={marqueeRef}

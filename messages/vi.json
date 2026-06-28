@@ -29,6 +29,9 @@
     "viewProduct": "Xem chi tiết",
     "viewAll": "Xem tất cả sản phẩm"
   },
+  "partners": {
+    "visit": "Ghé thăm ↗"
+  },
   "notFound": {
     "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
     "backHome": "Về trang chủ"
