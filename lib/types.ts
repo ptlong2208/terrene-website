@@ -97,6 +97,16 @@ export interface ShopCategory {
 }
 
 // ---------------------------------------------------------------------------
+// Journal Category (collection type)
+// ---------------------------------------------------------------------------
+
+export interface JournalCategory {
+  id: number;
+  documentId: string;
+  name: string;
+}
+
+// ---------------------------------------------------------------------------
 // Shop Product (collection type)
 // ---------------------------------------------------------------------------
 
@@ -123,6 +133,7 @@ export interface JournalPost {
   cover_image: StrapiMedia | null;
   published_date: string | null;
   excerpt: string | null;
+  category: JournalCategory | null;
 }
 
 export interface TestimonialItem {

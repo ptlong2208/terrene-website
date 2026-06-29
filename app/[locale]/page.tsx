@@ -47,6 +47,7 @@ export default async function Home({
       'populate[journal_header]': 'true',
       'populate[journal_view_all]': 'true',
       'populate[journal_posts][populate][cover_image]': 'true',
+      'populate[journal_posts][populate][category]': 'true',
       'populate[cta_header]': 'true',
       'populate[cta_link]': 'true',
       locale,

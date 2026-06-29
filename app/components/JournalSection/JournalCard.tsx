@@ -14,6 +14,8 @@ interface JournalCardProps {
 }
 
 export default function JournalCard({ post, href }: JournalCardProps) {
+  const hasTags = post.category || post.published_date;
+
   return (
     <article className="group cursor-pointer">
       <Link href={href} className="block no-underline">
@@ -34,15 +36,22 @@ export default function JournalCard({ post, href }: JournalCardProps) {
           )}
         </div>
 
-        {post.published_date && (
+        {hasTags && (
           <div className="flex gap-3.5 mt-4.5 mb-2.5 text-[11px] tracking-widest uppercase text-ink-faint">
-            <span>{formatDate(post.published_date)}</span>
+            {post.category && <span>{post.category.name}</span>}
+            {post.published_date && <span>{formatDate(post.published_date)}</span>}
           </div>
         )}
 
         <h3 className="text-[clamp(16px,1.5vw,21px)] font-[450] leading-[1.35] tracking-[-0.02em] max-w-[30ch] text-(--green-deep)">
           {post.title}
         </h3>
+
+        {post.excerpt && (
+          <p className="mt-2 text-sm leading-relaxed text-ink-faint line-clamp-2">
+            {post.excerpt}
+          </p>
+        )}
       </Link>
     </article>
   );
