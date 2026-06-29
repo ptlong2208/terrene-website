@@ -16,7 +16,8 @@
     "emailInvalid": "Please enter a valid email address.",
     "alreadySubscribed": "This email is already on the list.",
     "serverError": "Something went wrong. Please try again.",
-    "networkError": "Network error. Please try again."
+    "networkError": "Network error. Please try again.",
+    "subscribeSuccess": "Thank you for subscribing!"
   },
   "comingSoon": {
     "seoTitle": "Terrene — Coming Soon",

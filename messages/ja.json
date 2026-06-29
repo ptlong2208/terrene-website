@@ -16,7 +16,8 @@
     "emailInvalid": "有効なメールアドレスを入力してください。",
     "alreadySubscribed": "このメールアドレスはすでに登録されています。",
     "serverError": "エラーが発生しました。もう一度お試しください。",
-    "networkError": "接続エラーです。もう一度お試しください。"
+    "networkError": "接続エラーです。もう一度お試しください。",
+    "subscribeSuccess": "ご登録ありがとうございます！"
   },
   "comingSoon": {
     "seoTitle": "Terrene — もうすぐオープン",

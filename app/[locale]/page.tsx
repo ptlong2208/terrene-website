@@ -119,7 +119,12 @@ export default async function Home({
             header={homepage.cta_header}
             link={homepage.cta_link}
           />
-          <Footer siteName={global.site_name} legalLinks={global.footer_legal_links} />
+          <Footer
+            siteName={global.site_name}
+            legalLinks={global.footer_legal_links}
+            newsletterLabel={global.footer_newsletter_label}
+            newsletterPlaceholder={global.footer_newsletter_placeholder}
+          />
         </div>
       </main>
     </>

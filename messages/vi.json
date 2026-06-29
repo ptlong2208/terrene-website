@@ -16,7 +16,8 @@
     "emailInvalid": "Email không hợp lệ.",
     "alreadySubscribed": "Email này đã đăng ký rồi.",
     "serverError": "Có lỗi xảy ra. Vui lòng thử lại.",
-    "networkError": "Lỗi kết nối. Vui lòng thử lại."
+    "networkError": "Lỗi kết nối. Vui lòng thử lại.",
+    "subscribeSuccess": "Cảm ơn bạn đã đăng ký!"
   },
   "comingSoon": {
     "seoTitle": "Terrene — Sắp Ra Mắt",
