@@ -21,6 +21,7 @@ interface HeaderProps {
   navLinks?: NavLink[];
   navShopLink?: NavLink;
   navCartLabel?: string;
+  navOverlayImage?: StrapiMedia | null;
   cartCount?: number;
   musicConsentText?: string | null;
   musicConsentAccept?: string | null;
@@ -33,6 +34,7 @@ export default function Header({
   navLinks = [],
   navShopLink,
   navCartLabel,
+  navOverlayImage,
   cartCount = 0,
   musicConsentText,
   musicConsentAccept,
@@ -167,6 +169,7 @@ export default function Header({
       <MenuOverlay
         menuState={menuState}
         navLinks={navLinks}
+        overlayImage={navOverlayImage}
         onClose={closeMenu}
         onClosed={handleMenuClosed}
       />

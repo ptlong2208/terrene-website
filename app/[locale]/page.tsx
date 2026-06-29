@@ -63,6 +63,7 @@ export default async function Home({
           navLinks={global.nav_links}
           navShopLink={global.nav_shop_link ?? undefined}
           navCartLabel={global.nav_cart_label ?? undefined}
+          navOverlayImage={global.nav_overlay_image}
           cartCount={0}
           musicConsentText={global.music_consent_text}
           musicConsentAccept={global.music_consent_accept}

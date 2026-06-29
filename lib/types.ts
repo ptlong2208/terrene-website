@@ -55,6 +55,7 @@ export interface GlobalData {
   nav_email: string | null;
   nav_shop_link: NavLink | null;
   nav_cart_label: string | null;
+  nav_overlay_image: StrapiMedia | null;
 
   // Social
   social_links: SocialLink[];

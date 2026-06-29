@@ -2,11 +2,13 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import type { NavLink } from '@/lib/types';
+import { strapiMediaUrl } from '@/lib/strapi';
+import type { NavLink, StrapiMedia } from '@/lib/types';
 import SlotText from '@/app/components/SlotText';
 import styles from './MenuOverlay.module.css';
 
@@ -29,6 +31,7 @@ const linkVariants = {
 interface MenuOverlayProps {
   menuState: MenuState;
   navLinks: NavLink[];
+  overlayImage?: StrapiMedia | null;
   onClose: () => void;
   onClosed: () => void;
 }
@@ -36,6 +39,7 @@ interface MenuOverlayProps {
 export default function MenuOverlay({
   menuState,
   navLinks,
+  overlayImage,
   onClose,
   onClosed,
 }: MenuOverlayProps) {
@@ -162,10 +166,20 @@ export default function MenuOverlay({
           </nav>
         </div>
 
-        <div
-          ref={footerRef}
-          className="h-[clamp(300px,42vh,520px)] shrink-0 overflow-hidden"
-        />
+        {overlayImage && (
+          <div
+            ref={footerRef}
+            className="h-[clamp(300px,42vh,520px)] shrink-0 overflow-hidden relative"
+          >
+            <Image
+              src={strapiMediaUrl(overlayImage.url)}
+              alt={overlayImage.alternativeText ?? ''}
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
