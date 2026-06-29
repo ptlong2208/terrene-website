@@ -40,8 +40,6 @@ export interface GlobalData {
   // Site
   site_name: string;
   site_description: string | null;
-  favicon: StrapiMedia | null;
-  logo: StrapiMedia | null;
 
   // Loader / Audio
   loader_quote: string | null;
@@ -52,7 +50,7 @@ export interface GlobalData {
 
   // Nav
   nav_links: NavLink[];
-  nav_email: string | null;
+  email: string | null;
   nav_shop_link: NavLink | null;
   nav_cart_label: string | null;
   nav_overlay_image: StrapiMedia | null;
@@ -61,7 +59,6 @@ export interface GlobalData {
   social_links: SocialLink[];
 
   // Footer
-  footer_copyright: string | null;
   footer_newsletter_label: string | null;
   footer_newsletter_placeholder: string | null;
   footer_legal_links: NavLink[];
