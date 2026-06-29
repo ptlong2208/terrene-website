@@ -6,6 +6,10 @@ import { useEffect, useState } from 'react';
 // after the event still get `true` immediately without re-listening.
 let isDone = false;
 
+export function isPreloaderDone(): boolean {
+  return isDone;
+}
+
 export function usePreloaderDone(): boolean {
   const [done, setDone] = useState(isDone);
 

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import TerreneLogo from '@/app/components/TerreneLogo';
+import { isPreloaderDone } from '@/app/hooks/usePreloaderDone';
 
 interface PreloaderProps {
   siteName: string;
@@ -23,6 +24,11 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
     const quoteLine = quoteLineRef.current;
     const count = countRef.current;
     if (!loader || !mark || !brandLine || !quoteLine || !count) return;
+
+    if (isPreloaderDone()) {
+      gsap.set(loader, { display: 'none' });
+      return;
+    }
 
     document.body.classList.add('is-locked');
 

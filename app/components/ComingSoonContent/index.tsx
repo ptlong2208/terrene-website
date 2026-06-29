@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import TerreneLogo from '@/app/components/TerreneLogo';
 import SlotText from '@/app/components/SlotText';
 import { subscribeToWishlist } from '@/app/actions/wishlist';
+import { isPreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { ComingSoonData } from '@/lib/types';
 
 interface ComingSoonContentProps {
@@ -48,6 +49,10 @@ export default function ComingSoonContent({
     const root = rootRef.current;
     if (!root) return;
     const items = root.querySelectorAll('[data-reveal]');
+    if (isPreloaderDone()) {
+      gsap.set(items, { opacity: 1, y: 0 });
+      return;
+    }
     const tl = gsap.timeline({ delay: 0.1 });
     tl.from(items, { opacity: 0, y: 24, duration: 0.9, stagger: 0.13, ease: 'power3.out' });
     return () => { tl.kill(); };
