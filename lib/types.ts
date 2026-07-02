@@ -62,6 +62,10 @@ export interface GlobalData {
   footer_newsletter_label: string | null;
   footer_newsletter_placeholder: string | null;
   footer_legal_links: NavLink[];
+
+  // CTA (layout-level, shared across pages)
+  cta_header: SectionHeaderData | null;
+  cta_link: NavLink | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -198,8 +202,6 @@ export interface HomepageData {
   journal_header: SectionHeaderData | null;
   journal_view_all: NavLink | null;
   journal_posts: JournalPost[];
-  cta_header: SectionHeaderData | null;
-  cta_link: NavLink | null;
 }
 
 // ---------------------------------------------------------------------------
