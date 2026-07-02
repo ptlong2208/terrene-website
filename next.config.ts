@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         hostname: 'blessed-happiness-3e10a81db6.media.strapiapp.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
     ],
     dangerouslyAllowSVG: true,
     dangerouslyAllowLocalIP: true,
