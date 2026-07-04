@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
 import type { ShopProduct } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
+import ProductInfoCard from '@/app/components/ProductInfoCard';
 
 export default async function ProductDetailPage({
   params,
@@ -34,7 +35,7 @@ export default async function ProductDetailPage({
 
   return (
     <section className="pt-[calc(64px+clamp(24px,4vh,56px))] pb-[clamp(60px,9vh,120px)]">
-      <div className="max-w-[1440px] mx-auto px-gutter">
+      <div className="max-w-360 mx-auto px-gutter">
 
         {/* ── Main grid ──────────────────────────────────────────────────── */}
         <div className="grid grid-cols-[1.1fr_0.9fr] gap-[clamp(28px,5vw,88px)] items-start max-md:grid-cols-1 max-md:gap-8">
@@ -124,7 +125,7 @@ export default async function ProductDetailPage({
 
               {/* Taste notes */}
               {product.taste_notes?.length > 0 && (
-                <div className="py-4 border-t border-b border-(--line) mb-2">
+                <div className="py-4 border-t border-b border-line mb-2">
                   <p className="text-[11px] font-bold tracking-[0.08em] uppercase text-(--green-deep) mb-3.5">
                     {t('tasteNotesTitle')}
                   </p>
@@ -163,30 +164,15 @@ export default async function ProductDetailPage({
           </aside>
         </div>
 
-        {/* ── Product info accordion ─────────────────────────────────────── */}
-        {product.product_info?.length > 0 && (
-          <div className="mt-[clamp(48px,6vh,88px)] max-w-[560px]">
-            <h2 className="text-[clamp(18px,1.8vw,24px)] font-extrabold tracking-[-0.01em] text-(--green-deep) mb-4">
-              {t('productInfoTitle')}
-            </h2>
-            <div className="border-t border-(--line)">
-              {product.product_info.map((item) => (
-                <details key={item.id} className="border-b border-(--line) group">
-                  <summary className="list-none cursor-pointer py-[14px] flex items-center justify-between gap-4 text-[12px] font-bold tracking-[0.06em] uppercase text-(--green-deep) [&::-webkit-details-marker]:hidden select-none">
-                    {item.title}
-                    <span className="text-[20px] font-light text-ink-faint shrink-0 group-open:hidden" aria-hidden="true">+</span>
-                    <span className="text-[20px] font-light text-ink-faint shrink-0 hidden group-open:block" aria-hidden="true">−</span>
-                  </summary>
-                  {item.body && (
-                    <p className="pb-4 text-[13px] leading-[1.65] text-ink-faint">
-                      {item.body}
-                    </p>
-                  )}
-                </details>
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="mt-[clamp(48px,6vh,88px)] grid grid-cols-[1.35fr_0.65fr] gap-[clamp(20px,2.6vw,44px)] items-start max-md:grid-cols-1">
+          {/* Left: reviews placeholder (implemented later) */}
+          <div />
+
+          {product.product_info?.length > 0 && (
+              <ProductInfoCard title={t('productInfoTitle')} items={product.product_info} />
+          )}
+        </div>
+
       </div>
     </section>
   );
