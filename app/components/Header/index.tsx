@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
@@ -41,9 +42,11 @@ export default function Header({
   musicConsentDecline,
 }: HeaderProps) {
   const t = useTranslations('audio');
+  const pathname = usePathname();
+  const isHomepage = /^\/[a-z]{2}\/?$/.test(pathname);
   const [menuState, setMenuState] = useState<MenuState>('closed');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [hasBg, setHasBg] = useState(false);
+  const [hasBg, setHasBg] = useState(!isHomepage);
   const [showConsent, setShowConsent] = useState(false);
   const preloaderDone = usePreloaderDone();
 
@@ -76,7 +79,7 @@ export default function Header({
           return;
         }
 
-        setHasBg(currentScroll > 60);
+        setHasBg(!isHomepage || currentScroll > 60);
 
         if (currentScroll <= 0) {
           hideHeaderAnim.reverse();
