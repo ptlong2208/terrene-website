@@ -44,6 +44,30 @@ export async function fetchStrapiCollection<T>(
   return json.data as T[];
 }
 
+/**
+ * Fetch a single item from a collection via a custom slug endpoint.
+ * Expects the CMS to expose GET {path}/slug/:slug returning { data: item }.
+ * Returns null when the CMS responds with 404.
+ */
+export async function fetchStrapiBySlug<T>(
+  path: string,
+  slug: string,
+  params: Record<string, string> = {}
+): Promise<T | null> {
+  const qs = new URLSearchParams(params).toString();
+  const url = `${STRAPI_URL}${path}/slug/${encodeURIComponent(slug)}${qs ? `?${qs}` : ''}`;
+
+  const res = await fetch(url, { next: { revalidate: 60 } });
+  if (res.status === 404) return null;
+
+  if (!res.ok) {
+    throw new Error(`Strapi fetch failed: ${res.status} ${res.statusText} — ${url}`);
+  }
+
+  const json = await res.json();
+  return json.data as T;
+}
+
 /** Resolve a Strapi media URL to an absolute URL. */
 export function strapiMediaUrl(url: string | null | undefined): string {
   if (!url) return "";

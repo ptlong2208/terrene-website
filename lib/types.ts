@@ -114,6 +114,18 @@ export interface JournalCategory {
 // Shop Product (collection type)
 // ---------------------------------------------------------------------------
 
+export interface TasteNote {
+  id: number;
+  label: string;
+  value: number;
+}
+
+export interface ProductInfoItem {
+  id: number;
+  title: string;
+  body: string | null;
+}
+
 export interface ShopProduct {
   id: number;
   documentId: string;
@@ -127,6 +139,10 @@ export interface ShopProduct {
   attribute: string | null;
   tags: Tag[];
   image: StrapiMedia | null;
+  gallery: StrapiMedia[];
+  taste_notes: TasteNote[];
+  product_info: ProductInfoItem[];
+  learn_more_link: NavLink | null;
 }
 
 export interface JournalPost {

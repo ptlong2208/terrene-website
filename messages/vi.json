@@ -28,7 +28,11 @@
   },
   "shop": {
     "viewProduct": "Xem chi tiết",
-    "viewAll": "Xem tất cả sản phẩm"
+    "viewAll": "Xem tất cả sản phẩm",
+    "tasteNotesTitle": "Hồ sơ hương vị",
+    "backToAll": "Tất cả sản phẩm",
+    "addToCart": "Thêm vào giỏ hàng",
+    "productInfoTitle": "Thông tin sản phẩm"
   },
   "partners": {
     "visit": "Ghé thăm"

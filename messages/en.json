@@ -28,7 +28,11 @@
   },
   "shop": {
     "viewProduct": "View details",
-    "viewAll": "View all products"
+    "viewAll": "View all products",
+    "tasteNotesTitle": "Tasting Notes",
+    "backToAll": "All products",
+    "addToCart": "Add to cart",
+    "productInfoTitle": "Product information"
   },
   "partners": {
     "visit": "Visit"

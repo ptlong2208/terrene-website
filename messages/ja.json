@@ -28,7 +28,11 @@
   },
   "shop": {
     "viewProduct": "詳細を見る",
-    "viewAll": "すべての商品を見る"
+    "viewAll": "すべての商品を見る",
+    "tasteNotesTitle": "テイスティングノート",
+    "backToAll": "すべての商品",
+    "addToCart": "カートに追加",
+    "productInfoTitle": "商品情報"
   },
   "partners": {
     "visit": "訪問する"

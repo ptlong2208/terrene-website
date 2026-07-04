@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { strapiMediaUrl } from '@/lib/strapi';
-import { formatPrice } from '@/app/utils/formatPrice';
+import { formatPrice } from '@/lib/utils';
 import type { ShopProduct } from '@/lib/types';
 
 interface ProductCardProps {
