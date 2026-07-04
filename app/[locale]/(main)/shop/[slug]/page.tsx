@@ -5,7 +5,7 @@ import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
 import type { ShopProduct } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import ProductInfoCard from '@/app/components/ProductInfoCard';
-import CtaLink from '@/app/components/CtaLink';
+import StoryModal from '@/app/components/StoryModal';
 
 export default async function ProductDetailPage({
   params,
@@ -21,7 +21,7 @@ export default async function ProductDetailPage({
     'populate[category]': 'true',
     'populate[taste_notes]': 'true',
     'populate[product_info]': 'true',
-    'populate[learn_more_link]': 'true',
+    'populate[story][populate][images]': 'true',
     locale,
   });
 
@@ -71,9 +71,9 @@ export default async function ProductDetailPage({
                 </p>
               )}
 
-              {product.learn_more_link && (
+              {product.story && (
                 <div className="mb-5">
-                  <CtaLink href={product.learn_more_link.href} label={product.learn_more_link.label} />
+                  <StoryModal story={product.story} />
                 </div>
               )}
 
@@ -121,7 +121,6 @@ export default async function ProductDetailPage({
               </p>
             </div>
 
-            {/* Add to cart — stays at bottom of panel */}
             <button
               type="button"
               className="w-full mt-4 py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase hover:opacity-85 transition-opacity shrink-0 cursor-pointer"
@@ -132,7 +131,6 @@ export default async function ProductDetailPage({
         </div>
 
         <div className="mt-[clamp(48px,6vh,88px)] grid grid-cols-[1.35fr_0.65fr] gap-[clamp(20px,2.6vw,44px)] items-start max-md:grid-cols-1">
-          {/* Left: reviews placeholder (implemented later) */}
           <div />
 
           {product.product_info?.length > 0 && (

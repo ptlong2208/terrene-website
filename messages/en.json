@@ -1,10 +1,12 @@
 {
+  "common": {
+    "close": "Close"
+  },
   "nav": {
     "mainLabel": "Main navigation",
     "overlayLabel": "Navigation",
     "menuOpen": "Open menu",
-    "menuClose": "Close menu",
-    "overlayClose": "Close"
+    "menuClose": "Close menu"
   },
   "audio": {
     "play": "Play music",

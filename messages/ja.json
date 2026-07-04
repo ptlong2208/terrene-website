@@ -1,10 +1,12 @@
 {
+  "common": {
+    "close": "閉じる"
+  },
   "nav": {
     "mainLabel": "ナビゲーション",
     "overlayLabel": "ナビゲーション",
     "menuOpen": "メニューを開く",
-    "menuClose": "メニューを閉じる",
-    "overlayClose": "閉じる"
+    "menuClose": "メニューを閉じる"
   },
   "audio": {
     "play": "音楽を再生",

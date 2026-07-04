@@ -126,6 +126,13 @@ export interface ProductInfoItem {
   body: string | null;
 }
 
+export interface ProductStory {
+  button_label: string;
+  title: string;
+  content: string;
+  images: StrapiMedia[];
+}
+
 export interface ShopProduct {
   id: number;
   documentId: string;
@@ -142,7 +149,7 @@ export interface ShopProduct {
   gallery: StrapiMedia[];
   taste_notes: TasteNote[];
   product_info: ProductInfoItem[];
-  learn_more_link: NavLink | null;
+  story: ProductStory | null;
 }
 
 export interface JournalPost {

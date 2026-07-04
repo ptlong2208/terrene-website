@@ -1,10 +1,12 @@
 {
+  "common": {
+    "close": "Đóng"
+  },
   "nav": {
     "mainLabel": "Điều hướng chính",
     "overlayLabel": "Điều hướng",
     "menuOpen": "Mở menu",
-    "menuClose": "Đóng menu",
-    "overlayClose": "Đóng"
+    "menuClose": "Đóng menu"
   },
   "audio": {
     "play": "Bật nhạc",

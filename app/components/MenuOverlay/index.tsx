@@ -51,6 +51,7 @@ export default function MenuOverlay({
   const footerRef = useRef<HTMLDivElement | null>(null);
 
   const t = useTranslations('nav');
+  const tCommon = useTranslations('common');
   const onClosedRef = useRef(onClosed);
   useEffect(() => { onClosedRef.current = onClosed; });
 
@@ -144,7 +145,7 @@ export default function MenuOverlay({
 
         <div className="flex items-center justify-center px-gutter h-16 shrink-0">
           <button type="button" className={`${styles.closeBtn} group`} onClick={onClose}>
-            <SlotText text={t('overlayClose')} />
+            <SlotText text={tCommon('close')} />
           </button>
         </div>
 
