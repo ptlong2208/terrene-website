@@ -110,11 +110,7 @@ export default async function ProductDetailPage({
 
             </div>
 
-            <VariantPicker
-              variants={variants}
-              optionName={optionName}
-              fallbackPrice={product.price || undefined}
-            />
+            <VariantPicker variants={variants} optionName={optionName} />
           </aside>
         </div>
 

@@ -9,19 +9,17 @@ import type { ProductVariant } from '@/lib/haravan';
 interface VariantPickerProps {
   variants: ProductVariant[];
   optionName: string | null;
-  fallbackPrice?: number;
 }
 
-export default function VariantPicker({ variants, optionName, fallbackPrice }: VariantPickerProps) {
+export default function VariantPicker({ variants, optionName }: VariantPickerProps) {
   const t = useTranslations('shop');
   const [selectedId, setSelectedId] = useState<number | null>(variants[0]?.id ?? null);
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
-  const hasVariants = variants.length > 0;
   const hasOptions = variants.length > 1;
-  const price = hasVariants ? (selected?.price ?? 0) : (fallbackPrice ?? 0);
-  const compareAtPrice = hasVariants ? (selected?.compare_at_price ?? null) : null;
-  const isAvailable = hasVariants ? (selected?.available ?? false) : false;
+  const price = selected?.price ?? 0;
+  const compareAtPrice = selected?.compare_at_price ?? null;
+  const isAvailable = selected?.available ?? false;
 
   return (
     <>

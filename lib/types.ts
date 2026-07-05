@@ -141,8 +141,6 @@ export interface ShopProduct {
   slug: string;
   category: ShopCategory | null;
   description: string | null;
-  price: number;
-  original_price: number | null;
   attribute: string | null;
   tags: Tag[];
   image: StrapiMedia | null;

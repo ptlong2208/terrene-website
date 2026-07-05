@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { strapiMediaUrl } from '@/lib/strapi';
-import { formatPrice } from '@/lib/utils';
 import type { ShopProduct } from '@/lib/types';
 
 interface ProductCardProps {
@@ -51,11 +50,8 @@ export default function ProductCard({
             {product.description}
           </p>
         )}
-        <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)_44px] items-center gap-3.5 mt-auto">
-          <span className="text-xl font-extrabold tracking-[-0.01em] text-(--green-deep) tabular-nums whitespace-nowrap">
-            {formatPrice(product.price)}
-          </span>
-          <span className="col-[2/4] border border-(--green-deep) text-(--green-deep) text-xs font-bold tracking-[0.08em] uppercase p-3 text-center transition-colors group-hover:hover:bg-(--green-deep) group-hover:hover:text-cream">
+        <div className="mt-auto">
+          <span className="block border border-(--green-deep) text-(--green-deep) text-xs font-bold tracking-[0.08em] uppercase p-3 text-center transition-colors group-hover:hover:bg-(--green-deep) group-hover:hover:text-cream">
             {viewProductLabel}
           </span>
         </div>
