@@ -63,7 +63,7 @@ export default async function ProductDetailPage({
             )}
           </div>
 
-          <aside className="sticky top-21 flex flex-col max-h-[calc(100vh-100px)] max-md:static max-md:max-h-none">
+          <aside className="sticky top-1/2 -translate-y-1/2 flex flex-col max-h-[calc(100vh-100px)] max-md:static max-md:max-h-none max-md:translate-y-0">
             <div className="min-h-0 flex-1 overflow-y-auto pr-1 scrollbar-thin">
               <h1 className="text-[clamp(24px,2.8vw,34px)] font-semibold tracking-[-0.02em] leading-[1.05] text-(--green-deep) mb-3">
                 {product.title}
