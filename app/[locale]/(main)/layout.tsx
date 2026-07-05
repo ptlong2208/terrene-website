@@ -5,6 +5,7 @@ import Header from '@/app/components/Header';
 import CtaSection from '@/app/components/CtaSection';
 import Footer from '@/app/components/Footer';
 import Preloader from '@/app/components/Preloader';
+import CartDrawer from '@/app/components/CartDrawer';
 
 export default async function MainLayout({
   children,
@@ -30,7 +31,6 @@ export default async function MainLayout({
           navShopLink={global.nav_shop_link ?? undefined}
           navCartLabel={global.nav_cart_label ?? undefined}
           navOverlayImage={global.nav_overlay_image}
-          cartCount={0}
           musicConsentText={global.music_consent_text}
           musicConsentAccept={global.music_consent_accept}
           musicConsentDecline={global.music_consent_decline}
@@ -46,6 +46,7 @@ export default async function MainLayout({
         />
         </div>
       </main>
+      <CartDrawer />
     </>
   );
 }

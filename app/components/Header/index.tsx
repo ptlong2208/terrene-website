@@ -23,7 +23,6 @@ interface HeaderProps {
   navShopLink?: NavLink;
   navCartLabel?: string;
   navOverlayImage?: StrapiMedia | null;
-  cartCount?: number;
   musicConsentText?: string | null;
   musicConsentAccept?: string | null;
   musicConsentDecline?: string | null;
@@ -36,7 +35,6 @@ export default function Header({
   navShopLink,
   navCartLabel,
   navOverlayImage,
-  cartCount = 0,
   musicConsentText,
   musicConsentAccept,
   musicConsentDecline,
@@ -165,7 +163,6 @@ export default function Header({
         <HeaderRight
           navShopLink={navShopLink}
           navCartLabel={navCartLabel}
-          cartCount={cartCount}
         />
       </header>
 

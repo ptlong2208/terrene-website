@@ -38,6 +38,13 @@
     "addToCart": "Add to cart",
     "productInfoTitle": "Product information"
   },
+  "cart": {
+    "title": "cart",
+    "empty": "Your cart is empty.",
+    "continueShopping": "Continue shopping",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout"
+  },
   "partners": {
     "visit": "Visit"
   },

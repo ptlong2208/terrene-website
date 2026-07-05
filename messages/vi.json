@@ -38,6 +38,13 @@
     "addToCart": "Thêm vào giỏ hàng",
     "productInfoTitle": "Thông tin sản phẩm"
   },
+  "cart": {
+    "title": "giỏ hàng",
+    "empty": "Giỏ hàng của bạn đang trống.",
+    "continueShopping": "Tiếp tục mua sắm",
+    "subtotal": "Tạm tính",
+    "checkout": "Thanh toán"
+  },
   "partners": {
     "visit": "Ghé thăm"
   },

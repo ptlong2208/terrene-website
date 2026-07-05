@@ -4,15 +4,19 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { formatPrice } from '@/lib/utils';
+import { useCartStore } from '@/app/store/cartStore';
 import type { ProductVariant } from '@/lib/haravan';
 
 interface VariantPickerProps {
   variants: ProductVariant[];
   optionName: string | null;
+  productSlug: string;
+  productTitle: string;
 }
 
-export default function VariantPicker({ variants, optionName }: VariantPickerProps) {
+export default function VariantPicker({ variants, optionName, productSlug, productTitle }: VariantPickerProps) {
   const t = useTranslations('shop');
+  const addItem = useCartStore((s) => s.addItem);
   const [selectedId, setSelectedId] = useState<number | null>(variants[0]?.id ?? null);
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
@@ -20,6 +24,17 @@ export default function VariantPicker({ variants, optionName }: VariantPickerPro
   const price = selected?.price ?? 0;
   const compareAtPrice = selected?.compare_at_price ?? null;
   const isAvailable = selected?.available ?? false;
+
+  const handleAddToCart = () => {
+    if (!selected || !isAvailable) return;
+    addItem({
+      productSlug,
+      productTitle,
+      variantId: selected.id,
+      variantTitle: selected.title,
+      price: selected.price,
+    });
+  };
 
   return (
     <>
@@ -81,6 +96,7 @@ export default function VariantPicker({ variants, optionName }: VariantPickerPro
       ) : (
         <button
           type="button"
+          onClick={handleAddToCart}
           disabled={!isAvailable}
           className={`w-full py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase shrink-0 transition-opacity ${
             !isAvailable ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:opacity-85'

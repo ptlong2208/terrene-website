@@ -5,20 +5,18 @@ import { ShoppingBag, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { NavLink } from '@/lib/types';
 import SlotText from '@/app/components/SlotText';
+import { useCartStore } from '@/app/store/cartStore';
 
 interface HeaderRightProps {
   navShopLink?: NavLink;
   navCartLabel?: string;
-  cartCount?: number;
 }
 
-export default function HeaderRight({
-  navShopLink,
-  navCartLabel,
-  cartCount = 0,
-}: HeaderRightProps) {
+export default function HeaderRight({ navShopLink, navCartLabel }: HeaderRightProps) {
   const t = useTranslations('nav');
-  const cartText = `${navCartLabel} [${cartCount}]`;
+  const { count, open } = useCartStore();
+  const liveCount = count();
+  const cartText = `${navCartLabel} [${liveCount}]`;
 
   return (
     <nav
@@ -38,13 +36,21 @@ export default function HeaderRight({
       )}
       <button
         type="button"
+        onClick={open}
         className="group inline-flex items-center whitespace-nowrap text-[18px] md:text-base font-normal leading-none bg-transparent border-0 cursor-pointer p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92]"
         aria-label={cartText}
       >
         <span className="hidden md:block">
           <SlotText text={cartText} />
         </span>
-        <ShoppingBag size={24} strokeWidth={1.5} className="md:hidden" />
+        <span className="md:hidden relative">
+          <ShoppingBag size={24} strokeWidth={1.5} />
+          {liveCount > 0 && (
+            <span className="absolute -top-1.5 -right-2 bg-(--green-deep) text-cream text-[10px] font-bold leading-none w-4 h-4 rounded-full flex items-center justify-center">
+              {liveCount}
+            </span>
+          )}
+        </span>
       </button>
     </nav>
   );

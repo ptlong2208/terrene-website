@@ -38,6 +38,13 @@
     "addToCart": "カートに追加",
     "productInfoTitle": "商品情報"
   },
+  "cart": {
+    "title": "カート",
+    "empty": "カートに商品がありません。",
+    "continueShopping": "お買い物を続ける",
+    "subtotal": "小計",
+    "checkout": "チェックアウト"
+  },
   "partners": {
     "visit": "訪問する"
   },
