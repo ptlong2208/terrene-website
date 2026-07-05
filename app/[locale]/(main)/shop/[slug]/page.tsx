@@ -2,10 +2,11 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
+import { fetchProductData } from '@/lib/haravan';
 import type { ShopProduct } from '@/lib/types';
-import { formatPrice } from '@/lib/utils';
 import ProductInfoCard from '@/app/components/ProductInfoCard';
 import StoryModal from '@/app/components/StoryModal';
+import VariantPicker from '@/app/components/VariantPicker';
 
 export default async function ProductDetailPage({
   params,
@@ -15,15 +16,18 @@ export default async function ProductDetailPage({
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: 'shop' });
 
-  const product = await fetchStrapiBySlug<ShopProduct>('/api/shop-products', slug, {
-    'populate[gallery]': 'true',
-    'populate[image]': 'true',
-    'populate[category]': 'true',
-    'populate[taste_notes]': 'true',
-    'populate[product_info]': 'true',
-    'populate[story][populate][images]': 'true',
-    locale,
-  });
+  const [product, { variants, optionName }] = await Promise.all([
+    fetchStrapiBySlug<ShopProduct>('/api/shop-products', slug, {
+      'populate[gallery]': 'true',
+      'populate[image]': 'true',
+      'populate[category]': 'true',
+      'populate[taste_notes]': 'true',
+      'populate[product_info]': 'true',
+      'populate[story][populate][images]': 'true',
+      locale,
+    }),
+    fetchProductData(slug),
+  ]);
 
   if (!product) notFound();
 
@@ -104,29 +108,13 @@ export default async function ProductDetailPage({
                 </div>
               )}
 
-              {product.price > 0 && (
-                <p className="flex items-baseline gap-2.5 mb-4">
-                  <span className="text-[20px] font-extrabold text-(--green-deep)">
-                    {formatPrice(product.price)}
-                  </span>
-                  {product.original_price && product.original_price > product.price && (
-                    <span className="text-[14px] text-ink-faint line-through">
-                      {formatPrice(product.original_price)}
-                    </span>
-                  )}
-                </p>
-              )}
-              <p className="text-[13px] text-ink-soft mb-4">
-                {t('shippingNote')}
-              </p>
             </div>
 
-            <button
-              type="button"
-              className="w-full mt-4 py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase hover:opacity-85 transition-opacity shrink-0 cursor-pointer"
-            >
-              {t('addToCart')}
-            </button>
+            <VariantPicker
+              variants={variants}
+              optionName={optionName}
+              fallbackPrice={product.price || undefined}
+            />
           </aside>
         </div>
 
