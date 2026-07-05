@@ -30,16 +30,18 @@ export async function fetchProductData(slug: string): Promise<HaravanProduct> {
 
   const data = await res.json();
   const product = data.products?.[0];
-
   const variants: ProductVariant[] = (product?.variants ?? []).map(
     (v: Omit<ProductVariant, 'available'>) => ({
       ...v,
+      compare_at_price: v.compare_at_price || null,
       available: v.inventory_management === null || v.inventory_quantity > 0,
     })
   );
 
+  const rawOptionName = product?.options?.[0]?.name ?? null;
+
   return {
     variants,
-    optionName: product?.options?.[0]?.name ?? null,
+    optionName: rawOptionName === 'Title' ? null : rawOptionName,
   };
 }

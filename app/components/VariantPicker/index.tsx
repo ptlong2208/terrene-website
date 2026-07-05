@@ -18,6 +18,7 @@ export default function VariantPicker({ variants, optionName, fallbackPrice }: V
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
   const hasVariants = variants.length > 0;
+  const hasOptions = variants.length > 1;
   const price = hasVariants ? (selected?.price ?? 0) : (fallbackPrice ?? 0);
   const compareAtPrice = hasVariants ? (selected?.compare_at_price ?? null) : null;
   const isAvailable = hasVariants ? (selected?.available ?? false) : false;
@@ -43,7 +44,7 @@ export default function VariantPicker({ variants, optionName, fallbackPrice }: V
         )}
       </p>
 
-      {hasVariants && (
+      {hasOptions && (
         <div className="py-3.5 border-t border-line mb-4">
           {optionName && (
             <p className="text-[11px] font-bold tracking-widest uppercase text-ink-soft mb-3">
