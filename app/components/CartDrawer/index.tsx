@@ -5,17 +5,19 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useCartStore } from '@/app/store/cartStore';
 import { formatPrice } from '@/lib/utils';
+import { useIsMounted } from '@/app/hooks/useIsMounted';
 import SlotText from '@/app/components/SlotText';
 
 export default function CartDrawer() {
   const { items, isOpen, close, updateQty } = useCartStore();
   const t = useTranslations('cart');
   const tCommon = useTranslations('common');
+  const mounted = useIsMounted();
 
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
-  if (typeof document === 'undefined') return null;
+  if (!mounted) return null;
 
   return createPortal(
     <>
@@ -89,7 +91,8 @@ export default function CartDrawer() {
                     <button
                       type="button"
                       onClick={() => updateQty(item.variantId, item.quantity + 1)}
-                      className="text-[15px] leading-none w-3.5 text-center bg-transparent border-0 cursor-pointer text-ink hover:text-(--green-deep) transition-colors"
+                      disabled={item.inventoryQuantity !== null && item.quantity >= item.inventoryQuantity}
+                      className="text-[15px] leading-none w-3.5 text-center bg-transparent border-0 cursor-pointer text-ink hover:text-(--green-deep) transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       aria-label="Tăng số lượng"
                     >
                       +

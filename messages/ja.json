@@ -36,6 +36,8 @@
     "shippingNote": "🚚 ホーチミン市内送料無料",
     "contactUs": "お問い合わせ",
     "addToCart": "カートに追加",
+    "stockRemaining": "残り{count}点",
+    "cartLimit": "購入可能な最大数量に達しました",
     "productInfoTitle": "商品情報"
   },
   "cart": {

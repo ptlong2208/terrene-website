@@ -36,6 +36,8 @@
     "shippingNote": "🚚 Freeship nội thành TP.HCM (cũ)",
     "contactUs": "Liên hệ",
     "addToCart": "Thêm vào giỏ hàng",
+    "stockRemaining": "Còn {count} sản phẩm",
+    "cartLimit": "Bạn đã thêm tối đa số lượng có thể mua",
     "productInfoTitle": "Thông tin sản phẩm"
   },
   "cart": {

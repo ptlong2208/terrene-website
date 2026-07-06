@@ -16,8 +16,9 @@ interface VariantPickerProps {
 
 export default function VariantPicker({ variants, optionName, productSlug, productTitle }: VariantPickerProps) {
   const t = useTranslations('shop');
-  const addItem = useCartStore((s) => s.addItem);
+  const { items, addItem } = useCartStore();
   const [selectedId, setSelectedId] = useState<number | null>(variants[0]?.id ?? null);
+  const [limitReached, setLimitReached] = useState(false);
 
   const selected = variants.find((v) => v.id === selectedId) ?? variants[0];
   const hasOptions = variants.length > 1;
@@ -25,14 +26,25 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
   const compareAtPrice = selected?.compare_at_price ?? null;
   const isAvailable = selected?.available ?? false;
 
+  const isTracked = selected?.inventory_management === 'haravan';
+  const stockLeft = isTracked ? (selected?.inventory_quantity ?? 0) : null;
+  const cartQty = items.find((i) => i.variantId === selected?.id)?.quantity ?? 0;
+  const atLimit = stockLeft !== null && cartQty >= stockLeft;
+
   const handleAddToCart = () => {
     if (!selected || !isAvailable) return;
+    if (atLimit) {
+      setLimitReached(true);
+      setTimeout(() => setLimitReached(false), 2500);
+      return;
+    }
     addItem({
       productSlug,
       productTitle,
       variantId: selected.id,
       variantTitle: selected.title,
       price: selected.price,
+      inventoryQuantity: stockLeft,
     });
   };
 
@@ -69,7 +81,7 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
               <button
                 key={v.id}
                 type="button"
-                onClick={() => setSelectedId(v.id)}
+                onClick={() => { setSelectedId(v.id); setLimitReached(false); }}
                 disabled={!v.available}
                 className={`px-4 py-2 rounded-full text-[13px] font-semibold border transition-colors cursor-pointer ${
                   v.id === selectedId
@@ -84,7 +96,17 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
         </div>
       )}
 
+      {isTracked && stockLeft !== null && (
+        <p className={`text-[12px] mb-3 font-medium ${stockLeft <= 5 ? 'text-amber-700' : 'text-ink-soft'}`}>
+          {t('stockRemaining', { count: stockLeft })}
+        </p>
+      )}
+
       <p className="text-[13px] text-ink-soft mb-4">{t('shippingNote')}</p>
+
+      {limitReached && (
+        <p className="text-[12px] text-amber-700 mb-2 text-center">{t('cartLimit')}</p>
+      )}
 
       {price === 0 ? (
         <Link
@@ -97,9 +119,9 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
         <button
           type="button"
           onClick={handleAddToCart}
-          disabled={!isAvailable}
+          disabled={!isAvailable || atLimit}
           className={`w-full py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase shrink-0 transition-opacity ${
-            !isAvailable ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:opacity-85'
+            !isAvailable || atLimit ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:opacity-85'
           }`}
         >
           {t('addToCart')}

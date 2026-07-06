@@ -1,5 +1,6 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -14,8 +15,12 @@ interface HeaderRightProps {
 
 export default function HeaderRight({ navShopLink, navCartLabel }: HeaderRightProps) {
   const t = useTranslations('nav');
-  const { count, open } = useCartStore();
-  const liveCount = count();
+  const open = useCartStore((s) => s.open);
+  const liveCount = useSyncExternalStore(
+    useCartStore.subscribe,
+    () => useCartStore.getState().count(),
+    () => 0,
+  );
   const cartText = `${navCartLabel} [${liveCount}]`;
 
   return (

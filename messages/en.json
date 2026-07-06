@@ -36,6 +36,8 @@
     "shippingNote": "🚚 Free shipping in Ho Chi Minh City",
     "contactUs": "Contact us",
     "addToCart": "Add to cart",
+    "stockRemaining": "{count} left in stock",
+    "cartLimit": "You've reached the maximum available quantity",
     "productInfoTitle": "Product information"
   },
   "cart": {

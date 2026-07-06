@@ -8,6 +8,7 @@ export interface CartItem {
   variantTitle: string;
   price: number;
   quantity: number;
+  inventoryQuantity: number | null; // null = unlimited
 }
 
 interface CartState {
@@ -35,6 +36,8 @@ export const useCartStore = create<CartState>()(
       addItem: (incoming) => {
         set((state) => {
           const existing = state.items.find((i) => i.variantId === incoming.variantId);
+          const max = incoming.inventoryQuantity;
+          if (existing && max !== null && existing.quantity >= max) return state;
           const items = existing
             ? state.items.map((i) =>
                 i.variantId === incoming.variantId ? { ...i, quantity: i.quantity + 1 } : i
@@ -51,10 +54,17 @@ export const useCartStore = create<CartState>()(
       updateQty: (variantId, qty) => {
         if (qty <= 0) { get().removeItem(variantId); return; }
         set((state) => ({
-          items: state.items.map((i) => (i.variantId === variantId ? { ...i, quantity: qty } : i)),
+          items: state.items.map((i) => {
+            if (i.variantId !== variantId) return i;
+            const capped = i.inventoryQuantity !== null ? Math.min(qty, i.inventoryQuantity) : qty;
+            return { ...i, quantity: capped };
+          }),
         }));
       },
     }),
-    { name: 'terrene-cart' }
+    {
+      name: 'terrene-cart',
+      partialize: (state) => ({ items: state.items }),
+    }
   )
 );
