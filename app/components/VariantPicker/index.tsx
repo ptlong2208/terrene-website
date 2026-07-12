@@ -96,8 +96,8 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
         </div>
       )}
 
-      {isTracked && stockLeft !== null && (
-        <p className={`text-[12px] mb-3 font-medium ${stockLeft <= 5 ? 'text-amber-700' : 'text-ink-soft'}`}>
+      {isTracked && stockLeft !== null && stockLeft <= 10 && (
+        <p className={`text-[12px] mb-3 font-medium ${stockLeft <= 10 ? 'text-amber-700' : 'text-ink-soft'}`}>
           {t('stockRemaining', { count: stockLeft })}
         </p>
       )}
