@@ -45,27 +45,20 @@ export async function fetchStrapiCollection<T>(
 }
 
 /**
- * Fetch a single item from a collection via a custom slug endpoint.
- * Expects the CMS to expose GET {path}/slug/:slug returning { data: item }.
- * Returns null when the CMS responds with 404.
+ * Fetch a single item from a collection by slug using the standard REST endpoint.
+ * Strapi applies the filter server-side; only the matching row is returned.
  */
 export async function fetchStrapiBySlug<T>(
   path: string,
   slug: string,
   params: Record<string, string> = {}
 ): Promise<T | null> {
-  const qs = new URLSearchParams(params).toString();
-  const url = `${STRAPI_URL}${path}/slug/${encodeURIComponent(slug)}${qs ? `?${qs}` : ''}`;
-
-  const res = await fetch(url, { next: { revalidate: 60 } });
-  if (res.status === 404) return null;
-
-  if (!res.ok) {
-    throw new Error(`Strapi fetch failed: ${res.status} ${res.statusText} — ${url}`);
-  }
-
-  const json = await res.json();
-  return json.data as T;
+  const items = await fetchStrapiCollection<T>(path, {
+    ...params,
+    'filters[slug][$eq]': slug,
+    'pagination[limit]': '1',
+  });
+  return items[0] ?? null;
 }
 
 /** Resolve a Strapi media URL to an absolute URL. */

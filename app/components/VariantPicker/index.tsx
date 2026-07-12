@@ -70,7 +70,7 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
       </p>
 
       {hasOptions && (
-        <div className="py-3.5 border-t border-line mb-4">
+        <div className="py-3.5 border-t border-line">
           {optionName && (
             <p className="text-[11px] font-bold tracking-widest uppercase text-ink-soft mb-3">
               {optionName}
