@@ -1,6 +1,9 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import SlotText from '@/app/components/SlotText';
 import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
 import { fetchProductData } from '@/lib/haravan';
 import type { ShopProduct } from '@/lib/types';
@@ -40,6 +43,14 @@ export default async function ProductDetailPage({
   return (
     <section className="pt-[calc(64px+clamp(24px,4vh,56px))] pb-[clamp(60px,9vh,120px)]">
       <div className="max-w-360 mx-auto px-gutter">
+        <Link
+          href="/shop"
+          className="inline-flex items-center gap-1.5 mb-6 text-[13px] text-ink-soft no-underline group"
+        >
+          <ArrowLeft size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+          <SlotText text={t('backToAll')} />
+        </Link>
+
         <div className="grid grid-cols-[1.1fr_0.9fr] gap-[clamp(28px,5vw,88px)] items-start max-md:grid-cols-1 max-md:gap-8">
           <div className="flex flex-col gap-3.5">
             {galleryImages.length > 0 ? (

@@ -44,7 +44,8 @@ export default function Header({
   const isHomepage = /^\/[a-z]{2}\/?$/.test(pathname);
   const [menuState, setMenuState] = useState<MenuState>('closed');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [hasBg, setHasBg] = useState(!isHomepage);
+  const [scrolledPast60, setScrolledPast60] = useState(false);
+  const hasBg = !isHomepage || scrolledPast60;
   const [showConsent, setShowConsent] = useState(false);
   const preloaderDone = usePreloaderDone();
 
@@ -73,11 +74,11 @@ export default function Header({
 
         if (isOverFooterRef.current) {
           hideHeaderAnim.reverse();
-          setHasBg(true);
+          setScrolledPast60(true);
           return;
         }
 
-        setHasBg(!isHomepage || currentScroll > 60);
+        setScrolledPast60(currentScroll > 60);
 
         if (currentScroll <= 0) {
           hideHeaderAnim.reverse();
@@ -101,6 +102,10 @@ export default function Header({
       hideHeaderAnimRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    hideHeaderAnimRef.current?.reverse();
+  }, [pathname]);
 
   useBodyScrollLock(menuState !== 'closed');
 
