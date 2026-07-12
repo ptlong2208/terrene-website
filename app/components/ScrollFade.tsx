@@ -26,6 +26,7 @@ export default function ScrollFade({ children, className = '' }: ScrollFadeProps
   return (
     <div
       ref={ref}
+      data-lenis-prevent
       className={`${className} ${overflowing ? 'mask-[linear-gradient(to_bottom,black_calc(100%-48px),transparent_100%)]' : ''}`}
     >
       {children}
