@@ -17,6 +17,19 @@ export interface HaravanProduct {
   optionName: string | null;
 }
 
+export async function fetchProductPricesBySlugs(
+  slugs: string[]
+): Promise<Record<string, number>> {
+  const entries = await Promise.all(
+    slugs.map(async (slug) => {
+      const { variants } = await fetchProductData(slug);
+      const prices = variants.map((v) => v.price).filter((p) => p > 0);
+      return [slug, prices.length ? Math.min(...prices) : 0] as const;
+    })
+  );
+  return Object.fromEntries(entries);
+}
+
 export async function fetchProductData(slug: string): Promise<HaravanProduct> {
   const res = await fetch(`${BASE}/products.json?handle=${slug}`, {
     headers: {

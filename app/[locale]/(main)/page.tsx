@@ -1,4 +1,5 @@
 import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
+import { fetchProductPricesBySlugs } from '@/lib/haravan';
 import type { HomepageData } from '@/lib/types';
 import HeroSection from '@/app/components/HeroSection';
 import StorySection from '@/app/components/StorySection';
@@ -43,6 +44,9 @@ export default async function Home({
     locale,
   });
 
+  const featuredProducts = homepage.shop_products.slice(0, 6);
+  const productPrices = await fetchProductPricesBySlugs(featuredProducts.map((p) => p.slug));
+
   return (
     <>
       <HeroSection
@@ -62,7 +66,8 @@ export default async function Home({
         />
         <FeaturedProductsSection
           header={homepage.shop_header}
-          products={homepage.shop_products.slice(0, 6)}
+          products={featuredProducts}
+          productPrices={productPrices}
         />
         <BenefitsSection
           header={homepage.benefits_header}

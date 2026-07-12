@@ -1,60 +1,113 @@
+'use client';
+
+import { useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import gsap from 'gsap';
 import { strapiMediaUrl } from '@/lib/strapi';
+import { formatPrice } from '@/lib/utils';
 import type { ShopProduct } from '@/lib/types';
 
 interface ProductCardProps {
   product: ShopProduct;
   href: string;
+  minPrice?: number;
   tabIndex?: number;
   ariaHidden?: boolean;
-  viewProductLabel: string;
 }
 
-export default function ProductCard({
-  product,
-  href,
-  tabIndex,
-  ariaHidden,
-  viewProductLabel,
-}: ProductCardProps) {
+export default function ProductCard({ product, href, minPrice, tabIndex, ariaHidden }: ProductCardProps) {
+  const tagOrigin = product.tags[0]?.label;
+  const tagGrade = product.tags[1]?.label;
+  const hasTags = tagOrigin || tagGrade;
+
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const tagsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const media = mediaRef.current;
+    const tags = tagsRef.current;
+    if (!media || !tags || !hasTags) return;
+
+    const el = media;
+
+    if (window.matchMedia('(hover: none)').matches) {
+      gsap.set(tags, { opacity: 1, yPercent: -50, y: 0 });
+      return;
+    }
+
+    gsap.set(tags, { opacity: 0, yPercent: -50, y: 8 });
+
+    const quickOpacity = gsap.quickTo(tags, 'opacity', { duration: 0.35, ease: 'power2.out' });
+    const quickY = gsap.quickTo(tags, 'y', { duration: 0.5, ease: 'power3.out' });
+
+    function onEnter() { quickOpacity(1); quickY(0); }
+    function onMove(e: MouseEvent) {
+      const rect = el.getBoundingClientRect();
+      const frac = Math.min(0.82, Math.max(0.18, (e.clientY - rect.top) / rect.height));
+      quickY((frac - 0.5) * rect.height);
+    }
+    function onLeave() { quickOpacity(0); quickY(8); }
+
+    media.addEventListener('mouseenter', onEnter);
+    media.addEventListener('mousemove', onMove);
+    media.addEventListener('mouseleave', onLeave);
+
+    return () => {
+      media.removeEventListener('mouseenter', onEnter);
+      media.removeEventListener('mousemove', onMove);
+      media.removeEventListener('mouseleave', onLeave);
+      gsap.killTweensOf(tags);
+    };
+  }, [hasTags]);
+
   return (
     <Link
       href={href}
       tabIndex={tabIndex}
       aria-hidden={ariaHidden}
-      className="group relative w-[clamp(320px,34vw,500px)] max-md:w-[75vw] aspect-4/5 shrink-0 overflow-hidden block mr-4 bg-[#E8E3D5] no-underline"
+      className="w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4 no-underline"
     >
-      {product.image && (
-        <Image
-          src={strapiMediaUrl(product.image.url)}
-          alt={product.image.alternativeText ?? product.title}
-          fill
-          className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-[1.04]"
-          sizes="(max-width: 768px) 75vw, clamp(320px, 34vw, 500px)"
-        />
-      )}
-
-      {product.tags.length > 0 && (
-        <span className="absolute top-3 left-3 z-40 bg-white text-(--green-deep) border border-(--green-deep)/12 text-sm font-semibold tracking-[-0.01em] px-3.5 py-2.5 shadow-[0_4px_14px_rgba(29,64,37,0.10)] opacity-0 -translate-y-1.5 pointer-events-none transition duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-          {product.tags.map((t) => t.label).join(' · ')}
-        </span>
-      )}
-
-      <div className="absolute left-3 right-3 bottom-3 z-30 bg-[#F2EFE8] p-4 flex flex-col opacity-0 pointer-events-none transition-opacity duration-350 group-hover:opacity-100 group-hover:pointer-events-auto">
-        <div className="text-base font-extrabold uppercase text-(--green-deep) mb-4 tracking-[-0.01em]">
-          {product.title}
-        </div>
-        {product.description && (
-          <p className="text-sm leading-normal text-(--green-deep)/78 mb-4.5">
-            {product.description}
-          </p>
+      <div ref={mediaRef} className="relative aspect-square overflow-hidden bg-[#E8E3D5]">
+        {product.image && (
+          <Image
+            src={strapiMediaUrl(product.image.url)}
+            alt={product.image.alternativeText ?? product.title}
+            fill
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:scale-[1.03]"
+            sizes="(max-width: 768px) 70vw, clamp(260px, 28vw, 420px)"
+          />
         )}
-        <div className="mt-auto">
-          <span className="block border border-(--green-deep) text-(--green-deep) text-xs font-bold tracking-[0.08em] uppercase p-3 text-center transition-colors group-hover:hover:bg-(--green-deep) group-hover:hover:text-cream">
-            {viewProductLabel}
+
+        {hasTags && (
+          <div
+            ref={tagsRef}
+            className="absolute inset-x-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-between pointer-events-none"
+            style={{ opacity: 0 }}
+          >
+            {tagOrigin && (
+              <span className="text-[11px] font-semibold tracking-[0.03em] uppercase text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
+                {tagOrigin}
+              </span>
+            )}
+            {tagGrade && (
+              <span className="text-[11px] font-semibold tracking-[0.03em] uppercase text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
+                {tagGrade}
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-baseline justify-between gap-3 border-t border-line pt-3.5">
+        <span className="text-[15px] font-semibold text-(--green-deep) tracking-[-0.01em] leading-snug">
+          {product.title}
+        </span>
+        {minPrice !== undefined && minPrice > 0 && (
+          <span className="text-[16px] font-bold text-(--green-deep) tabular-nums whitespace-nowrap font-sans">
+            {formatPrice(minPrice)}
           </span>
-        </div>
+        )}
       </div>
     </Link>
   );

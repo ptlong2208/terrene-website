@@ -14,12 +14,14 @@ import styles from './index.module.css';
 interface FeaturedProductsSectionProps {
   header?: SectionHeaderData | null;
   products?: ShopProduct[];
+  productPrices?: Record<string, number>;
   viewAllHref?: string;
 }
 
 export default function FeaturedProductsSection({
   header,
   products = [],
+  productPrices = {},
   viewAllHref = '/shop',
 }: FeaturedProductsSectionProps) {
   const t = useTranslations('shop');
@@ -66,16 +68,16 @@ export default function FeaturedProductsSection({
       >
         <div className={`flex w-max motion-reduce:animate-none group-hover/marquee:[animation-play-state:paused] ${styles.track}`}>
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} href={`/shop/${product.slug}`} viewProductLabel={t('viewProduct')} />
+            <ProductCard key={product.id} product={product} href={`/shop/${product.slug}`} minPrice={productPrices[product.slug]} />
           ))}
           {products.map((product) => (
             <ProductCard
               key={`dup-${product.id}`}
               product={product}
               href={`/shop/${product.slug}`}
+              minPrice={productPrices[product.slug]}
               tabIndex={-1}
               ariaHidden={true}
-              viewProductLabel={t('viewProduct')}
             />
           ))}
         </div>
