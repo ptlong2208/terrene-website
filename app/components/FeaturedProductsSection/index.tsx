@@ -35,7 +35,7 @@ export default function FeaturedProductsSection({
 
     const marquee = marqueeRef.current;
     const cta = ctaRef.current;
-    const cards = marquee.querySelectorAll('a');
+    const cards = marquee.querySelectorAll('article');
 
     gsap.set(cards, { y: 46, opacity: 0 });
 

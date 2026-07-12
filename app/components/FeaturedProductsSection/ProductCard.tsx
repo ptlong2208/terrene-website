@@ -62,19 +62,23 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
   }, [hasTags]);
 
   return (
-    <Link
-      href={href}
-      tabIndex={tabIndex}
+    <article
       aria-hidden={ariaHidden}
-      className="w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4 no-underline"
+      className="w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4"
     >
-      <div ref={mediaRef} className="relative aspect-square overflow-hidden bg-[#E8E3D5]">
+      <div ref={mediaRef} className="group relative aspect-square overflow-hidden bg-[#E8E3D5]">
+        <Link
+          href={href}
+          tabIndex={tabIndex}
+          className="absolute inset-0 z-10"
+          aria-label={product.title}
+        />
         {product.image && (
           <Image
             src={strapiMediaUrl(product.image.url)}
             alt={product.image.alternativeText ?? product.title}
             fill
-            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] hover:scale-[1.03]"
+            className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 70vw, clamp(260px, 28vw, 420px)"
           />
         )}
@@ -109,6 +113,6 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
           </span>
         )}
       </div>
-    </Link>
+    </article>
   );
 }
