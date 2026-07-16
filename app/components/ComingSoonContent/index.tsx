@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, useActionState, Fragment } from 'react';
+import { useEffect, useRef, useActionState, Fragment } from 'react';
 import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import TerreneLogo from '@/app/components/TerreneLogo';
 import SlotText from '@/app/components/SlotText';
+import RotatingText from '@/app/components/RotatingText';
 import { subscribeToWishlist } from '@/app/actions/wishlist';
 import type { ComingSoonData } from '@/lib/types';
 
@@ -31,18 +32,8 @@ export default function ComingSoonContent({
 
   const t = useTranslations('validation');
   const rootRef = useRef<HTMLDivElement>(null);
-  const [wordIdx, setWordIdx] = useState(0);
   const [state, action, isPending] = useActionState(subscribeToWishlist, null);
   const submitted = !!state && 'success' in state;
-
-  useEffect(() => {
-    if (!words.length) return;
-    const id = setInterval(
-      () => setWordIdx(prev => (prev + 1) % words.length),
-      2600,
-    );
-    return () => clearInterval(id);
-  }, [words.length]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -85,20 +76,13 @@ export default function ComingSoonContent({
               </Fragment>
             ))}
             {words.length > 0 && (
-              <span
-                className="overflow-hidden h-[1.4em] w-[4.8em] inline-block align-bottom"
-              >
-                <span
-                  className="flex flex-col transition-[transform] duration-550 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                  style={{ transform: `translateY(${-wordIdx * 1.4}em)` }}
-                >
-                  {words.map(w => (
-                    <span key={w} className="block h-[1.4em] leading-[1.4] italic font-light text-left">
-                      {w}
-                    </span>
-                  ))}
-                </span>
-              </span>
+              <RotatingText
+                texts={words}
+                rotationInterval={2600}
+                staggerDuration={0.03}
+                mainClassName="inline-flex align-bottom italic"
+                splitLevelClassName="overflow-hidden pb-[0.2em] mb-[-0.2em] px-[0.1em] mx-[-0.1em]"
+              />
             )}
           </p>
         </div>
