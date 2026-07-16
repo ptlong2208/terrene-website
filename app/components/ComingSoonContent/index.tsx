@@ -78,8 +78,8 @@ export default function ComingSoonContent({
             {words.length > 0 && (
               <RotatingText
                 texts={words}
-                rotationInterval={2600}
-                staggerDuration={0.03}
+                rotationInterval={3600}
+                staggerDuration={0.05}
                 mainClassName="inline-flex align-bottom italic"
                 splitLevelClassName="overflow-hidden pb-[0.2em] mb-[-0.2em] px-[0.1em] mx-[-0.1em]"
               />
