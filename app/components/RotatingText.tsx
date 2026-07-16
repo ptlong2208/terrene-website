@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { motion, AnimatePresence, type Transition } from 'framer-motion';
+import { motion, AnimatePresence, type Transition, type Target, type TargetAndTransition, type VariantLabels } from 'framer-motion';
 
 function cn(...classes: (string | undefined | null | boolean)[]): string {
   return classes.filter(Boolean).join(' ');
@@ -21,9 +21,9 @@ export interface RotatingTextProps
   > {
   texts: string[];
   transition?: Transition;
-  initial?: object | boolean | string | string[];
-  animate?: object | boolean | string | string[];
-  exit?: object | string | string[];
+  initial?: boolean | Target | VariantLabels;
+  animate?: boolean | TargetAndTransition | VariantLabels;
+  exit?: TargetAndTransition | VariantLabels;
   animatePresenceMode?: 'sync' | 'wait';
   animatePresenceInitial?: boolean;
   rotationInterval?: number;
@@ -188,9 +188,9 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
                   {wordObj.characters.map((char, charIndex) => (
                     <motion.span
                       key={charIndex}
-                      initial={initial as object}
-                      animate={animate as object}
-                      exit={exit as object}
+                      initial={initial}
+                      animate={animate}
+                      exit={exit}
                       transition={{
                         ...transition,
                         delay: getStaggerDelay(
