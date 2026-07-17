@@ -27,7 +27,7 @@ export default function MusicConsentBanner({
       className={clsx(styles.banner, show && styles.visible)}
       role="dialog"
       aria-label={dialogLabel}
-      aria-hidden={!show}
+      inert={!show || undefined}
     >
       <p className={styles.text}>{text}</p>
       <div className={styles.actions}>

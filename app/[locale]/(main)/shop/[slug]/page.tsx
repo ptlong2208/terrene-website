@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import SlotText from '@/app/components/ui/SlotText';
 import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
@@ -49,7 +49,7 @@ export default async function ProductDetailPage({
           href="/shop"
           className="inline-flex items-center gap-1.5 mb-6 text-[13px] text-ink-soft no-underline group"
         >
-          <ArrowLeft size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+          <ChevronLeft size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
           <SlotText text={t('backToAll')} />
         </Link>
 
