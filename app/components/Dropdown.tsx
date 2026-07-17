@@ -58,7 +58,7 @@ export default function Dropdown<T extends string>({ label, value, options, onCh
               key={opt.value}
               type="button"
               onClick={() => { onChange(opt.value); setOpen(false); }}
-              className={`block w-full text-left px-4 py-2.5 text-[13px] transition-colors duration-150 hover:bg-(--green-deep)/5 ${
+              className={`block w-full text-left px-4 py-2.5 text-[13px] transition-colors duration-150 hover:bg-(--green-deep)/5 cursor-pointer ${
                 value === opt.value ? 'text-(--green-deep) font-semibold' : 'text-(--green-deep)/70'
               }`}
             >

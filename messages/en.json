@@ -40,6 +40,7 @@
     "cartLimit": "You've reached the maximum available quantity",
     "productInfoTitle": "Product information",
     "allProducts": "All Products",
+    "noProducts": "No products found in this category.",
     "sort": "Sort",
     "sortDefault": "Default",
     "sortPriceAsc": "Price: low → high",

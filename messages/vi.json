@@ -40,6 +40,7 @@
     "cartLimit": "Bạn đã thêm tối đa số lượng có thể mua",
     "productInfoTitle": "Thông tin sản phẩm",
     "allProducts": "Tất cả sản phẩm",
+    "noProducts": "Danh mục này chưa có sản phẩm nào.",
     "sort": "Sắp xếp",
     "sortDefault": "Mặc định",
     "sortPriceAsc": "Giá: thấp → cao",

@@ -1,4 +1,5 @@
 import type { ShopCategory } from '@/lib/types';
+import SlotText from '@/app/components/SlotText';
 import { CategoryFilter } from './constants';
 
 interface CategoryBarProps {
@@ -19,7 +20,7 @@ export default function CategoryBar({
   allProductsLabel,
 }: CategoryBarProps) {
   const btnClass = (active: boolean) =>
-    `text-[13px] font-semibold tracking-[0.02em] uppercase text-(--green-deep) transition-opacity duration-200 cursor-pointer${
+    `group inline-flex items-center gap-1 text-[13px] font-semibold tracking-[0.02em] uppercase text-(--green-deep) transition-opacity duration-200 cursor-pointer${
       active ? '' : ' opacity-40 hover:opacity-100'
     }`;
 
@@ -30,7 +31,8 @@ export default function CategoryBar({
         onClick={() => onSelect(CategoryFilter.All)}
         className={btnClass(activeCategory === CategoryFilter.All)}
       >
-        {allProductsLabel} <span className="tabular-nums">({totalCount})</span>
+        <SlotText text={allProductsLabel} />
+        <span className="tabular-nums">({totalCount})</span>
       </button>
       {categories.map(cat => (
         <button
@@ -39,7 +41,8 @@ export default function CategoryBar({
           onClick={() => onSelect(cat.documentId)}
           className={btnClass(activeCategory === cat.documentId)}
         >
-          {cat.name} <span className="tabular-nums">({categoryCounts[cat.documentId] ?? 0})</span>
+          <SlotText text={cat.name} />
+          <span className="tabular-nums">({categoryCounts[cat.documentId] ?? 0})</span>
         </button>
       ))}
     </div>

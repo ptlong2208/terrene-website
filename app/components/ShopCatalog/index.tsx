@@ -12,6 +12,10 @@ import Dropdown from '@/app/components/Dropdown';
 
 export { CategoryFilter, SortMode } from './constants';
 
+// Persists across SPA navigations; resets only on hard refresh.
+// Used to skip entrance animations when navigating back to this page.
+let entranceAnimated = false;
+
 interface ShopCatalogProps {
   products: ShopProduct[];
   categories: ShopCategory[];
@@ -55,6 +59,7 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
   useEffect(() => {
     const bar = barRef.current;
     if (!bar) return;
+    if (entranceAnimated) return;
     gsap.from(Array.from(bar.children), {
       opacity: 0, y: 18, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.1,
     });
@@ -68,14 +73,21 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
       isFirstRender.current = false;
       gsap.registerPlugin(ScrollTrigger);
       const cards = grid.querySelectorAll('article');
-      gsap.set(cards, { opacity: 0, y: 30 });
-      ScrollTrigger.create({
-        trigger: grid,
-        start: 'top 85%',
-        once: true,
-        onEnter: () =>
-          gsap.to(cards, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out' }),
-      });
+
+      if (entranceAnimated) {
+        // Back navigation — skip entrance, show cards immediately
+        gsap.set(cards, { opacity: 1, y: 0 });
+      } else {
+        entranceAnimated = true;
+        gsap.set(cards, { opacity: 0, y: 30 });
+        ScrollTrigger.create({
+          trigger: grid,
+          start: 'top 85%',
+          once: true,
+          onEnter: () =>
+            gsap.to(cards, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out' }),
+        });
+      }
     } else {
       gsap.fromTo(grid, { opacity: 0.5 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
     }
@@ -109,21 +121,27 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
         />
       </div>
 
-      <div
-        ref={gridRef}
-        className="grid grid-cols-2 max-[520px]:grid-cols-1 gap-x-[clamp(20px,2.4vw,40px)] gap-y-[clamp(28px,3.5vh,48px)] px-gutter pb-[clamp(80px,12vh,160px)] max-w-365 mx-auto"
-      >
-        {filtered.map(product => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            href={`/${locale}/shop/${product.slug}`}
-            minPrice={prices[product.slug]}
-            className="flex flex-col"
-            sizes="(max-width: 520px) 100vw, 50vw"
-          />
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <div className="px-gutter pb-[clamp(80px,12vh,160px)] pt-10 text-center text-(--green-deep) opacity-50">
+          <p className="text-[15px]">{t('noProducts')}</p>
+        </div>
+      ) : (
+        <div
+          ref={gridRef}
+          className="grid grid-cols-2 max-[520px]:grid-cols-1 gap-x-[clamp(20px,2.4vw,40px)] gap-y-[clamp(28px,3.5vh,48px)] px-gutter pb-[clamp(80px,12vh,160px)] max-w-365 mx-auto"
+        >
+          {filtered.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              href={`/${locale}/shop/${product.slug}`}
+              minPrice={prices[product.slug]}
+              className="flex flex-col"
+              sizes="(max-width: 520px) 100vw, 50vw"
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

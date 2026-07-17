@@ -40,6 +40,7 @@
     "cartLimit": "購入可能な最大数量に達しました",
     "productInfoTitle": "商品情報",
     "allProducts": "すべての商品",
+    "noProducts": "このカテゴリにはまだ商品がありません。",
     "sort": "並び替え",
     "sortDefault": "デフォルト",
     "sortPriceAsc": "価格：安い順",
