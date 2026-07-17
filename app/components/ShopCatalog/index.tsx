@@ -8,7 +8,7 @@ import ProductCard from '@/app/components/FeaturedProductsSection/ProductCard';
 import type { ShopProduct, ShopCategory } from '@/lib/types';
 import { CategoryFilter, SortMode } from './constants';
 import CategoryBar from './CategoryBar';
-import Dropdown from '@/app/components/Dropdown';
+import Dropdown from '@/app/components/ui/Dropdown';
 
 export { CategoryFilter, SortMode } from './constants';
 

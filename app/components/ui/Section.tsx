@@ -1,7 +1,7 @@
 'use client';
 
 import { type Ref } from 'react';
-import SectionHeader from '@/app/components/SectionHeader';
+import SectionHeader from '@/app/components/ui/SectionHeader';
 
 interface SectionProps {
   id?: string;

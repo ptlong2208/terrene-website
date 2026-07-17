@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import type { PartnerItem as PartnerItemType } from '@/lib/types';
 
 interface PartnerItemProps {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import Section from '@/app/components/Section';
+import Section from '@/app/components/ui/Section';
 import TerreneElement from '@/app/components/TerreneElement';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import gsap from 'gsap';

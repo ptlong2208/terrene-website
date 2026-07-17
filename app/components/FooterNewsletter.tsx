@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { useTranslations } from 'next-intl';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import { subscribeToWishlist } from '@/app/actions/wishlist';
 
 interface FooterNewsletterProps {

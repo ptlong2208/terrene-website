@@ -4,7 +4,7 @@ import { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/Section';
+import Section from '@/app/components/ui/Section';
 import PartnerItem from './PartnerItem';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { PartnerItem as PartnerItemType, SectionHeaderData } from '@/lib/types';

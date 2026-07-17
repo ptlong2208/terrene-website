@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/Section';
+import Section from '@/app/components/ui/Section';
 import BenefitCard from './BenefitCard';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { BenefitItem, SectionHeaderData } from '@/lib/types';

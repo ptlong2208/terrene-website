@@ -3,9 +3,9 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/Section';
-import SectionHeader from '@/app/components/SectionHeader';
-import CtaLink from '@/app/components/CtaLink';
+import Section from '@/app/components/ui/Section';
+import SectionHeader from '@/app/components/ui/SectionHeader';
+import CtaLink from '@/app/components/ui/CtaLink';
 import JournalCard from './JournalCard';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { JournalPost, SectionHeaderData, NavLink } from '@/lib/types';

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useCartStore } from '@/app/store/cartStore';
 import { formatPrice } from '@/lib/utils';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 
 export default function CartDrawer() {
   const { items, isOpen, close, updateQty } = useCartStore();

@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import Section from '@/app/components/Section';
-import SlotText from '@/app/components/SlotText';
+import Section from '@/app/components/ui/Section';
+import SlotText from '@/app/components/ui/SlotText';
 import CtaPhysics from '@/app/components/CtaPhysics';
 import type { SectionHeaderData, NavLink } from '@/lib/types';
 

@@ -4,7 +4,7 @@ import { useEffect, useRef, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { useTranslations } from 'next-intl';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 
 interface ModalProps {
   isOpen: boolean;

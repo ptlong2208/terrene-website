@@ -2,8 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import SectionHeader from '@/app/components/SectionHeader';
-import CtaLink from '@/app/components/CtaLink';
+import SectionHeader from '@/app/components/ui/SectionHeader';
+import CtaLink from '@/app/components/ui/CtaLink';
 import ProcessItem from './ProcessItem';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import { strapiMediaUrl } from '@/lib/strapi';

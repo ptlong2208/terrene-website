@@ -1,5 +1,5 @@
 import type { ShopCategory } from '@/lib/types';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import { CategoryFilter } from './constants';
 
 interface CategoryBarProps {

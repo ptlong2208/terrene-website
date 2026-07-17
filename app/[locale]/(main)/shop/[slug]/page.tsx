@@ -3,14 +3,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
 import { fetchProductData } from '@/lib/haravan';
 import type { ShopProduct } from '@/lib/types';
 import ProductInfoCard from '@/app/components/ProductInfoCard';
 import StoryModal from '@/app/components/StoryModal';
 import VariantPicker from '@/app/components/VariantPicker';
-import ScrollFade from '@/app/components/ScrollFade';
+import ScrollFade from '@/app/components/ui/ScrollFade';
 
 export default async function ProductDetailPage({
   params,

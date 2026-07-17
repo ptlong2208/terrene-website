@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/Section';
+import Section from '@/app/components/ui/Section';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { TestimonialItem, SectionHeaderData } from '@/lib/types';

@@ -4,8 +4,8 @@ import { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { ProductStory } from '@/lib/types';
-import Modal from '@/app/components/Modal';
-import SlotText from '@/app/components/SlotText';
+import Modal from '@/app/components/ui/Modal';
+import SlotText from '@/app/components/ui/SlotText';
 
 interface StoryModalProps {
   story: ProductStory;

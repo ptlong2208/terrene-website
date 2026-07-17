@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, StrapiMedia } from '@/lib/types';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import styles from './MenuOverlay.module.css';
 
 export type MenuState = 'closed' | 'open' | 'closing';

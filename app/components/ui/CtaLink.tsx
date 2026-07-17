@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 
 interface CtaLinkProps {
   href: string;

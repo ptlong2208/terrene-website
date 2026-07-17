@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ShoppingBag, Store } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import type { NavLink } from '@/lib/types';
-import SlotText from '@/app/components/SlotText';
+import SlotText from '@/app/components/ui/SlotText';
 import { useCartStore } from '@/app/store/cartStore';
 
 interface HeaderRightProps {
