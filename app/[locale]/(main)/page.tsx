@@ -11,11 +11,7 @@ import PartnersSection from '@/app/components/PartnersSection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
 import JournalSection from '@/app/components/JournalSection';
 
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
   const homepage = await fetchStrapiSingle<HomepageData>('/api/homepage', {
@@ -56,7 +52,7 @@ export default async function Home({
         posterUrl={strapiMediaUrl(homepage.hero_video_poster?.url)}
         posterAlt={homepage.hero_title ?? undefined}
       />
-      <div className="relative z-1 bg-cream">
+      <div className="bg-cream relative z-1">
         <StorySection
           header={homepage.story_header}
           image={homepage.story_image}
@@ -69,23 +65,14 @@ export default async function Home({
           products={featuredProducts}
           productPrices={productPrices}
         />
-        <BenefitsSection
-          header={homepage.benefits_header}
-          items={homepage.benefits_items}
-        />
+        <BenefitsSection header={homepage.benefits_header} items={homepage.benefits_items} />
         <ProcessSection
           header={homepage.process_header}
           steps={homepage.process_steps}
           cta={homepage.process_cta}
         />
-        <QuoteSection
-          quote={homepage.quote_text}
-          attribution={homepage.quote_attribution}
-        />
-        <PartnersSection
-          header={homepage.partners_header}
-          partners={homepage.partners_items}
-        />
+        <QuoteSection quote={homepage.quote_text} attribution={homepage.quote_attribution} />
+        <PartnersSection header={homepage.partners_header} partners={homepage.partners_items} />
         <TestimonialsSection
           header={homepage.testimonials_header}
           testimonials={homepage.testimonials_items}

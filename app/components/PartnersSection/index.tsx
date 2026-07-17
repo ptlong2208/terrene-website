@@ -29,7 +29,12 @@ export default function PartnersSection({ header, partners = [] }: PartnersSecti
     gsap.set(items, { y: 32, opacity: 0 });
 
     const tween = gsap.to(items, {
-      y: 0, opacity: 1, duration: 0.75, stagger: 0.08, ease: 'power2.out', delay: 0.12,
+      y: 0,
+      opacity: 1,
+      duration: 0.75,
+      stagger: 0.08,
+      ease: 'power2.out',
+      delay: 0.12,
       onStart: () => gsap.set(list, { opacity: 1 }),
       onComplete: () => gsap.set(items, { clearProps: 'opacity,y' }),
       scrollTrigger: { trigger: sectionRef.current, start: 'top 76%', once: true },
@@ -51,12 +56,9 @@ export default function PartnersSection({ header, partners = [] }: PartnersSecti
       title={header?.title}
       inverted
       titleClassName="mb-[clamp(40px,5vh,72px)]"
-      className="bg-(--green-deep) text-cream max-md:min-h-0"
+      className="text-cream bg-(--green-deep) max-md:min-h-0"
     >
-      <ul
-        ref={listRef}
-        className="opacity-0 [&:has(li:hover)>li:not(:hover)]:opacity-[0.32]"
-      >
+      <ul ref={listRef} className="opacity-0 [&:has(li:hover)>li:not(:hover)]:opacity-[0.32]">
         {partners.map((partner) => (
           <PartnerItem key={partner.id} item={partner} visitLabel={t('visit')} />
         ))}

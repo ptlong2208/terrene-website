@@ -29,9 +29,10 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
     gsap.set(icon, { opacity: 0, scale: 0.78, rotation: -18 });
     gsap.set(targets, { opacity: 0, y: 34 });
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: section, start: 'top 76%', once: true },
-    })
+    const tl = gsap
+      .timeline({
+        scrollTrigger: { trigger: section, start: 'top 76%', once: true },
+      })
       .to(icon, { opacity: 0.3, scale: 1, rotation: 0, duration: 0.7, ease: 'power3.out' })
       .to(targets, { opacity: 1, y: 0, duration: 1, stagger: 0.16, ease: 'power3.out' }, '-=0.25');
 
@@ -46,18 +47,20 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
 
   return (
     <Section ref={sectionRef} className="items-center text-center max-md:min-h-0 max-md:py-20">
-      <div className="max-w-185 mx-auto">
+      <div className="mx-auto max-w-185">
         <div ref={iconRef} className="mb-[clamp(28px,4vh,44px)] opacity-0">
-          <TerreneElement className="size-9.5 mx-auto" />
+          <TerreneElement className="mx-auto size-9.5" />
         </div>
 
         {quote && (
           <blockquote
             ref={blockquoteRef}
-            className="text-[clamp(12px,2vw,28px)] font-[380] leading-tight tracking-[-0.02em] text-(--green-deep) mb-[clamp(20px,2.5vh,30px)] opacity-0"
+            className="mb-[clamp(20px,2.5vh,30px)] text-[clamp(12px,2vw,28px)] leading-tight font-[380] tracking-[-0.02em] text-(--green-deep) opacity-0"
           >
             {quote.split('\n').map((line, i) => (
-              <span key={i} className="block whitespace-nowrap">{line}</span>
+              <span key={i} className="block whitespace-nowrap">
+                {line}
+              </span>
             ))}
           </blockquote>
         )}
@@ -65,7 +68,7 @@ export default function QuoteSection({ quote, attribution }: QuoteSectionProps) 
         {attribution && (
           <p
             ref={attrRef}
-            className="text-[11px] font-medium tracking-[0.14em] uppercase text-ink-faint opacity-0"
+            className="text-ink-faint text-[11px] font-medium tracking-[0.14em] uppercase opacity-0"
           >
             {attribution}
           </p>

@@ -25,7 +25,7 @@ export default function CategoryBar({
     }`;
 
   return (
-    <div className="flex items-center flex-wrap gap-x-5.5 gap-y-2.5">
+    <div className="flex flex-wrap items-center gap-x-5.5 gap-y-2.5">
       <button
         type="button"
         onClick={() => onSelect(CategoryFilter.All)}
@@ -34,7 +34,7 @@ export default function CategoryBar({
         <SlotText text={allProductsLabel} />
         <span className="tabular-nums">({totalCount})</span>
       </button>
-      {categories.map(cat => (
+      {categories.map((cat) => (
         <button
           key={cat.documentId}
           type="button"

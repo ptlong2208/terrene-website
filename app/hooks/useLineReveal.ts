@@ -14,12 +14,7 @@ interface UseLineRevealOptions {
 
 export function useLineReveal<T extends HTMLElement>(
   ref: RefObject<T | null>,
-  {
-    start = 'top 86%',
-    duration = 0.9,
-    ease = 'power3.out',
-    y = 24,
-  }: UseLineRevealOptions = {},
+  { start = 'top 86%', duration = 0.9, ease = 'power3.out', y = 24 }: UseLineRevealOptions = {}
 ): void {
   const preloaderDone = usePreloaderDone();
 

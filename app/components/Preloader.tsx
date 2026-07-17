@@ -46,16 +46,21 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
       },
     });
 
-    tl
-      .to(mark, { opacity: 1, scale: 1, rotation: 0, duration: 1.1, ease: 'power3.out' })
+    tl.to(mark, { opacity: 1, scale: 1, rotation: 0, duration: 1.1, ease: 'power3.out' })
       .to(brandLine, { yPercent: 0, duration: 1, ease: 'power3.out' }, '-=0.7')
       .to(quoteLine, { yPercent: 0, duration: 0.9, ease: 'power3.out' }, '-=0.6')
-      .to(countObj, {
-        value: 100,
-        duration: 1.6,
-        ease: 'power2.inOut',
-        onUpdate: () => { count.textContent = String(Math.round(countObj.value)); },
-      }, 0)
+      .to(
+        countObj,
+        {
+          value: 100,
+          duration: 1.6,
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            count.textContent = String(Math.round(countObj.value));
+          },
+        },
+        0
+      )
       .to(brandLine, { yPercent: -110, duration: 0.7, ease: 'power3.in' }, '+=0.2')
       .to(quoteLine, { yPercent: -110, duration: 0.6, ease: 'power3.in' }, '<')
       .to(mark, { opacity: 0, y: -24, duration: 0.5, ease: 'power2.in' }, '<')
@@ -70,16 +75,16 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
   return (
     <div
       ref={loaderRef}
-      className="fixed inset-0 z-2000 bg-(--green-deep) flex flex-col items-center justify-center gap-7"
+      className="fixed inset-0 z-2000 flex flex-col items-center justify-center gap-7 bg-(--green-deep)"
     >
       <div ref={markRef} className="opacity-0">
-        <TerreneLogo className="size-11.5 text-cream" />
+        <TerreneLogo className="text-cream size-11.5" />
       </div>
 
       <div className="overflow-hidden">
         <span
           ref={brandLineRef}
-          className="block font-display text-[clamp(40px,6vw,80px)] font-normal leading-[0.95] tracking-[-0.02em] lowercase text-cream invisible"
+          className="font-display text-cream invisible block text-[clamp(40px,6vw,80px)] leading-[0.95] font-normal tracking-[-0.02em] lowercase"
         >
           {siteName}
         </span>
@@ -88,7 +93,7 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
       <div className="overflow-hidden">
         <span
           ref={quoteLineRef}
-          className="block text-[clamp(13px,1.1vw,16px)] tracking-[-0.02em] text-cream/55 invisible"
+          className="text-cream/55 invisible block text-[clamp(13px,1.1vw,16px)] tracking-[-0.02em]"
         >
           {quote}
         </span>
@@ -96,7 +101,7 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
 
       <div
         ref={countRef}
-        className="absolute right-(--gutter) bottom-7 text-[clamp(40px,8vw,80px)] font-display tabular-nums tracking-[-0.02em] text-cream/55"
+        className="font-display text-cream/55 absolute right-(--gutter) bottom-7 text-[clamp(40px,8vw,80px)] tracking-[-0.02em] tabular-nums"
       >
         0
       </div>

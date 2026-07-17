@@ -18,7 +18,7 @@ export default function FooterNewsletter({ label, placeholder }: FooterNewslette
   return (
     <div className="flex flex-col gap-4">
       {label && (
-        <span className="text-[10px] font-normal tracking-[0.08em] uppercase text-cream/40">
+        <span className="text-cream/40 text-[10px] font-normal tracking-[0.08em] uppercase">
           {label}
         </span>
       )}
@@ -26,20 +26,20 @@ export default function FooterNewsletter({ label, placeholder }: FooterNewslette
       {!submitted ? (
         <>
           <form action={action} noValidate>
-            <div className="flex items-center border-b border-cream/20 pb-2 transition-[border-color] duration-250 focus-within:border-cream/60">
+            <div className="border-cream/20 focus-within:border-cream/60 flex items-center border-b pb-2 transition-[border-color] duration-250">
               <input
                 name="email"
                 type="email"
                 placeholder={placeholder ?? undefined}
                 autoComplete="email"
                 disabled={isPending}
-                className="flex-1 bg-transparent border-none outline-none text-[13px] font-normal text-cream tracking-[-0.02em] placeholder:text-cream/35 disabled:opacity-50"
+                className="text-cream placeholder:text-cream/35 flex-1 border-none bg-transparent text-[13px] font-normal tracking-[-0.02em] outline-none disabled:opacity-50"
               />
               <button
                 type="submit"
                 disabled={isPending}
                 aria-label="Subscribe"
-                className="cursor-pointer group text-cream/55 text-[15px] leading-none transition-colors duration-200 hover:text-cream disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group text-cream/55 hover:text-cream cursor-pointer text-[15px] leading-none transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <SlotText text="→" />
               </button>
@@ -52,9 +52,7 @@ export default function FooterNewsletter({ label, placeholder }: FooterNewslette
           )}
         </>
       ) : (
-        <p className="text-[11px] tracking-[-0.01em] text-cream/40">
-          {t('subscribeSuccess')}
-        </p>
+        <p className="text-cream/40 text-[11px] tracking-[-0.01em]">{t('subscribeSuccess')}</p>
       )}
     </div>
   );

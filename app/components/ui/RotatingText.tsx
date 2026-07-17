@@ -1,7 +1,21 @@
 'use client';
 
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { motion, AnimatePresence, type Transition, type Target, type TargetAndTransition, type VariantLabels } from 'framer-motion';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react';
+import {
+  motion,
+  AnimatePresence,
+  type Transition,
+  type Target,
+  type TargetAndTransition,
+  type VariantLabels,
+} from 'framer-motion';
 
 function cn(...classes: (string | undefined | null | boolean)[]): string {
   return classes.filter(Boolean).join(' ');
@@ -14,11 +28,10 @@ export interface RotatingTextRef {
   reset: () => void;
 }
 
-export interface RotatingTextProps
-  extends Omit<
-    React.ComponentPropsWithoutRef<typeof motion.span>,
-    'children' | 'transition' | 'initial' | 'animate' | 'exit'
-  > {
+export interface RotatingTextProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof motion.span>,
+  'children' | 'transition' | 'initial' | 'animate' | 'exit'
+> {
   texts: string[];
   transition?: Transition;
   initial?: boolean | Target | VariantLabels;
@@ -67,7 +80,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
     const splitIntoCharacters = (text: string): string[] => {
       if (typeof Intl !== 'undefined' && Intl.Segmenter) {
         const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
-        return Array.from(segmenter.segment(text), segment => segment.segment);
+        return Array.from(segmenter.segment(text), (segment) => segment.segment);
       }
       return Array.from(text);
     };
@@ -127,7 +140,9 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
     const next = useCallback(() => {
       const nextIndex =
         currentTextIndex === texts.length - 1
-          ? loop ? 0 : currentTextIndex
+          ? loop
+            ? 0
+            : currentTextIndex
           : currentTextIndex + 1;
       if (nextIndex !== currentTextIndex) handleIndexChange(nextIndex);
     }, [currentTextIndex, texts.length, loop, handleIndexChange]);
@@ -135,7 +150,9 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
     const previous = useCallback(() => {
       const prevIndex =
         currentTextIndex === 0
-          ? loop ? texts.length - 1 : currentTextIndex
+          ? loop
+            ? texts.length - 1
+            : currentTextIndex
           : currentTextIndex - 1;
       if (prevIndex !== currentTextIndex) handleIndexChange(prevIndex);
     }, [currentTextIndex, texts.length, loop, handleIndexChange]);
@@ -152,7 +169,12 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
       if (currentTextIndex !== 0) handleIndexChange(0);
     }, [currentTextIndex, handleIndexChange]);
 
-    useImperativeHandle(ref, () => ({ next, previous, jumpTo, reset }), [next, previous, jumpTo, reset]);
+    useImperativeHandle(ref, () => ({ next, previous, jumpTo, reset }), [
+      next,
+      previous,
+      jumpTo,
+      reset,
+    ]);
 
     useEffect(() => {
       if (!auto) return;
@@ -162,7 +184,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
 
     return (
       <motion.span
-        className={cn('flex flex-wrap whitespace-pre-wrap relative', mainClassName)}
+        className={cn('relative flex flex-wrap whitespace-pre-wrap', mainClassName)}
         {...rest}
         layout
         transition={transition as Transition}
@@ -173,8 +195,8 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
             key={currentTextIndex}
             className={cn(
               splitBy === 'lines'
-                ? 'flex flex-col w-full'
-                : 'flex flex-wrap whitespace-pre-wrap relative'
+                ? 'flex w-full flex-col'
+                : 'relative flex flex-wrap whitespace-pre-wrap'
             )}
             layout
             aria-hidden="true"

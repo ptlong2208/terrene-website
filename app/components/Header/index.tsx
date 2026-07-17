@@ -60,7 +60,8 @@ export default function Header({
     gsap.registerPlugin(ScrollTrigger, CustomEase);
     CustomEase.create('headerSlide', 'M0,0 C0.77,0 0.175,1 1,1');
 
-    const hideHeaderAnim = gsap.timeline({ paused: true })
+    const hideHeaderAnim = gsap
+      .timeline({ paused: true })
       .to(headerRef.current, { opacity: 0, duration: 0.8, ease: 'power1.inOut' }, 0)
       .to(headerRef.current, { yPercent: -110, duration: 0.8, ease: 'headerSlide' }, 0);
 
@@ -85,7 +86,8 @@ export default function Header({
           return;
         }
 
-        const isTimelineTrapped = (window as Window & { isTimelineTrapped?: boolean }).isTimelineTrapped;
+        const isTimelineTrapped = (window as Window & { isTimelineTrapped?: boolean })
+          .isTimelineTrapped;
         if (isTimelineTrapped) return;
 
         if (self.direction === 1) {
@@ -114,7 +116,14 @@ export default function Header({
   const handleMenuClosed = useCallback(() => setMenuState('closed'), []);
 
   useEffect(() => {
-    if (!preloaderDone || !audioSrc || !musicConsentText || !musicConsentAccept || !musicConsentDecline) return;
+    if (
+      !preloaderDone ||
+      !audioSrc ||
+      !musicConsentText ||
+      !musicConsentAccept ||
+      !musicConsentDecline
+    )
+      return;
     const timer = setTimeout(() => setShowConsent(true), 2000);
     return () => clearTimeout(timer);
   }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
@@ -150,8 +159,8 @@ export default function Header({
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-1000 grid grid-cols-[1fr_auto_1fr] items-center h-22 md:h-16 px-5 md:px-gutter transition-colors duration-400 ${
-          hasBg ? 'bg-cream text-(--green-deep)' : 'bg-transparent text-cream'
+        className={`md:px-gutter fixed top-0 right-0 left-0 z-1000 grid h-22 grid-cols-[1fr_auto_1fr] items-center px-5 transition-colors duration-400 md:h-16 ${
+          hasBg ? 'bg-cream text-(--green-deep)' : 'text-cream bg-transparent'
         }`}
       >
         <audio ref={audioRef} src={audioSrc} loop preload="metadata" />
@@ -165,10 +174,7 @@ export default function Header({
 
         <HeaderLogo siteName={siteName} />
 
-        <HeaderRight
-          navShopLink={navShopLink}
-          navCartLabel={navCartLabel}
-        />
+        <HeaderRight navShopLink={navShopLink} navCartLabel={navCartLabel} />
       </header>
 
       <MenuOverlay

@@ -52,7 +52,10 @@ export const useCartStore = create<CartState>()(
       },
 
       updateQty: (variantId, qty) => {
-        if (qty <= 0) { get().removeItem(variantId); return; }
+        if (qty <= 0) {
+          get().removeItem(variantId);
+          return;
+        }
         set((state) => ({
           items: state.items.map((i) => {
             if (i.variantId !== variantId) return i;

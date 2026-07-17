@@ -18,7 +18,15 @@ interface ProductCardProps {
   sizes?: string;
 }
 
-export default function ProductCard({ product, href, minPrice, tabIndex, ariaHidden, className, sizes: sizesProp }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  href,
+  minPrice,
+  tabIndex,
+  ariaHidden,
+  className,
+  sizes: sizesProp,
+}: ProductCardProps) {
   const tagOrigin = product.tags[0]?.label;
   const tagGrade = product.tags[1]?.label;
   const hasTags = tagOrigin || tagGrade;
@@ -43,13 +51,19 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
     const quickOpacity = gsap.quickTo(tags, 'opacity', { duration: 0.35, ease: 'power2.out' });
     const quickY = gsap.quickTo(tags, 'y', { duration: 0.5, ease: 'power3.out' });
 
-    function onEnter() { quickOpacity(1); quickY(0); }
+    function onEnter() {
+      quickOpacity(1);
+      quickY(0);
+    }
     function onMove(e: MouseEvent) {
       const rect = el.getBoundingClientRect();
       const frac = Math.min(0.82, Math.max(0.18, (e.clientY - rect.top) / rect.height));
       quickY((frac - 0.5) * rect.height);
     }
-    function onLeave() { quickOpacity(0); quickY(8); }
+    function onLeave() {
+      quickOpacity(0);
+      quickY(8);
+    }
 
     media.addEventListener('mouseenter', onEnter);
     media.addEventListener('mousemove', onMove);
@@ -66,7 +80,9 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
   return (
     <article
       aria-hidden={ariaHidden}
-      className={className ?? 'w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4'}
+      className={
+        className ?? 'mr-4 flex w-[clamp(260px,28vw,420px)] shrink-0 flex-col max-md:w-[70vw]'
+      }
     >
       <div ref={mediaRef} className="group relative aspect-square overflow-hidden bg-[#E8E3D5]">
         <Link
@@ -88,16 +104,16 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
         {hasTags && (
           <div
             ref={tagsRef}
-            className="absolute inset-x-3 top-1/2 -translate-y-1/2 z-20 flex items-center justify-between pointer-events-none"
+            className="pointer-events-none absolute inset-x-3 top-1/2 z-20 flex -translate-y-1/2 items-center justify-between"
             style={{ opacity: 0 }}
           >
             {tagOrigin && (
-              <span className="text-[11px] font-semibold tracking-[0.03em] uppercase text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
+              <span className="text-[11px] font-semibold tracking-[0.03em] text-white uppercase [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
                 {tagOrigin}
               </span>
             )}
             {tagGrade && (
-              <span className="text-[11px] font-semibold tracking-[0.03em] uppercase text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
+              <span className="text-[11px] font-semibold tracking-[0.03em] text-white uppercase [text-shadow:0_1px_6px_rgba(0,0,0,0.35)]">
                 {tagGrade}
               </span>
             )}
@@ -105,12 +121,12 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
         )}
       </div>
 
-      <div className="flex items-baseline justify-between gap-3 border-t border-line pt-3.5">
-        <span className="text-[15px] font-semibold text-(--green-deep) tracking-[-0.01em] leading-snug">
+      <div className="border-line flex items-baseline justify-between gap-3 border-t pt-3.5">
+        <span className="text-[15px] leading-snug font-semibold tracking-[-0.01em] text-(--green-deep)">
           {product.title}
         </span>
         {minPrice !== undefined && minPrice > 0 && (
-          <span className="text-[16px] font-bold text-(--green-deep) tabular-nums whitespace-nowrap font-sans">
+          <span className="font-sans text-[16px] font-bold whitespace-nowrap text-(--green-deep) tabular-nums">
             {formatPrice(minPrice)}
           </span>
         )}

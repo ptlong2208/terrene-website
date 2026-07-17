@@ -8,4 +8,4 @@ export const SortMode = {
   PriceDesc: 'price-desc',
 } as const;
 
-export type SortMode = typeof SortMode[keyof typeof SortMode];
+export type SortMode = (typeof SortMode)[keyof typeof SortMode];

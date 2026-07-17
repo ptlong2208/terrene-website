@@ -45,7 +45,7 @@ export function useHeroAnimation({
             end: 'bottom top',
             scrub: true,
           },
-        },
+        }
       );
     }
 
@@ -55,7 +55,7 @@ export function useHeroAnimation({
       introTl.fromTo(
         titleRef.current,
         { y: 32, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out' },
+        { y: 0, opacity: 1, duration: 1.1, ease: 'power3.out' }
       );
     }
 
@@ -64,7 +64,7 @@ export function useHeroAnimation({
         descRef.current,
         { y: 24, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.95, ease: 'power3.out' },
-        '-=0.72',
+        '-=0.72'
       );
     }
 

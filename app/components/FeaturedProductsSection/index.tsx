@@ -39,9 +39,10 @@ export default function FeaturedProductsSection({
 
     gsap.set(cards, { y: 46, opacity: 0 });
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: marquee, start: 'top 78%', once: true },
-    })
+    const tl = gsap
+      .timeline({
+        scrollTrigger: { trigger: marquee, start: 'top 78%', once: true },
+      })
       .to(marquee, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' })
       .to(cards, { y: 0, opacity: 1, duration: 0.85, stagger: 0.045, ease: 'power3.out' }, '-=0.35')
       .to(cta, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.45');
@@ -64,11 +65,18 @@ export default function FeaturedProductsSection({
     >
       <div
         ref={marqueeRef}
-        className="-mx-gutter overflow-hidden group/marquee opacity-0 translate-y-6"
+        className="-mx-gutter group/marquee translate-y-6 overflow-hidden opacity-0"
       >
-        <div className={`flex w-max motion-reduce:animate-none group-hover/marquee:[animation-play-state:paused] ${styles.track}`}>
+        <div
+          className={`flex w-max group-hover/marquee:[animation-play-state:paused] motion-reduce:animate-none ${styles.track}`}
+        >
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} href={`/shop/${product.slug}`} minPrice={productPrices[product.slug]} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              href={`/shop/${product.slug}`}
+              minPrice={productPrices[product.slug]}
+            />
           ))}
           {products.map((product) => (
             <ProductCard
@@ -85,7 +93,7 @@ export default function FeaturedProductsSection({
 
       <div
         ref={ctaRef}
-        className="flex justify-center mt-[clamp(14px,1.8vw,22px)] pt-[clamp(14px,1.8vw,24px)] opacity-0 translate-y-4.5"
+        className="mt-[clamp(14px,1.8vw,22px)] flex translate-y-4.5 justify-center pt-[clamp(14px,1.8vw,24px)] opacity-0"
       >
         <CtaLink href={viewAllHref} label={t('viewAll')} />
       </div>

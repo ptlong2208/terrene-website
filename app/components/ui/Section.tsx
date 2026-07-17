@@ -30,7 +30,7 @@ export default function Section({
     <section
       ref={ref}
       id={id}
-      className={`min-h-svh flex flex-col justify-center py-[clamp(80px,10vh,140px)] px-gutter${className ? ` ${className}` : ''}`}
+      className={`flex min-h-svh flex-col justify-center py-[clamp(80px,10vh,140px)] px-gutter${className ? ` ${className}` : ''}`}
     >
       <SectionHeader
         kicker={kicker}

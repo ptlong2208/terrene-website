@@ -63,7 +63,9 @@ export default function TestimonialsSection({
       opacity: 1,
       duration: 0.4,
       ease: 'power2.out',
-      onComplete: () => { busyRef.current = false; },
+      onComplete: () => {
+        busyRef.current = false;
+      },
     });
   }, [activeIndex]);
 
@@ -94,29 +96,26 @@ export default function TestimonialsSection({
       kicker={header?.kicker}
       inverted
       kickerClassName="border-t border-cream/22 pt-[22px]"
-      className="bg-(--green-deep) text-cream max-lg:min-h-0"
+      className="text-cream bg-(--green-deep) max-lg:min-h-0"
     >
       {/* Body */}
       <div
         ref={bodyRef}
-        className="mt-[clamp(48px,8vh,100px)] grid grid-cols-[clamp(160px,16vw,230px)_1fr] gap-[clamp(36px,6vw,90px)] items-start opacity-0 max-md:grid-cols-1 max-md:gap-8"
+        className="mt-[clamp(48px,8vh,100px)] grid grid-cols-[clamp(160px,16vw,230px)_1fr] items-start gap-[clamp(36px,6vw,90px)] opacity-0 max-md:grid-cols-1 max-md:gap-8"
       >
         {/* Portrait */}
-        <div
-          ref={portraitRef}
-          className="aspect-3/4 overflow-hidden bg-cream/18 max-md:w-35"
-        >
+        <div ref={portraitRef} className="bg-cream/18 aspect-3/4 overflow-hidden max-md:w-35">
           {item.image ? (
             <Image
               src={strapiMediaUrl(item.image.url)}
               alt={item.image.alternativeText ?? item.name}
               width={230}
               height={307}
-              className="w-full h-full object-cover grayscale"
+              className="h-full w-full object-cover grayscale"
               sizes="(max-width: 768px) 140px, clamp(160px, 16vw, 230px)"
             />
           ) : (
-            <div className="w-full h-full bg-cream/10" />
+            <div className="bg-cream/10 h-full w-full" />
           )}
         </div>
 
@@ -124,9 +123,9 @@ export default function TestimonialsSection({
         <div>
           <blockquote
             ref={quoteRef}
-            className="relative max-w-[26ch] text-[clamp(26px,3.6vw,54px)] font-[360] leading-[1.18] tracking-tight"
+            className="relative max-w-[26ch] text-[clamp(26px,3.6vw,54px)] leading-[1.18] font-[360] tracking-tight"
           >
-            <span className="absolute left-[-0.5em] top-[-0.08em] text-[1.1em] text-cream/45 max-md:left-0 max-md:top-[-0.7em]">
+            <span className="text-cream/45 absolute top-[-0.08em] left-[-0.5em] text-[1.1em] max-md:top-[-0.7em] max-md:left-0">
               &ldquo;
             </span>
             {item.quote}
@@ -134,36 +133,33 @@ export default function TestimonialsSection({
 
           <div
             ref={metaRef}
-            className="flex items-end justify-between gap-[clamp(20px,4vw,48px)] mt-[clamp(36px,5vh,64px)] flex-wrap"
+            className="mt-[clamp(36px,5vh,64px)] flex flex-wrap items-end justify-between gap-[clamp(20px,4vw,48px)]"
           >
             {/* Name + role */}
             <div>
-              <p className="text-[clamp(17px,1.5vw,22px)] font-[450] mb-2">{item.name}</p>
+              <p className="mb-2 text-[clamp(17px,1.5vw,22px)] font-[450]">{item.name}</p>
               {item.role && (
-                <p className="text-[11px] tracking-[0.14em] uppercase text-cream/55">
-                  {item.role}
-                </p>
+                <p className="text-cream/55 text-[11px] tracking-[0.14em] uppercase">{item.role}</p>
               )}
             </div>
 
             {/* Counter + nav */}
-            <div className="flex items-center gap-[clamp(16px,2vw,28px)] shrink-0">
-              <span className="text-[12px] tabular-nums tracking-[0.14em] uppercase text-cream/60">
-                {String(activeIndex + 1).padStart(2, '0')} /{' '}
-                {String(total).padStart(2, '0')}
+            <div className="flex shrink-0 items-center gap-[clamp(16px,2vw,28px)]">
+              <span className="text-cream/60 text-[12px] tracking-[0.14em] uppercase tabular-nums">
+                {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
               </span>
               <div className="flex gap-2.5">
                 <button
                   onClick={() => go(-1)}
                   aria-label={t('prev')}
-                  className="w-13 h-13 border border-cream text-cream text-[17px] flex items-center justify-center cursor-pointer transition-[background-color,color,border-color] duration-300 hover:bg-cream hover:text-(--green-deep) active:scale-[0.94] max-md:w-11.5 max-md:h-11.5"
+                  className="border-cream text-cream hover:bg-cream flex h-13 w-13 cursor-pointer items-center justify-center border text-[17px] transition-[background-color,color,border-color] duration-300 hover:text-(--green-deep) active:scale-[0.94] max-md:h-11.5 max-md:w-11.5"
                 >
                   ←
                 </button>
                 <button
                   onClick={() => go(1)}
                   aria-label={t('next')}
-                  className="w-13 h-13 border border-cream text-cream text-[17px] flex items-center justify-center cursor-pointer transition-[background-color,color,border-color] duration-300 hover:bg-cream hover:text-(--green-deep) active:scale-[0.94] max-md:w-11.5 max-md:h-11.5"
+                  className="border-cream text-cream hover:bg-cream flex h-13 w-13 cursor-pointer items-center justify-center border text-[17px] transition-[background-color,color,border-color] duration-300 hover:text-(--green-deep) active:scale-[0.94] max-md:h-11.5 max-md:w-11.5"
                 >
                   →
                 </button>

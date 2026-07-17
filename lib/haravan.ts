@@ -17,9 +17,7 @@ export interface HaravanProduct {
   optionName: string | null;
 }
 
-export async function fetchProductPricesBySlugs(
-  slugs: string[]
-): Promise<Record<string, number>> {
+export async function fetchProductPricesBySlugs(slugs: string[]): Promise<Record<string, number>> {
   const entries = await Promise.all(
     slugs.map(async (slug) => {
       const { variants } = await fetchProductData(slug);

@@ -7,19 +7,17 @@ interface BenefitCardProps {
 
 export default function BenefitCard({ item, index }: BenefitCardProps) {
   return (
-    <article className="border-t border-line pt-6.5">
+    <article className="border-line border-t pt-6.5">
       <div className="mb-5.5">
-        <span className="text-xs text-ink-faint tabular-nums">
+        <span className="text-ink-faint text-xs tabular-nums">
           {String(index + 1).padStart(2, '0')}
         </span>
       </div>
-      <h3 className="text-[clamp(16px,1.4vw,20px)] font-[450] tracking-[-0.02em] mb-3 text-(--green-deep)">
+      <h3 className="mb-3 text-[clamp(16px,1.4vw,20px)] font-[450] tracking-[-0.02em] text-(--green-deep)">
         {item.title}
       </h3>
       {item.description && (
-        <p className="text-[13px] leading-[1.7] text-ink-soft">
-          {item.description}
-        </p>
+        <p className="text-ink-soft text-[13px] leading-[1.7]">{item.description}</p>
       )}
     </article>
   );

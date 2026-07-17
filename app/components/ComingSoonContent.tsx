@@ -15,10 +15,7 @@ interface ComingSoonContentProps {
   data: ComingSoonData | null;
 }
 
-export default function ComingSoonContent({
-  siteName,
-  data,
-}: ComingSoonContentProps) {
+export default function ComingSoonContent({ siteName, data }: ComingSoonContentProps) {
   const {
     quote,
     label,
@@ -29,7 +26,7 @@ export default function ComingSoonContent({
     words: wordItems,
   } = data ?? {};
 
-  const words = wordItems?.map(w => w.text) ?? [];
+  const words = wordItems?.map((w) => w.text) ?? [];
 
   const t = useTranslations('validation');
   const rootRef = useRef<HTMLDivElement>(null);
@@ -46,36 +43,35 @@ export default function ComingSoonContent({
     }
     const tl = gsap.timeline({ delay: 0.1 });
     tl.from(items, { opacity: 0, y: 24, duration: 0.9, stagger: 0.13, ease: 'power3.out' });
-    return () => { tl.kill(); };
+    return () => {
+      tl.kill();
+    };
   }, []);
 
   return (
     <div
       ref={rootRef}
-      className="flex flex-col items-center justify-center min-h-svh px-gutter gap-[clamp(56px,8.5vh,96px)] pt-[clamp(72px,11vh,120px)] pb-[clamp(72px,11vh,120px)]"
+      className="px-gutter flex min-h-svh flex-col items-center justify-center gap-[clamp(56px,8.5vh,96px)] pt-[clamp(72px,11vh,120px)] pb-[clamp(72px,11vh,120px)]"
     >
-      <div
-        data-reveal=""
-        className="flex flex-col items-center gap-[clamp(8px,1.2vh,12px)]"
-      >
-        <TerreneLogo
-          className="h-6.5 w-auto text-(--green-deep)"
-          aria-label={siteName}
-        />
-        <span
-          className="font-display text-[clamp(16px,2.6vw,34px)] font-normal leading-none tracking-[-0.03em] lowercase text-(--green-deep)"
-        >
+      <div data-reveal="" className="flex flex-col items-center gap-[clamp(8px,1.2vh,12px)]">
+        <TerreneLogo className="h-6.5 w-auto text-(--green-deep)" aria-label={siteName} />
+        <span className="font-display text-[clamp(16px,2.6vw,34px)] leading-none font-normal tracking-[-0.03em] text-(--green-deep) lowercase">
           {siteName}
         </span>
       </div>
 
       {(quote || words.length > 0) && (
         <div data-reveal="" className="flex flex-col items-center">
-          <p className="text-[clamp(26px,2.8vw,44px)] font-light leading-[1.3] tracking-[-0.02em] text-(--green-deep) text-center">
+          <p className="text-center text-[clamp(26px,2.8vw,44px)] leading-[1.3] font-light tracking-[-0.02em] text-(--green-deep)">
             {quote?.split(', ').map((part, i, arr) => (
               <Fragment key={i}>
-                {part}{i < arr.length - 1 ? ',' : ' '}
-                {i < arr.length - 1 && <><br className="md:hidden" />{' '}</>}
+                {part}
+                {i < arr.length - 1 ? ',' : ' '}
+                {i < arr.length - 1 && (
+                  <>
+                    <br className="md:hidden" />{' '}
+                  </>
+                )}
               </Fragment>
             ))}
             {words.length > 0 && (
@@ -93,18 +89,14 @@ export default function ComingSoonContent({
 
       <div
         data-reveal=""
-        className="flex flex-col items-center w-full max-w-[320px] gap-[clamp(20px,3vh,32px)]"
+        className="flex w-full max-w-[320px] flex-col items-center gap-[clamp(20px,3vh,32px)]"
       >
         {label && (
-          <span className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
-            {label}
-          </span>
+          <span className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">{label}</span>
         )}
 
         {formHeading && (
-          <span className="text-[18px] tracking-[-0.02em] text-(--green-deep)">
-            {formHeading}
-          </span>
+          <span className="text-[18px] tracking-[-0.02em] text-(--green-deep)">{formHeading}</span>
         )}
 
         {!submitted ? (
@@ -112,22 +104,20 @@ export default function ComingSoonContent({
             <form
               action={action}
               noValidate
-              className="flex flex-col w-full gap-[clamp(8px,1.2vh,12px)]"
+              className="flex w-full flex-col gap-[clamp(8px,1.2vh,12px)]"
             >
-              <div
-                className="border-b border-(--green-deep)/15 transition-[border-color] duration-250 focus-within:border-(--green-deep) pb-[clamp(8px,1.2vh,12px)]"
-              >
+              <div className="border-b border-(--green-deep)/15 pb-[clamp(8px,1.2vh,12px)] transition-[border-color] duration-250 focus-within:border-(--green-deep)">
                 <input
                   name="email"
                   type="email"
                   placeholder={emailPlaceholder ?? undefined}
                   autoComplete="email"
                   disabled={isPending}
-                  className="w-full bg-transparent border-none outline-none text-[12px] font-light text-(--green-deep) tracking-[-0.01em] text-center placeholder:text-(--green-deep)/30 disabled:opacity-50"
+                  className="w-full border-none bg-transparent text-center text-[12px] font-light tracking-[-0.01em] text-(--green-deep) outline-none placeholder:text-(--green-deep)/30 disabled:opacity-50"
                 />
               </div>
               {state && 'error' in state && (
-                <p className="text-[11px] tracking-[-0.02em] text-red-600/80 text-center">
+                <p className="text-center text-[11px] tracking-[-0.02em] text-red-600/80">
                   {t(state.error as Parameters<typeof t>[0])}
                 </p>
               )}
@@ -135,7 +125,7 @@ export default function ComingSoonContent({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="group w-full flex justify-center items-center overflow-hidden bg-(--green-deep) text-cream border-0 cursor-pointer text-[16px] tracking-[-0.02em] transition-opacity duration-200 hover:opacity-85 disabled:opacity-60 disabled:cursor-not-allowed p-[clamp(13px,1.6vh,15px)]"
+                  className="group text-cream flex w-full cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) p-[clamp(13px,1.6vh,15px)] text-[16px] tracking-[-0.02em] transition-opacity duration-200 hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <SlotText text={submitLabel} />
                 </button>
@@ -143,9 +133,7 @@ export default function ComingSoonContent({
             </form>
           </>
         ) : (
-          <p className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">
-            {successMessage}
-          </p>
+          <p className="text-[11px] tracking-[-0.02em] text-(--green-deep)/30">{successMessage}</p>
         )}
       </div>
 

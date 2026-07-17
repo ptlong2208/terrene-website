@@ -20,13 +20,7 @@ interface StorySectionProps {
   cta?: NavLink | null;
 }
 
-export default function StorySection({
-  header,
-  image,
-  sideLabel,
-  body,
-  cta,
-}: StorySectionProps) {
+export default function StorySection({ header, image, sideLabel, body, cta }: StorySectionProps) {
   const imgWrapRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const sideLabelTextRef = useRef<HTMLSpanElement>(null);
@@ -59,7 +53,7 @@ export default function StorySection({
           duration: 1.3,
           ease: 'expo.inOut',
           scrollTrigger: { trigger: imgWrap, start: 'top 65%', once: true },
-        }),
+        })
       );
 
       if (img) {
@@ -72,8 +66,8 @@ export default function StorySection({
               duration: 1.6,
               ease: 'power2.out',
               scrollTrigger: { trigger: imgWrap, start: 'top 65%', once: true },
-            },
-          ),
+            }
+          )
         );
       }
     }
@@ -93,7 +87,7 @@ export default function StorySection({
             start: 'top 86%',
             once: true,
           },
-        }),
+        })
       );
     }
 
@@ -115,7 +109,7 @@ export default function StorySection({
     >
       <div
         ref={imgWrapRef}
-        className="relative w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw] aspect-5/4 mx-auto mb-[clamp(32px,4vh,52px)] overflow-hidden opacity-0"
+        className="relative mx-auto mb-[clamp(32px,4vh,52px)] aspect-5/4 w-[min(38vw,480px)] overflow-hidden opacity-0 max-lg:w-[72vw] max-md:w-[88vw]"
       >
         {image ? (
           <Image
@@ -131,9 +125,9 @@ export default function StorySection({
         )}
       </div>
 
-      <div className="w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw] mx-auto">
+      <div className="mx-auto w-[min(38vw,480px)] max-lg:w-[72vw] max-md:w-[88vw]">
         {sideLabel && (
-          <div className="flex items-center gap-2.5 text-ink-faint mb-4.5">
+          <div className="text-ink-faint mb-4.5 flex items-center gap-2.5">
             <TerreneElement className="size-3.75 shrink-0" />
             <span
               ref={sideLabelTextRef}
@@ -148,7 +142,7 @@ export default function StorySection({
           {body?.split('\n\n').map((para, i) => (
             <p
               key={i}
-              className={`text-[clamp(14px,1.15vw,17px)] font-normal leading-normal text-ink-soft opacity-0${i > 0 ? ' mt-[clamp(16px,2vh,28px)]' : ''}`}
+              className={`text-ink-soft text-[clamp(14px,1.15vw,17px)] leading-normal font-normal opacity-0${i > 0 ? 'mt-[clamp(16px,2vh,28px)]' : ''}`}
             >
               {para}
             </p>

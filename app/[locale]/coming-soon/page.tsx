@@ -33,10 +33,11 @@ export default async function ComingSoonPage({ params }: Props) {
 
   const [t, global, comingSoon] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),
-    fetchStrapiSingle<Pick<GlobalData, 'site_name' | 'loader_quote'>>(
-      '/api/global',
-      { 'fields[0]': 'site_name', 'fields[1]': 'loader_quote', locale },
-    ),
+    fetchStrapiSingle<Pick<GlobalData, 'site_name' | 'loader_quote'>>('/api/global', {
+      'fields[0]': 'site_name',
+      'fields[1]': 'loader_quote',
+      locale,
+    }),
     fetchComingSoonData(locale).catch(() => null),
   ]);
 

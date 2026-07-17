@@ -14,19 +14,30 @@ interface ModalProps {
   ariaLabel?: string;
 }
 
-export default function Modal({ isOpen, onClose, children, dialogClassName = '', ariaLabel }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  children,
+  dialogClassName = '',
+  ariaLabel,
+}: ModalProps) {
   const tCommon = useTranslations('common');
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) return;
-    const lenis = (window as unknown as Record<string, unknown>).lenis as { stop: () => void; start: () => void } | undefined;
+    const lenis = (window as unknown as Record<string, unknown>).lenis as
+      { stop: () => void; start: () => void } | undefined;
     lenis?.stop();
     // rAF gives Radix Presence one frame to mount portal elements before GSAP reads refs
     const frame = requestAnimationFrame(() => {
       if (overlayRef.current)
-        gsap.fromTo(overlayRef.current, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: 'power1.out' });
+        gsap.fromTo(
+          overlayRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.35, ease: 'power1.out' }
+        );
       if (contentRef.current)
         gsap.fromTo(contentRef.current, { y: 16 }, { y: 0, duration: 0.35, ease: 'power2.out' });
     });
@@ -40,9 +51,12 @@ export default function Modal({ isOpen, onClose, children, dialogClassName = '',
     if (!overlayRef.current || !contentRef.current) return;
     gsap.to(contentRef.current, { y: 16, duration: 0.3, ease: 'power2.in' });
     gsap.to(overlayRef.current, {
-      opacity: 0, duration: 0.3, ease: 'power1.in',
+      opacity: 0,
+      duration: 0.3,
+      ease: 'power1.in',
       onComplete: () => {
-        const lenis = (window as unknown as Record<string, unknown>).lenis as { start: () => void } | undefined;
+        const lenis = (window as unknown as Record<string, unknown>).lenis as
+          { start: () => void } | undefined;
         lenis?.start();
         onClose();
       },
@@ -54,25 +68,28 @@ export default function Modal({ isOpen, onClose, children, dialogClassName = '',
       <Dialog.Portal>
         <Dialog.Overlay
           ref={overlayRef}
-          className="fixed inset-0 z-1200 bg-[color-mix(in_srgb,var(--green-deep)_55%,transparent)] cursor-pointer"
+          className="fixed inset-0 z-1200 cursor-pointer bg-[color-mix(in_srgb,var(--green-deep)_55%,transparent)]"
           style={{ opacity: 0 }}
           onClick={handleClose}
         />
-        <div className="fixed inset-0 z-1200 flex items-center justify-center p-gutter max-md:p-0 pointer-events-none">
+        <div className="p-gutter pointer-events-none fixed inset-0 z-1200 flex items-center justify-center max-md:p-0">
           <Dialog.Content
             ref={contentRef}
             aria-label={ariaLabel}
-            onEscapeKeyDown={(e) => { e.preventDefault(); handleClose(); }}
+            onEscapeKeyDown={(e) => {
+              e.preventDefault();
+              handleClose();
+            }}
             onInteractOutside={(e) => e.preventDefault()}
-            className={`relative pointer-events-auto bg-cream shadow-[0_30px_80px_rgba(15,40,37,0.3)] ${dialogClassName}`}
+            className={`bg-cream pointer-events-auto relative shadow-[0_30px_80px_rgba(15,40,37,0.3)] ${dialogClassName}`}
           >
             <Dialog.Title className="sr-only">{ariaLabel}</Dialog.Title>
 
-            <div className="hidden max-md:flex items-center justify-end px-4 h-11 shrink-0 bg-cream border-b border-line">
+            <div className="bg-cream border-line hidden h-11 shrink-0 items-center justify-end border-b px-4 max-md:flex">
               <button
                 type="button"
                 onClick={handleClose}
-                className="group bg-transparent border-0 p-0 cursor-pointer text-[11px] font-normal tracking-[0.12em] uppercase text-(--brown) leading-none"
+                className="group cursor-pointer border-0 bg-transparent p-0 text-[11px] leading-none font-normal tracking-[0.12em] text-(--brown) uppercase"
               >
                 <SlotText text={tCommon('close')} />
               </button>
@@ -81,7 +98,7 @@ export default function Modal({ isOpen, onClose, children, dialogClassName = '',
             <button
               type="button"
               onClick={handleClose}
-              className="group max-md:hidden absolute top-3.5 right-4 z-10 bg-transparent border-0 p-0 cursor-pointer text-[11px] font-normal tracking-[0.12em] uppercase text-(--brown) leading-none"
+              className="group absolute top-3.5 right-4 z-10 cursor-pointer border-0 bg-transparent p-0 text-[11px] leading-none font-normal tracking-[0.12em] text-(--brown) uppercase max-md:hidden"
             >
               <SlotText text={tCommon('close')} />
             </button>

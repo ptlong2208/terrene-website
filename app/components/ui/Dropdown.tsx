@@ -16,12 +16,17 @@ interface DropdownProps<T extends string> {
   onChange: (value: T) => void;
 }
 
-export default function Dropdown<T extends string>({ label, value, options, onChange }: DropdownProps<T>) {
+export default function Dropdown<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
 
   return (
     <DropdownMenu.Root open={open} onOpenChange={setOpen} modal={false}>
-      <DropdownMenu.Trigger className="inline-flex items-center gap-2 border border-(--green-deep)/20 rounded-full px-4 py-2.5 text-[12px] font-semibold tracking-[0.04em] uppercase text-(--green-deep) transition-colors duration-200 hover:border-(--green-deep)/50 cursor-pointer outline-none">
+      <DropdownMenu.Trigger className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-(--green-deep)/20 px-4 py-2.5 text-[12px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase transition-colors duration-200 outline-none hover:border-(--green-deep)/50">
         {label}
         <ChevronDown
           size={12}
@@ -35,14 +40,14 @@ export default function Dropdown<T extends string>({ label, value, options, onCh
           sideOffset={10}
           align="end"
           avoidCollisions
-          className="z-200 min-w-50 bg-cream border border-(--green-deep)/12 rounded-2xl shadow-[0_24px_60px_rgba(29,64,37,0.14)] py-2 outline-none"
+          className="bg-cream z-200 min-w-50 rounded-2xl border border-(--green-deep)/12 py-2 shadow-[0_24px_60px_rgba(29,64,37,0.14)] outline-none"
         >
-          {options.map(opt => (
+          {options.map((opt) => (
             <DropdownMenu.Item
               key={opt.value}
               onSelect={() => onChange(opt.value)}
-              className={`block w-full text-left px-4 py-2.5 text-[13px] transition-colors duration-150 hover:bg-(--green-deep)/5 cursor-pointer outline-none ${
-                value === opt.value ? 'text-(--green-deep) font-semibold' : 'text-(--green-deep)/70'
+              className={`block w-full cursor-pointer px-4 py-2.5 text-left text-[13px] transition-colors duration-150 outline-none hover:bg-(--green-deep)/5 ${
+                value === opt.value ? 'font-semibold text-(--green-deep)' : 'text-(--green-deep)/70'
               }`}
             >
               {opt.label}

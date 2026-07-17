@@ -14,7 +14,12 @@ interface VariantPickerProps {
   productTitle: string;
 }
 
-export default function VariantPicker({ variants, optionName, productSlug, productTitle }: VariantPickerProps) {
+export default function VariantPicker({
+  variants,
+  optionName,
+  productSlug,
+  productTitle,
+}: VariantPickerProps) {
   const t = useTranslations('shop');
   const { items, addItem } = useCartStore();
   const [selectedId, setSelectedId] = useState<number | null>(variants[0]?.id ?? null);
@@ -50,18 +55,16 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
 
   return (
     <>
-      <p className="flex items-baseline gap-2.5 mb-4">
+      <p className="mb-4 flex items-baseline gap-2.5">
         {price === 0 ? (
-          <span className="text-[20px] font-extrabold text-(--green-deep)">
-            {t('contactUs')}
-          </span>
+          <span className="text-[20px] font-extrabold text-(--green-deep)">{t('contactUs')}</span>
         ) : (
           <>
             <span className="text-[20px] font-extrabold text-(--green-deep)">
               {formatPrice(price)}
             </span>
             {compareAtPrice && compareAtPrice > price && (
-              <span className="text-[14px] text-ink-faint line-through">
+              <span className="text-ink-faint text-[14px] line-through">
                 {formatPrice(compareAtPrice)}
               </span>
             )}
@@ -70,9 +73,9 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
       </p>
 
       {hasOptions && (
-        <div className="py-3.5 border-t border-line">
+        <div className="border-line border-t py-3.5">
           {optionName && (
-            <p className="text-[11px] font-bold tracking-widest uppercase text-ink-soft mb-3">
+            <p className="text-ink-soft mb-3 text-[11px] font-bold tracking-widest uppercase">
               {optionName}
             </p>
           )}
@@ -81,13 +84,16 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
               <button
                 key={v.id}
                 type="button"
-                onClick={() => { setSelectedId(v.id); setLimitReached(false); }}
+                onClick={() => {
+                  setSelectedId(v.id);
+                  setLimitReached(false);
+                }}
                 disabled={!v.available}
-                className={`px-4 py-2 rounded-full text-[13px] font-semibold border transition-colors cursor-pointer ${
+                className={`cursor-pointer rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ${
                   v.id === selectedId
-                    ? 'bg-(--green-deep) text-cream border-(--green-deep)'
-                    : 'bg-transparent text-(--green-deep) border-(--green-deep)/40 hover:border-(--green-deep)'
-                } ${!v.available ? 'opacity-35 cursor-not-allowed' : ''}`}
+                    ? 'text-cream border-(--green-deep) bg-(--green-deep)'
+                    : 'border-(--green-deep)/40 bg-transparent text-(--green-deep) hover:border-(--green-deep)'
+                } ${!v.available ? 'cursor-not-allowed opacity-35' : ''}`}
               >
                 {v.title}
               </button>
@@ -97,21 +103,21 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
       )}
 
       {isTracked && stockLeft !== null && stockLeft <= 10 && (
-        <p className='text-[12px] mb-3 font-medium text-amber-700'>
+        <p className="mb-3 text-[12px] font-medium text-amber-700">
           {t('stockRemaining', { count: stockLeft })}
         </p>
       )}
 
-      <p className="text-[13px] text-ink-soft mb-4">{t('shippingNote')}</p>
+      <p className="text-ink-soft mb-4 text-[13px]">{t('shippingNote')}</p>
 
       {limitReached && (
-        <p className="text-[12px] text-amber-700 mb-2 text-center">{t('cartLimit')}</p>
+        <p className="mb-2 text-center text-[12px] text-amber-700">{t('cartLimit')}</p>
       )}
 
       {price === 0 ? (
         <Link
           href="/"
-          className="w-full py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase shrink-0 cursor-pointer flex items-center justify-center hover:opacity-85 transition-opacity"
+          className="text-cream flex w-full shrink-0 cursor-pointer items-center justify-center bg-(--green-deep) py-3.75 text-[13px] font-bold tracking-[0.12em] uppercase transition-opacity hover:opacity-85"
         >
           {t('contactUs')}
         </Link>
@@ -120,8 +126,10 @@ export default function VariantPicker({ variants, optionName, productSlug, produ
           type="button"
           onClick={handleAddToCart}
           disabled={!isAvailable || atLimit}
-          className={`w-full py-3.75 bg-(--green-deep) text-cream text-[13px] font-bold tracking-[0.12em] uppercase shrink-0 transition-opacity ${
-            !isAvailable || atLimit ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:opacity-85'
+          className={`text-cream w-full shrink-0 bg-(--green-deep) py-3.75 text-[13px] font-bold tracking-[0.12em] uppercase transition-opacity ${
+            !isAvailable || atLimit
+              ? 'cursor-not-allowed opacity-40'
+              : 'cursor-pointer hover:opacity-85'
           }`}
         >
           {t('addToCart')}

@@ -44,22 +44,26 @@ export default async function ProductDetailPage({
 
   return (
     <section className="pt-[calc(64px+clamp(24px,4vh,56px))] pb-[clamp(60px,9vh,120px)]">
-      <div className="max-w-360 mx-auto px-gutter">
+      <div className="px-gutter mx-auto max-w-360">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-1.5 mb-6 text-[13px] text-ink-soft no-underline group"
+          className="text-ink-soft group mb-6 inline-flex items-center gap-1.5 text-[13px] no-underline"
         >
-          <ChevronLeft size={14} strokeWidth={2} className="transition-transform duration-200 group-hover:-translate-x-0.5" />
+          <ChevronLeft
+            size={14}
+            strokeWidth={2}
+            className="transition-transform duration-200 group-hover:-translate-x-0.5"
+          />
           <SlotText text={t('backToAll')} />
         </Link>
 
-        <div className="grid grid-cols-[1.1fr_0.9fr] gap-[clamp(28px,5vw,88px)] items-start max-md:grid-cols-1 max-md:gap-8">
+        <div className="grid grid-cols-[1.1fr_0.9fr] items-start gap-[clamp(28px,5vw,88px)] max-md:grid-cols-1 max-md:gap-8">
           <div className="flex flex-col gap-3.5">
             {galleryImages.length > 0 ? (
               galleryImages.map((img, i) => (
                 <div
                   key={img.id ?? i}
-                  className="relative w-full aspect-4/5 overflow-hidden bg-card"
+                  className="bg-card relative aspect-4/5 w-full overflow-hidden"
                 >
                   <Image
                     src={strapiMediaUrl(img.url)}
@@ -72,17 +76,15 @@ export default async function ProductDetailPage({
                 </div>
               ))
             ) : (
-              <div className="relative w-full aspect-4/5 bg-card" />
+              <div className="bg-card relative aspect-4/5 w-full" />
             )}
           </div>
 
-          <div className="sticky top-[calc(64px+clamp(24px,4vh,56px))] h-[calc(100vh-64px-clamp(24px,4vh,56px))] flex items-center max-md:static max-md:h-auto max-md:items-start">
-            <aside className="w-full flex flex-col max-h-[calc(100vh-64px-clamp(24px,4vh,56px))] max-md:max-h-none">
+          <div className="sticky top-[calc(64px+clamp(24px,4vh,56px))] flex h-[calc(100vh-64px-clamp(24px,4vh,56px))] items-center max-md:static max-md:h-auto max-md:items-start">
+            <aside className="flex max-h-[calc(100vh-64px-clamp(24px,4vh,56px))] w-full flex-col max-md:max-h-none">
               {(product.category || product.tags?.length > 0) && (
-                <p className="text-[12px] tracking-[0.08em] uppercase text-ink-soft mb-2 flex flex-wrap items-center gap-x-2">
-                  {product.category && (
-                    <span>{product.category.name}</span>
-                  )}
+                <p className="text-ink-soft mb-2 flex flex-wrap items-center gap-x-2 text-[12px] tracking-[0.08em] uppercase">
+                  {product.category && <span>{product.category.name}</span>}
                   {product.category && product.tags?.length > 0 && (
                     <span className="opacity-40">—</span>
                   )}
@@ -95,13 +97,13 @@ export default async function ProductDetailPage({
                 </p>
               )}
 
-              <h1 className="text-[clamp(24px,2.8vw,34px)] font-semibold tracking-[-0.02em] leading-[1.05] text-(--green-deep) mb-3">
+              <h1 className="mb-3 text-[clamp(24px,2.8vw,34px)] leading-[1.05] font-semibold tracking-[-0.02em] text-(--green-deep)">
                 {product.title}
               </h1>
 
-              <ScrollFade className="min-h-0 flex-1 overflow-y-auto pr-1 scrollbar-thin">
+              <ScrollFade className="scrollbar-thin min-h-0 flex-1 overflow-y-auto pr-1">
                 {product.description && (
-                  <p className="text-[13px] leading-[1.65] text-ink-soft max-w-[48ch] mb-4">
+                  <p className="text-ink-soft mb-4 max-w-[48ch] text-[13px] leading-[1.65]">
                     {product.description}
                   </p>
                 )}
@@ -113,8 +115,8 @@ export default async function ProductDetailPage({
                 )}
 
                 {product.taste_notes?.length > 0 && (
-                  <div className="py-3.5 border-t border-b border-line mb-4 flex flex-col gap-2.25">
-                    <p className="text-[12px] font-bold tracking-[0.06em] uppercase text-(--green-deep) mb-1">
+                  <div className="border-line mb-4 flex flex-col gap-2.25 border-t border-b py-3.5">
+                    <p className="mb-1 text-[12px] font-bold tracking-[0.06em] text-(--green-deep) uppercase">
                       {t('tasteNotesTitle')}
                     </p>
                     {product.taste_notes.map((note) => (
@@ -122,12 +124,12 @@ export default async function ProductDetailPage({
                         key={note.id}
                         className="grid grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)_44px] items-center gap-3.5"
                       >
-                        <span className="text-[14px] font-semibold text-(--green-deep) leading-tight">
+                        <span className="text-[14px] leading-tight font-semibold text-(--green-deep)">
                           {note.label}
                         </span>
-                        <div className="h-1.75 rounded-full bg-[#BFCDA6] overflow-hidden">
+                        <div className="h-1.75 overflow-hidden rounded-full bg-[#BFCDA6]">
                           <div
-                            className="h-full bg-(--green-deep) rounded-full"
+                            className="h-full rounded-full bg-(--green-deep)"
                             style={{ width: `${(note.value / 5) * 100}%` }}
                           />
                         </div>
@@ -138,7 +140,6 @@ export default async function ProductDetailPage({
                     ))}
                   </div>
                 )}
-
               </ScrollFade>
 
               <VariantPicker
@@ -151,14 +152,13 @@ export default async function ProductDetailPage({
           </div>
         </div>
 
-        <div className="mt-[clamp(48px,6vh,88px)] grid grid-cols-[1.35fr_0.65fr] gap-[clamp(20px,2.6vw,44px)] items-start max-md:grid-cols-1">
+        <div className="mt-[clamp(48px,6vh,88px)] grid grid-cols-[1.35fr_0.65fr] items-start gap-[clamp(20px,2.6vw,44px)] max-md:grid-cols-1">
           <div />
 
           {product.product_info?.length > 0 && (
             <ProductInfoCard title={t('productInfoTitle')} items={product.product_info} />
           )}
         </div>
-
       </div>
     </section>
   );

@@ -37,20 +37,18 @@ export default function JournalCard({ post, href }: JournalCardProps) {
         </div>
 
         {hasTags && (
-          <div className="flex gap-3.5 mt-4.5 mb-2.5 text-[11px] tracking-widest uppercase text-ink-faint">
+          <div className="text-ink-faint mt-4.5 mb-2.5 flex gap-3.5 text-[11px] tracking-widest uppercase">
             {post.category && <span>{post.category.name}</span>}
             {post.published_date && <span>{formatDate(post.published_date)}</span>}
           </div>
         )}
 
-        <h3 className="text-[clamp(16px,1.5vw,21px)] font-[450] leading-[1.35] tracking-[-0.02em] max-w-[30ch] text-(--green-deep)">
+        <h3 className="max-w-[30ch] text-[clamp(16px,1.5vw,21px)] leading-[1.35] font-[450] tracking-[-0.02em] text-(--green-deep)">
           {post.title}
         </h3>
 
         {post.excerpt && (
-          <p className="mt-2 text-sm leading-relaxed text-ink-faint line-clamp-2">
-            {post.excerpt}
-          </p>
+          <p className="text-ink-faint mt-2 line-clamp-2 text-sm leading-relaxed">{post.excerpt}</p>
         )}
       </Link>
     </article>

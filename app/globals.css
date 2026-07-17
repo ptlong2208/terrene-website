@@ -1,10 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ─── Terrene design tokens ─────────────────────────────────────────────── */
 :root {
-  --bg-cream: #F4F1EC;
-  --text-dark: #1A1A1A;
-  --matcha-green: #4A5B46;
+  --bg-cream: #f4f1ec;
+  --text-dark: #1a1a1a;
+  --matcha-green: #4a5b46;
   --text-muted: #666666;
 }
 
@@ -21,15 +21,15 @@
   --font-display: var(--font-faculty-glyphic), serif;
 
   /* Demo-aligned tokens */
-  --brown: #6B4E37;
-  --green-deep: #1D4025;
+  --brown: #6b4e37;
+  --green-deep: #1d4025;
   --gutter: clamp(16px, 2vw, 32px);
 
   /* Ink scale — matches reference --ink / --ink-soft / --ink-faint */
-  --color-ink:       #6B4E37;
-  --color-ink-soft:  color-mix(in srgb, #6B4E37 55%, transparent);
-  --color-ink-faint: color-mix(in srgb, #6B4E37 28%, transparent);
-  --color-line:      color-mix(in srgb, var(--brown) 14%, transparent);
+  --color-ink: #6b4e37;
+  --color-ink-soft: color-mix(in srgb, #6b4e37 55%, transparent);
+  --color-ink-faint: color-mix(in srgb, #6b4e37 28%, transparent);
+  --color-line: color-mix(in srgb, var(--brown) 14%, transparent);
 }
 
 /* ─── Layout utilities ─────────────────────────────────────────────────── */
@@ -64,7 +64,9 @@
     overflow-x: clip;
   }
 
-  body.is-locked { overflow: hidden; }
+  body.is-locked {
+    overflow: hidden;
+  }
 
   a {
     color: inherit;

@@ -1,4 +1,4 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL ?? 'http://localhost:1337';
 
 /**
  * Fetch a single-type entry from Strapi.
@@ -10,7 +10,7 @@ export async function fetchStrapiSingle<T>(
   params: Record<string, string> = {}
 ): Promise<T> {
   const qs = new URLSearchParams(params).toString();
-  const url = `${STRAPI_URL}${path}${qs ? `?${qs}` : ""}`;
+  const url = `${STRAPI_URL}${path}${qs ? `?${qs}` : ''}`;
 
   const res = await fetch(url, { next: { revalidate: 60 } });
 
@@ -32,7 +32,7 @@ export async function fetchStrapiCollection<T>(
   params: Record<string, string> = {}
 ): Promise<T[]> {
   const qs = new URLSearchParams(params).toString();
-  const url = `${STRAPI_URL}${path}${qs ? `?${qs}` : ""}`;
+  const url = `${STRAPI_URL}${path}${qs ? `?${qs}` : ''}`;
 
   const res = await fetch(url, { next: { revalidate: 60 } });
 
@@ -63,7 +63,7 @@ export async function fetchStrapiBySlug<T>(
 
 /** Resolve a Strapi media URL to an absolute URL. */
 export function strapiMediaUrl(url: string | null | undefined): string {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
+  if (!url) return '';
+  if (url.startsWith('http')) return url;
   return `${STRAPI_URL}${url}`;
 }

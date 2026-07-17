@@ -16,11 +16,7 @@ interface JournalSectionProps {
   posts?: JournalPost[];
 }
 
-export default function JournalSection({
-  header,
-  viewAll,
-  posts = [],
-}: JournalSectionProps) {
+export default function JournalSection({ header, viewAll, posts = [] }: JournalSectionProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const preloaderDone = usePreloaderDone();
 
@@ -46,7 +42,10 @@ export default function JournalSection({
         onComplete: () => gsap.set(cards, { clearProps: 'opacity,y' }),
         scrollTrigger: { trigger: grid, start: 'top 85%', once: true },
       });
-      kills.push(() => { t.scrollTrigger?.kill(); t.kill(); });
+      kills.push(() => {
+        t.scrollTrigger?.kill();
+        t.kill();
+      });
     }
 
     // Clip-path reveal per card image
@@ -55,7 +54,10 @@ export default function JournalSection({
         scrollTrigger: { trigger: el, start: 'top 80%', once: true },
       });
       tl.to(el, { clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: 'expo.inOut' });
-      kills.push(() => { tl.scrollTrigger?.kill(); tl.kill(); });
+      kills.push(() => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      });
     });
 
     return () => kills.forEach((fn) => fn());
@@ -66,11 +68,9 @@ export default function JournalSection({
   return (
     <Section className="max-lg:min-h-0">
       {(header?.title || viewAll) && (
-        <div className="flex items-end justify-between mb-14 max-md:flex-col max-md:items-start max-md:gap-6">
+        <div className="mb-14 flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-6">
           <SectionHeader title={header?.title} />
-          {viewAll && (
-            <CtaLink href={viewAll.href} label={viewAll.label} className="shrink-0" />
-          )}
+          {viewAll && <CtaLink href={viewAll.href} label={viewAll.label} className="shrink-0" />}
         </div>
       )}
 
@@ -79,11 +79,7 @@ export default function JournalSection({
         className="grid grid-cols-3 gap-[clamp(16px,2vw,32px)] opacity-0 max-xl:grid-cols-2 max-lg:grid-cols-1"
       >
         {posts.map((post) => (
-          <JournalCard
-            key={post.id}
-            post={post}
-            href={`/journal/${post.slug}`}
-          />
+          <JournalCard key={post.id} post={post} href={`/journal/${post.slug}`} />
         ))}
       </div>
     </Section>

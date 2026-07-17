@@ -45,7 +45,7 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
     let list =
       activeCategory === CategoryFilter.All
         ? products
-        : products.filter(p => p.category?.documentId === activeCategory);
+        : products.filter((p) => p.category?.documentId === activeCategory);
 
     if (sortMode === SortMode.PriceAsc) {
       list = [...list].sort((a, b) => (prices[a.slug] ?? 0) - (prices[b.slug] ?? 0));
@@ -61,7 +61,12 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
     if (!bar) return;
     if (entranceAnimated) return;
     gsap.from(Array.from(bar.children), {
-      opacity: 0, y: 18, duration: 0.8, stagger: 0.08, ease: 'power3.out', delay: 0.1,
+      opacity: 0,
+      y: 18,
+      duration: 0.8,
+      stagger: 0.08,
+      ease: 'power3.out',
+      delay: 0.1,
     });
   }, []);
 
@@ -103,7 +108,7 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
     <div className="pt-16">
       <div
         ref={barRef}
-        className="relative z-10 flex items-center justify-between flex-wrap gap-4 px-gutter pt-[clamp(48px,8vh,100px)] pb-[clamp(32px,5vh,56px)]"
+        className="px-gutter relative z-10 flex flex-wrap items-center justify-between gap-4 pt-[clamp(48px,8vh,100px)] pb-[clamp(32px,5vh,56px)]"
       >
         <CategoryBar
           categories={categories}
@@ -113,24 +118,19 @@ export default function ShopCatalog({ products, categories, prices, locale }: Sh
           onSelect={setActiveCategory}
           allProductsLabel={t('allProducts')}
         />
-        <Dropdown
-          label={t('sort')}
-          value={sortMode}
-          options={sortOptions}
-          onChange={setSortMode}
-        />
+        <Dropdown label={t('sort')} value={sortMode} options={sortOptions} onChange={setSortMode} />
       </div>
 
       {filtered.length === 0 ? (
-        <div className="px-gutter pb-[clamp(80px,12vh,160px)] pt-10 text-center text-(--green-deep) opacity-50">
+        <div className="px-gutter pt-10 pb-[clamp(80px,12vh,160px)] text-center text-(--green-deep) opacity-50">
           <p className="text-[15px]">{t('noProducts')}</p>
         </div>
       ) : (
         <div
           ref={gridRef}
-          className="grid grid-cols-2 max-[520px]:grid-cols-1 gap-x-[clamp(20px,2.4vw,40px)] gap-y-[clamp(28px,3.5vh,48px)] px-gutter pb-[clamp(80px,12vh,160px)] max-w-365 mx-auto"
+          className="px-gutter mx-auto grid max-w-365 grid-cols-2 gap-x-[clamp(20px,2.4vw,40px)] gap-y-[clamp(28px,3.5vh,48px)] pb-[clamp(80px,12vh,160px)] max-[520px]:grid-cols-1"
         >
-          {filtered.map(product => (
+          {filtered.map((product) => (
             <ProductCard
               key={product.id}
               product={product}

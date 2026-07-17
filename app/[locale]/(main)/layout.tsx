@@ -23,7 +23,7 @@ export default async function MainLayout({
   return (
     <>
       <Preloader siteName={global.site_name} quote={global.loader_quote ?? t('quote')} />
-      <main className="bg-cream text-ink-soft font-sans overflow-x-clip">
+      <main className="bg-cream text-ink-soft overflow-x-clip font-sans">
         <Header
           siteName={global.site_name}
           ambientAudio={global.ambient_audio ?? undefined}
@@ -36,14 +36,14 @@ export default async function MainLayout({
           musicConsentDecline={global.music_consent_decline}
         />
         {children}
-        <div className="relative z-1 bg-cream">
+        <div className="bg-cream relative z-1">
           <CtaSection header={global.cta_header} link={global.cta_link} />
           <Footer
-          siteName={global.site_name}
-          legalLinks={global.footer_legal_links}
-          newsletterLabel={global.footer_newsletter_label}
-          newsletterPlaceholder={global.footer_newsletter_placeholder}
-        />
+            siteName={global.site_name}
+            legalLinks={global.footer_legal_links}
+            newsletterLabel={global.footer_newsletter_label}
+            newsletterPlaceholder={global.footer_newsletter_placeholder}
+          />
         </div>
       </main>
       <CartDrawer />

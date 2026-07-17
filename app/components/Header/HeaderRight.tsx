@@ -19,19 +19,19 @@ export default function HeaderRight({ navShopLink, navCartLabel }: HeaderRightPr
   const liveCount = useSyncExternalStore(
     useCartStore.subscribe,
     () => useCartStore.getState().count(),
-    () => 0,
+    () => 0
   );
   const cartText = `${navCartLabel} [${liveCount}]`;
 
   return (
     <nav
-      className="flex items-center gap-5 md:gap-6 justify-end justify-self-end"
+      className="flex items-center justify-end gap-5 justify-self-end md:gap-6"
       aria-label={t('mainLabel')}
     >
       {navShopLink && (
         <Link
           href={navShopLink.href}
-          className="group inline-flex items-center whitespace-nowrap text-[18px] md:text-base font-normal leading-none no-underline text-inherit transition-transform duration-120 ease-out hover:opacity-100! active:scale-[0.92]"
+          className="group inline-flex items-center text-[18px] leading-none font-normal whitespace-nowrap text-inherit no-underline transition-transform duration-120 ease-out hover:opacity-100! active:scale-[0.92] md:text-base"
         >
           <span className="hidden md:block">
             <SlotText text={navShopLink.label} />
@@ -42,16 +42,16 @@ export default function HeaderRight({ navShopLink, navCartLabel }: HeaderRightPr
       <button
         type="button"
         onClick={open}
-        className="group inline-flex items-center whitespace-nowrap text-[18px] md:text-base font-normal leading-none bg-transparent border-0 cursor-pointer p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92]"
+        className="group inline-flex cursor-pointer items-center border-0 bg-transparent p-0 text-[18px] leading-none font-normal whitespace-nowrap text-inherit transition-transform duration-120 ease-out active:scale-[0.92] md:text-base"
         aria-label={cartText}
       >
         <span className="hidden md:block">
           <SlotText text={cartText} />
         </span>
-        <span className="md:hidden relative">
+        <span className="relative md:hidden">
           <ShoppingBag size={24} strokeWidth={1.5} />
           {liveCount > 0 && (
-            <span className="absolute -top-1.5 -right-2 bg-(--green-deep) text-cream text-[10px] font-bold leading-none w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="text-cream absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-(--green-deep) text-[10px] leading-none font-bold">
               {liveCount}
             </span>
           )}
