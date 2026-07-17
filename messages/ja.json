@@ -38,7 +38,12 @@
     "addToCart": "カートに追加",
     "stockRemaining": "残り{count}点",
     "cartLimit": "購入可能な最大数量に達しました",
-    "productInfoTitle": "商品情報"
+    "productInfoTitle": "商品情報",
+    "allProducts": "すべての商品",
+    "sort": "並び替え",
+    "sortDefault": "デフォルト",
+    "sortPriceAsc": "価格：安い順",
+    "sortPriceDesc": "価格：高い順"
   },
   "cart": {
     "title": "カート",

@@ -38,7 +38,12 @@
     "addToCart": "Thêm vào giỏ hàng",
     "stockRemaining": "Còn {count} sản phẩm",
     "cartLimit": "Bạn đã thêm tối đa số lượng có thể mua",
-    "productInfoTitle": "Thông tin sản phẩm"
+    "productInfoTitle": "Thông tin sản phẩm",
+    "allProducts": "Tất cả sản phẩm",
+    "sort": "Sắp xếp",
+    "sortDefault": "Mặc định",
+    "sortPriceAsc": "Giá: thấp → cao",
+    "sortPriceDesc": "Giá: cao → thấp"
   },
   "cart": {
     "title": "giỏ hàng",

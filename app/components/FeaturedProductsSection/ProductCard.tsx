@@ -14,9 +14,11 @@ interface ProductCardProps {
   minPrice?: number;
   tabIndex?: number;
   ariaHidden?: boolean;
+  className?: string;
+  sizes?: string;
 }
 
-export default function ProductCard({ product, href, minPrice, tabIndex, ariaHidden }: ProductCardProps) {
+export default function ProductCard({ product, href, minPrice, tabIndex, ariaHidden, className, sizes: sizesProp }: ProductCardProps) {
   const tagOrigin = product.tags[0]?.label;
   const tagGrade = product.tags[1]?.label;
   const hasTags = tagOrigin || tagGrade;
@@ -64,7 +66,7 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
   return (
     <article
       aria-hidden={ariaHidden}
-      className="w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4"
+      className={className ?? 'w-[clamp(260px,28vw,420px)] max-md:w-[70vw] shrink-0 flex flex-col mr-4'}
     >
       <div ref={mediaRef} className="group relative aspect-square overflow-hidden bg-[#E8E3D5]">
         <Link
@@ -79,7 +81,7 @@ export default function ProductCard({ product, href, minPrice, tabIndex, ariaHid
             alt={product.image.alternativeText ?? product.title}
             fill
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.03]"
-            sizes="(max-width: 768px) 70vw, clamp(260px, 28vw, 420px)"
+            sizes={sizesProp ?? '(max-width: 768px) 70vw, clamp(260px, 28vw, 420px)'}
           />
         )}
 
