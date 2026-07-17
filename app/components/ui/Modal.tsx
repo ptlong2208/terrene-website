@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import gsap from 'gsap';
 import { useTranslations } from 'next-intl';
+import { ReactNode, useEffect, useRef } from 'react';
+
 import SlotText from '@/app/components/ui/SlotText';
 
 interface ModalProps {

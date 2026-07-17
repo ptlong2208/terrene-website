@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+
 import styles from './MusicConsentBanner.module.css';
 
 interface MusicConsentBannerProps {

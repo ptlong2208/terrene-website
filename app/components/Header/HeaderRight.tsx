@@ -1,12 +1,13 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
-import Link from 'next/link';
 import { ShoppingBag, Store } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import type { NavLink } from '@/lib/types';
+import { useSyncExternalStore } from 'react';
+
 import SlotText from '@/app/components/ui/SlotText';
 import { useCartStore } from '@/app/store/cartStore';
+import type { NavLink } from '@/lib/types';
 
 interface HeaderRightProps {
   navShopLink?: NavLink;

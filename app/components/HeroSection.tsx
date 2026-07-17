@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+
 import { useHeroAnimation } from '@/app/hooks/useHeroAnimation';
 
 interface HeroSectionProps {

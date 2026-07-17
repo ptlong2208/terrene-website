@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import Section from '@/app/components/ui/Section';
-import TerreneElement from '@/app/components/TerreneElement';
-import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
+
+import TerreneElement from '@/app/components/TerreneElement';
+import Section from '@/app/components/ui/Section';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 
 interface QuoteSectionProps {
   quote?: string | null;

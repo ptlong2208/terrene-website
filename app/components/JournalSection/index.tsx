@@ -1,14 +1,16 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
+
+import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
 import SectionHeader from '@/app/components/ui/SectionHeader';
-import CtaLink from '@/app/components/ui/CtaLink';
-import JournalCard from './JournalCard';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import type { JournalPost, SectionHeaderData, NavLink } from '@/lib/types';
+import type { JournalPost, NavLink, SectionHeaderData } from '@/lib/types';
+
+import JournalCard from './JournalCard';
 
 interface JournalSectionProps {
   header?: SectionHeaderData | null;

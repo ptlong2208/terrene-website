@@ -1,12 +1,14 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef } from 'react';
+
 import Section from '@/app/components/ui/Section';
-import BenefitCard from './BenefitCard';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { BenefitItem, SectionHeaderData } from '@/lib/types';
+
+import BenefitCard from './BenefitCard';
 
 interface BenefitsSectionProps {
   header?: SectionHeaderData | null;

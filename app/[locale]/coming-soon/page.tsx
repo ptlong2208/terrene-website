@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
 import ComingSoonContent from '@/app/components/ComingSoonContent';
 import Preloader from '@/app/components/Preloader';
 import { fetchStrapiSingle } from '@/lib/strapi';

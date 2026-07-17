@@ -1,14 +1,15 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { useEffect, useRef, useState } from 'react';
+
 import Section from '@/app/components/ui/Section';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import { strapiMediaUrl } from '@/lib/strapi';
-import type { TestimonialItem, SectionHeaderData } from '@/lib/types';
+import type { SectionHeaderData, TestimonialItem } from '@/lib/types';
 
 interface TestimonialsSectionProps {
   header?: SectionHeaderData | null;

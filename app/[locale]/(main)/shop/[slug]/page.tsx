@@ -1,16 +1,17 @@
-import { notFound } from 'next/navigation';
+import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft } from 'lucide-react';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
-import SlotText from '@/app/components/ui/SlotText';
-import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
-import { fetchProductData } from '@/lib/haravan';
-import type { ShopProduct } from '@/lib/types';
+
 import ProductInfoCard from '@/app/components/ProductInfoCard';
 import StoryModal from '@/app/components/StoryModal';
-import VariantPicker from '@/app/components/VariantPicker';
 import ScrollFade from '@/app/components/ui/ScrollFade';
+import SlotText from '@/app/components/ui/SlotText';
+import VariantPicker from '@/app/components/VariantPicker';
+import { fetchProductData } from '@/lib/haravan';
+import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
+import type { ShopProduct } from '@/lib/types';
 
 export default async function ProductDetailPage({
   params,

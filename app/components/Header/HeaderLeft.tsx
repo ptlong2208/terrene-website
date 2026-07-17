@@ -1,7 +1,7 @@
 'use client';
 
-import MusicToggleButton from '@/app/components/MusicToggleButton';
 import MenuToggleButton from '@/app/components/MenuToggleButton';
+import MusicToggleButton from '@/app/components/MusicToggleButton';
 
 interface HeaderLeftProps {
   isAudioPlaying: boolean;

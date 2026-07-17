@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useActionState, Fragment } from 'react';
-import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
-import TerreneLogo from '@/app/components/TerreneLogo';
-import SlotText from '@/app/components/ui/SlotText';
-import RotatingText from '@/app/components/ui/RotatingText';
+import { useTranslations } from 'next-intl';
+import { Fragment, useActionState, useEffect, useRef } from 'react';
+
 import { subscribeToWishlist } from '@/app/actions/wishlist';
+import TerreneLogo from '@/app/components/TerreneLogo';
+import RotatingText from '@/app/components/ui/RotatingText';
+import SlotText from '@/app/components/ui/SlotText';
 import { isPreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { ComingSoonData } from '@/lib/types';
 

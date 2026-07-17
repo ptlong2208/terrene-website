@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 
 const DEFS = [

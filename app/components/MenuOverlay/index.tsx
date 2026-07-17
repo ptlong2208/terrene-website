@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useEffect, useRef } from 'react';
+
+import SlotText from '@/app/components/ui/SlotText';
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, StrapiMedia } from '@/lib/types';
-import SlotText from '@/app/components/ui/SlotText';
+
 import styles from './MenuOverlay.module.css';
 
 export type MenuState = 'closed' | 'open' | 'closing';

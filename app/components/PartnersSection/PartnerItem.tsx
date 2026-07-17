@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+
 import SlotText from '@/app/components/ui/SlotText';
 import type { PartnerItem as PartnerItemType } from '@/lib/types';
 

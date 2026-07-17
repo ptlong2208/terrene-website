@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import TerreneLogo from '@/app/components/TerreneLogo';
+
 import FooterNewsletter from '@/app/components/FooterNewsletter';
+import TerreneLogo from '@/app/components/TerreneLogo';
 import type { NavLink } from '@/lib/types';
 
 interface FooterProps {

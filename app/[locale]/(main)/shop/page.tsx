@@ -1,7 +1,7 @@
-import { fetchStrapiCollection } from '@/lib/strapi';
-import { fetchProductPricesBySlugs } from '@/lib/haravan';
-import type { ShopProduct, ShopCategory } from '@/lib/types';
 import ShopCatalog from '@/app/components/ShopCatalog';
+import { fetchProductPricesBySlugs } from '@/lib/haravan';
+import { fetchStrapiCollection } from '@/lib/strapi';
+import type { ShopCategory, ShopProduct } from '@/lib/types';
 
 export default async function ShopPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

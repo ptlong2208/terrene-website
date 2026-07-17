@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/ui/Section';
-import CtaLink from '@/app/components/ui/CtaLink';
+import Image from 'next/image';
+import { useEffect, useRef } from 'react';
+
 import TerreneElement from '@/app/components/TerreneElement';
+import CtaLink from '@/app/components/ui/CtaLink';
+import Section from '@/app/components/ui/Section';
 import { useLineReveal } from '@/app/hooks/useLineReveal';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 import { strapiMediaUrl } from '@/lib/strapi';

@@ -1,12 +1,13 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import Image from 'next/image';
 import Link from 'next/link';
-import gsap from 'gsap';
+import { useEffect, useRef } from 'react';
+
 import { strapiMediaUrl } from '@/lib/strapi';
-import { formatPrice } from '@/lib/utils';
 import type { ShopProduct } from '@/lib/types';
+import { formatPrice } from '@/lib/utils';
 
 interface ProductCardProps {
   product: ShopProduct;

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { ProductStory } from '@/lib/types';
+import { useCallback, useRef, useState } from 'react';
+
 import Modal from '@/app/components/ui/Modal';
 import SlotText from '@/app/components/ui/SlotText';
+import { strapiMediaUrl } from '@/lib/strapi';
+import type { ProductStory } from '@/lib/types';
 
 interface StoryModalProps {
   story: ProductStory;

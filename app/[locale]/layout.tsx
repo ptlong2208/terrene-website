@@ -1,12 +1,14 @@
+import '@fontsource-variable/mona-sans/index.css';
+import '../globals.css';
+
 import type { Metadata } from 'next';
+import { Faculty_Glyphic } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Faculty_Glyphic } from 'next/font/google';
-import '@fontsource-variable/mona-sans/index.css';
+
 import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
-import '../globals.css';
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: '--font-faculty-glyphic',

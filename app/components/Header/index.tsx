@@ -1,17 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { NavLink, StrapiMedia } from '@/lib/types';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import MenuOverlay, { type MenuState } from '@/app/components/MenuOverlay';
 import MusicConsentBanner from '@/app/components/MusicConsentBanner';
 import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
+import { strapiMediaUrl } from '@/lib/strapi';
+import type { NavLink, StrapiMedia } from '@/lib/types';
+
 import HeaderLeft from './HeaderLeft';
 import HeaderLogo from './HeaderLogo';
 import HeaderRight from './HeaderRight';

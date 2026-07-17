@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+
 import { strapiMediaUrl } from '@/lib/strapi';
 import type { JournalPost } from '@/lib/types';
 

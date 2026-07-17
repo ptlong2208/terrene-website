@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+
 import TerreneElement from '@/app/components/TerreneElement';
 import { useLineReveal } from '@/app/hooks/useLineReveal';
 

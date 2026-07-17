@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+
 import TerreneLogo from '@/app/components/TerreneLogo';
 
 interface HeaderLogoProps {

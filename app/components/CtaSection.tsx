@@ -1,10 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+
+import CtaPhysics from '@/app/components/CtaPhysics';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
-import CtaPhysics from '@/app/components/CtaPhysics';
-import type { SectionHeaderData, NavLink } from '@/lib/types';
+import type { NavLink, SectionHeaderData } from '@/lib/types';
 
 interface CtaSectionProps {
   header?: SectionHeaderData | null;

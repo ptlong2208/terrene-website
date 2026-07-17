@@ -1,12 +1,13 @@
 'use client';
 
-import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { createPortal } from 'react-dom';
+
+import SlotText from '@/app/components/ui/SlotText';
+import { useIsMounted } from '@/app/hooks/useIsMounted';
 import { useCartStore } from '@/app/store/cartStore';
 import { formatPrice } from '@/lib/utils';
-import { useIsMounted } from '@/app/hooks/useIsMounted';
-import SlotText from '@/app/components/ui/SlotText';
 
 export default function CartDrawer() {
   const { items, isOpen, close, updateQty } = useCartStore();

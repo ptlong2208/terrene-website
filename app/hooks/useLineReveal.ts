@@ -1,8 +1,9 @@
 'use client';
 
-import { type RefObject, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { type RefObject, useEffect } from 'react';
+
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
 
 interface UseLineRevealOptions {

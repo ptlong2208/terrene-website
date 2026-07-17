@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { useEffect, useRef } from 'react';
+
 import TerreneLogo from '@/app/components/TerreneLogo';
 import { isPreloaderDone } from '@/app/hooks/usePreloaderDone';
 

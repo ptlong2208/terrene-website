@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import SectionHeader from '@/app/components/ui/SectionHeader';
-import CtaLink from '@/app/components/ui/CtaLink';
-import ProcessItem from './ProcessItem';
-import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { strapiMediaUrl } from '@/lib/strapi';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import type { ProcessStep, SectionHeaderData, NavLink } from '@/lib/types';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+
+import CtaLink from '@/app/components/ui/CtaLink';
+import SectionHeader from '@/app/components/ui/SectionHeader';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
+import { strapiMediaUrl } from '@/lib/strapi';
+import type { NavLink, ProcessStep, SectionHeaderData } from '@/lib/types';
+
+import ProcessItem from './ProcessItem';
 
 interface ProcessSectionProps {
   header?: SectionHeaderData | null;

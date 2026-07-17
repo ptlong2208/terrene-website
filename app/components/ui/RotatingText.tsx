@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  AnimatePresence,
+  motion,
+  type Target,
+  type TargetAndTransition,
+  type Transition,
+  type VariantLabels,
+} from 'framer-motion';
 import React, {
   forwardRef,
   useCallback,
@@ -8,14 +16,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  motion,
-  AnimatePresence,
-  type Transition,
-  type Target,
-  type TargetAndTransition,
-  type VariantLabels,
-} from 'framer-motion';
 
 function cn(...classes: (string | undefined | null | boolean)[]): string {
   return classes.filter(Boolean).join(' ');

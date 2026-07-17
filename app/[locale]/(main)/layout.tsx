@@ -1,11 +1,12 @@
 import { getTranslations } from 'next-intl/server';
-import { fetchStrapiSingle } from '@/lib/strapi';
-import type { GlobalData } from '@/lib/types';
-import Header from '@/app/components/Header';
+
+import CartDrawer from '@/app/components/CartDrawer';
 import CtaSection from '@/app/components/CtaSection';
 import Footer from '@/app/components/Footer';
+import Header from '@/app/components/Header';
 import Preloader from '@/app/components/Preloader';
-import CartDrawer from '@/app/components/CartDrawer';
+import { fetchStrapiSingle } from '@/lib/strapi';
+import type { GlobalData } from '@/lib/types';
 
 export default async function MainLayout({
   children,

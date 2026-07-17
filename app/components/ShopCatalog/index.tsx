@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import ProductCard from '@/app/components/FeaturedProductsSection/ProductCard';
-import type { ShopProduct, ShopCategory } from '@/lib/types';
-import { CategoryFilter, SortMode } from './constants';
-import CategoryBar from './CategoryBar';
 import Dropdown from '@/app/components/ui/Dropdown';
+import type { ShopCategory, ShopProduct } from '@/lib/types';
+
+import CategoryBar from './CategoryBar';
+import { CategoryFilter, SortMode } from './constants';
 
 export { CategoryFilter, SortMode } from './constants';
 

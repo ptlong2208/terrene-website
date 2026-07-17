@@ -1,15 +1,15 @@
-import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
-import { fetchProductPricesBySlugs } from '@/lib/haravan';
-import type { HomepageData } from '@/lib/types';
-import HeroSection from '@/app/components/HeroSection';
-import StorySection from '@/app/components/StorySection';
-import FeaturedProductsSection from '@/app/components/FeaturedProductsSection';
 import BenefitsSection from '@/app/components/BenefitsSection';
+import FeaturedProductsSection from '@/app/components/FeaturedProductsSection';
+import HeroSection from '@/app/components/HeroSection';
+import JournalSection from '@/app/components/JournalSection';
+import PartnersSection from '@/app/components/PartnersSection';
 import ProcessSection from '@/app/components/ProcessSection';
 import QuoteSection from '@/app/components/QuoteSection';
-import PartnersSection from '@/app/components/PartnersSection';
+import StorySection from '@/app/components/StorySection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
-import JournalSection from '@/app/components/JournalSection';
+import { fetchProductPricesBySlugs } from '@/lib/haravan';
+import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
+import type { HomepageData } from '@/lib/types';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

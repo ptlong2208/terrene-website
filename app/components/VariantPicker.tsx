@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { formatPrice } from '@/lib/utils';
+import { useState } from 'react';
+
 import { useCartStore } from '@/app/store/cartStore';
 import type { ProductVariant } from '@/lib/haravan';
+import { formatPrice } from '@/lib/utils';
 
 interface VariantPickerProps {
   variants: ProductVariant[];

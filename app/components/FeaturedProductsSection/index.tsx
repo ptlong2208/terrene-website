@@ -1,15 +1,17 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Section from '@/app/components/ui/Section';
-import ProductCard from './ProductCard';
+import { useTranslations } from 'next-intl';
+import { useEffect, useRef } from 'react';
+
 import CtaLink from '@/app/components/ui/CtaLink';
+import Section from '@/app/components/ui/Section';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import type { ShopProduct, SectionHeaderData } from '@/lib/types';
+import type { SectionHeaderData, ShopProduct } from '@/lib/types';
+
 import styles from './index.module.css';
+import ProductCard from './ProductCard';
 
 interface FeaturedProductsSectionProps {
   header?: SectionHeaderData | null;
