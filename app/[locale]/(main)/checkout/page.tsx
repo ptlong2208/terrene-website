@@ -217,9 +217,9 @@ export default function CheckoutPage() {
 
           <Form.Submit
             disabled={loading}
-            className="text-cream mt-2 w-full cursor-pointer border-0 bg-(--green-deep) py-4 text-[12px] font-semibold tracking-[0.12em] uppercase transition-opacity hover:opacity-85 disabled:opacity-40"
+            className="group text-cream mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) py-4 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85 disabled:opacity-40"
           >
-            {loading ? t('processing') : t('placeOrder')}
+            {loading ? t('processing') : <SlotText text={t('placeOrder')} />}
           </Form.Submit>
         </Form.Root>
       </div>

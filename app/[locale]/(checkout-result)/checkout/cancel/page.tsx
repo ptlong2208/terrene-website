@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import TerreneLogo from '@/app/components/TerreneLogo';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
+import SlotText from '@/app/components/ui/SlotText';
 
 export default async function CheckoutCancelPage() {
   const t = await getTranslations('checkout');
@@ -21,9 +22,9 @@ export default async function CheckoutCancelPage() {
         <div className="mt-[clamp(28px,3.5vh,44px)] flex flex-wrap items-center justify-center gap-6">
           <Link
             href="/checkout"
-            className="text-cream inline-flex items-center bg-(--green-deep) px-8 py-3 text-[12px] font-semibold tracking-widest uppercase transition-opacity hover:opacity-85"
+            className="group text-cream inline-flex items-center justify-center overflow-hidden bg-(--green-deep) px-8 py-3 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85"
           >
-            {t('cancelCta')}
+            <SlotText text={t('cancelCta')} />
           </Link>
           <CtaLink href="/shop" label={t('cancelShop')} />
         </div>

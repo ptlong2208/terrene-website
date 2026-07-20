@@ -125,9 +125,9 @@ export default function CartDrawer() {
             <Link
               href="/checkout"
               onClick={close}
-              className="text-cream block w-full bg-(--green-deep) py-4 text-center text-[12px] font-semibold tracking-[0.12em] uppercase no-underline transition-opacity hover:opacity-85"
+              className="group text-cream flex w-full items-center justify-center overflow-hidden bg-(--green-deep) py-4 text-[16px] tracking-[-0.02em] no-underline transition-opacity hover:opacity-85"
             >
-              {t('checkout')}
+              <SlotText text={t('checkout')} />
             </Link>
           </div>
         )}

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
+import SlotText from '@/app/components/ui/SlotText';
 import { useCartStore } from '@/app/store/cartStore';
 import type { ProductVariant } from '@/lib/haravan';
 import { formatPrice } from '@/lib/utils';
@@ -118,22 +119,22 @@ export default function VariantPicker({
       {price === 0 ? (
         <Link
           href="/"
-          className="text-cream flex w-full shrink-0 cursor-pointer items-center justify-center bg-(--green-deep) py-3.75 text-[13px] font-bold tracking-[0.12em] uppercase transition-opacity hover:opacity-85"
+          className="group text-cream flex w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden bg-(--green-deep) py-3.75 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85"
         >
-          {t('contactUs')}
+          <SlotText text={t('contactUs')} />
         </Link>
       ) : (
         <button
           type="button"
           onClick={handleAddToCart}
           disabled={!isAvailable || atLimit}
-          className={`text-cream w-full shrink-0 bg-(--green-deep) py-3.75 text-[13px] font-bold tracking-[0.12em] uppercase transition-opacity ${
+          className={`group text-cream flex w-full shrink-0 items-center justify-center overflow-hidden bg-(--green-deep) py-3.75 text-[16px] tracking-[-0.02em] transition-opacity ${
             !isAvailable || atLimit
               ? 'cursor-not-allowed opacity-40'
               : 'cursor-pointer hover:opacity-85'
           }`}
         >
-          {t('addToCart')}
+          <SlotText text={t('addToCart')} />
         </button>
       )}
     </>
