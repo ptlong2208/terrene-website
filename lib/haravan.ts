@@ -1,3 +1,6 @@
+import type { CheckoutCustomer } from '@/lib/checkout';
+import type { PendingOrderItem } from '@/lib/orderStore';
+
 const TOKEN = process.env.HARAVAN_API_TOKEN!;
 const BASE = 'https://apis.haravan.com/com';
 
@@ -26,6 +29,44 @@ export async function fetchProductPricesBySlugs(slugs: string[]): Promise<Record
     })
   );
   return Object.fromEntries(entries);
+}
+
+export async function createHaravanOrder(
+  customer: CheckoutCustomer,
+  items: PendingOrderItem[],
+  orderCode: number
+): Promise<void> {
+  const res = await fetch(`${BASE}/orders.json`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${TOKEN}`,
+    },
+    body: JSON.stringify({
+      order: {
+        financial_status: 'paid',
+        note: [customer.note ? `Note: ${customer.note}` : null, `PayOS order code: ${orderCode}`]
+          .filter(Boolean)
+          .join(' | '),
+        customer: {
+          first_name: customer.name,
+          email: customer.email,
+          phone: customer.phone,
+        },
+        line_items: items.map((item) => ({
+          title: item.productTitle,
+          variant_title: item.variantTitle || undefined,
+          quantity: item.quantity,
+          price: String(item.price),
+        })),
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`Haravan order creation failed: ${res.status} ${body}`);
+  }
 }
 
 export async function fetchProductData(slug: string): Promise<HaravanProduct> {
