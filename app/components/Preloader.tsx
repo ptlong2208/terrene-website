@@ -1,6 +1,7 @@
 'use client';
 
 import gsap from 'gsap';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 
 import TerreneLogo from '@/app/components/TerreneLogo';
@@ -11,7 +12,16 @@ interface PreloaderProps {
   quote: string;
 }
 
+const PRELOADER_ROUTES = [/^\/[a-z]{2}\/?$/, /\/coming-soon$/];
+
+function isPreloaderRoute(pathname: string) {
+  return PRELOADER_ROUTES.some((re) => re.test(pathname));
+}
+
 export default function Preloader({ siteName, quote }: PreloaderProps) {
+  const pathname = usePathname();
+  const shouldShow = isPreloaderRoute(pathname) && !isPreloaderDone();
+
   const loaderRef = useRef<HTMLDivElement>(null);
   const markRef = useRef<HTMLDivElement>(null);
   const brandLineRef = useRef<HTMLSpanElement>(null);
@@ -26,8 +36,9 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
     const count = countRef.current;
     if (!loader || !mark || !brandLine || !quoteLine || !count) return;
 
-    if (isPreloaderDone()) {
+    if (!shouldShow) {
       gsap.set(loader, { display: 'none' });
+      if (!isPreloaderDone()) window.dispatchEvent(new CustomEvent('preloader:complete'));
       return;
     }
 
@@ -71,11 +82,12 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
       tl.kill();
       document.body.classList.remove('is-locked');
     };
-  }, []);
+  }, [shouldShow]);
 
   return (
     <div
       ref={loaderRef}
+      style={!shouldShow ? { display: 'none' } : undefined}
       className="fixed inset-0 z-2000 flex flex-col items-center justify-center gap-7 bg-(--green-deep)"
     >
       <div ref={markRef} className="opacity-0">

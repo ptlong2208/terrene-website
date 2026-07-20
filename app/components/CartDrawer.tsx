@@ -89,7 +89,7 @@ export default function CartDrawer() {
                       type="button"
                       onClick={() => updateQty(item.variantId, item.quantity - 1)}
                       className="text-ink w-3.5 cursor-pointer border-0 bg-transparent text-center text-[15px] leading-none transition-colors hover:text-(--green-deep)"
-                      aria-label="Giảm số lượng"
+                      aria-label={t('decreaseQty')}
                     >
                       −
                     </button>
@@ -103,7 +103,7 @@ export default function CartDrawer() {
                         item.inventoryQuantity !== null && item.quantity >= item.inventoryQuantity
                       }
                       className="text-ink w-3.5 cursor-pointer border-0 bg-transparent text-center text-[15px] leading-none transition-colors hover:text-(--green-deep) disabled:cursor-not-allowed disabled:opacity-30"
-                      aria-label="Tăng số lượng"
+                      aria-label={t('increaseQty')}
                     >
                       +
                     </button>
@@ -123,7 +123,8 @@ export default function CartDrawer() {
               </span>
             </div>
             <Link
-              href="/"
+              href="/checkout"
+              onClick={close}
               className="text-cream block w-full bg-(--green-deep) py-4 text-center text-[12px] font-semibold tracking-[0.12em] uppercase no-underline transition-opacity hover:opacity-85"
             >
               {t('checkout')}
