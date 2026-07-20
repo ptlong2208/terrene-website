@@ -31,7 +31,7 @@ export default function HeaderRight({ navShopLink, navCartLabel }: HeaderRightPr
       className="flex items-center justify-end gap-5 justify-self-end md:gap-6"
       aria-label={t('mainLabel')}
     >
-      {navShopLink && (
+      {navShopLink && !pathname.endsWith('/checkout') && (
         <Link
           href={navShopLink.href}
           className="group inline-flex items-center text-[18px] leading-none font-normal whitespace-nowrap text-inherit no-underline transition-transform duration-120 ease-out hover:opacity-100! active:scale-[0.92] md:text-base"
