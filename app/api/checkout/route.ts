@@ -39,13 +39,14 @@ function signPayload(data: Record<string, string | number>, checksumKey: string)
 export async function POST(req: NextRequest) {
   // CSRF: reject requests from other origins
   const origin = req.headers.get('origin');
-  const siteUrl = process.env.SITE_URL;
+  const siteUrl =
+    process.env.SITE_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
   if (!siteUrl) {
-    log.error('SITE_URL env var is not configured');
+    log.error('Neither SITE_URL nor VERCEL_URL is set');
     return err(500, CheckoutErrorCode.ServerError);
   }
   if (origin !== siteUrl) {
-    log.warn({ origin }, 'CSRF: request from unexpected origin');
+    log.warn({ origin, siteUrl }, 'CSRF: request from unexpected origin');
     return err(403, CheckoutErrorCode.Forbidden);
   }
 
