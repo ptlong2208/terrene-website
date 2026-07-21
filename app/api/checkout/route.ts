@@ -4,7 +4,10 @@ import { z } from 'zod';
 
 import { checkoutCustomerSchema, CheckoutErrorCode, SLUG_PATTERN } from '@/lib/checkout';
 import { fetchProductData } from '@/lib/haravan';
+import logger from '@/lib/logger';
 import { savePendingOrder } from '@/lib/orderStore';
+
+const log = logger.child({ module: 'checkout' });
 
 const PAYOS_BASE_URL = 'https://api-merchant.payos.vn';
 const SESSION_MINUTES = 15;
@@ -38,15 +41,21 @@ export async function POST(req: NextRequest) {
   const origin = req.headers.get('origin');
   const siteUrl = process.env.SITE_URL;
   if (!siteUrl) {
-    console.error('[checkout] SITE_URL env var is not configured');
+    log.error('SITE_URL env var is not configured');
     return err(500, CheckoutErrorCode.ServerError);
   }
-  if (origin !== siteUrl) return err(403, CheckoutErrorCode.Forbidden);
+  if (origin !== siteUrl) {
+    log.warn({ origin }, 'CSRF: request from unexpected origin');
+    return err(403, CheckoutErrorCode.Forbidden);
+  }
 
   // Parse + validate body
   const body = await req.json().catch(() => null);
   const parsed = bodySchema.safeParse(body);
-  if (!parsed.success) return err(400, 'Invalid request.');
+  if (!parsed.success) {
+    log.warn({ issues: parsed.error?.issues }, 'Invalid request body');
+    return err(400, 'Invalid request.');
+  }
 
   const { customer, items } = parsed.data;
 
@@ -62,9 +71,14 @@ export async function POST(req: NextRequest) {
     const product = productMap[item.productSlug];
     const variant = product?.variants.find((v) => v.id === item.variantId);
 
-    if (!variant) return err(422, CheckoutErrorCode.NotFound, { product: item.productTitle });
-    if (!variant.available)
+    if (!variant) {
+      log.warn({ slug: item.productSlug, variantId: item.variantId }, 'Variant not found');
+      return err(422, CheckoutErrorCode.NotFound, { product: item.productTitle });
+    }
+    if (!variant.available) {
+      log.warn({ slug: item.productSlug, variantId: item.variantId }, 'Variant out of stock');
       return err(422, CheckoutErrorCode.OutOfStock, { product: item.productTitle });
+    }
 
     verifiedItems.push({
       name: `${item.productTitle}${item.variantTitle ? ` - ${item.variantTitle}` : ''}`.slice(
@@ -85,7 +99,7 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.PAYOS_API_KEY;
   const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
   if (!clientId || !apiKey || !checksumKey) {
-    console.error('[checkout] PayOS credentials are not configured');
+    log.error('PayOS credentials are not configured');
     return err(500, CheckoutErrorCode.ServerError);
   }
 
@@ -119,13 +133,18 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify(payload),
   });
 
-  if (!payosRes.ok) return err(502, CheckoutErrorCode.PaymentUnavailable);
+  if (!payosRes.ok) {
+    log.error({ status: payosRes.status }, 'PayOS HTTP error');
+    return err(502, CheckoutErrorCode.PaymentUnavailable);
+  }
 
   const payosData = await payosRes.json();
   if (payosData.code !== '00') {
-    console.error('[checkout] PayOS error:', payosData.code, payosData.desc);
+    log.error({ code: payosData.code, desc: payosData.desc }, 'PayOS returned non-success code');
     return err(502, CheckoutErrorCode.PaymentUnavailable);
   }
+
+  log.info({ orderCode, amount }, 'Payment link created');
 
   savePendingOrder(orderCode, {
     customer,

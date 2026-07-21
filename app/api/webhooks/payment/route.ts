@@ -2,7 +2,10 @@ import { createHmac } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { createHaravanOrder } from '@/lib/haravan';
+import logger from '@/lib/logger';
 import { takePendingOrder } from '@/lib/orderStore';
+
+const log = logger.child({ module: 'webhook/payment' });
 
 interface PayOSWebhookData {
   orderCode: number;
@@ -44,36 +47,45 @@ function verifySignature(data: PayOSWebhookData, signature: string, checksumKey:
 
 export async function POST(req: NextRequest) {
   const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
-  if (!checksumKey) return Response.json({ error: 'Server misconfiguration.' }, { status: 500 });
+  if (!checksumKey) {
+    log.error('PAYOS_CHECKSUM_KEY env var is not configured');
+    return Response.json({ error: 'Server misconfiguration.' }, { status: 500 });
+  }
 
   let body: PayOSWebhookBody;
   try {
     body = await req.json();
   } catch {
+    log.warn('Received webhook with invalid JSON');
     return Response.json({ error: 'Invalid JSON.' }, { status: 400 });
   }
 
   const { code, success, data, signature } = body;
 
   if (!verifySignature(data, signature, checksumKey)) {
+    log.warn({ orderCode: data?.orderCode }, 'Webhook signature verification failed');
     return Response.json({ error: 'Invalid signature.' }, { status: 401 });
   }
 
   // Only process successful payments (code '00')
   if (!success || code !== '00') {
+    log.info({ orderCode: data.orderCode, code }, 'Ignoring non-success webhook event');
     return Response.json({ message: 'Ignored non-success event.' }, { status: 200 });
   }
 
+  log.info({ orderCode: data.orderCode, amount: data.amount }, 'Payment confirmed, creating order');
+
   const order = takePendingOrder(data.orderCode);
   if (!order) {
-    // Already processed or expired — acknowledge to stop retries
+    log.warn({ orderCode: data.orderCode }, 'Order already processed or expired');
     return Response.json({ message: 'Order already processed or expired.' }, { status: 200 });
   }
 
   try {
     await createHaravanOrder(order.customer, order.items, data.orderCode);
+    log.info({ orderCode: data.orderCode }, 'Haravan order created successfully');
   } catch (err) {
-    console.error('[webhook] Haravan order creation failed:', err);
+    log.error({ err, orderCode: data.orderCode }, 'Haravan order creation failed');
     // Return 500 so PayOS retries the webhook
     return Response.json({ error: 'Order creation failed.' }, { status: 500 });
   }

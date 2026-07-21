@@ -1,6 +1,8 @@
 import type { CheckoutCustomer } from '@/lib/checkout';
+import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
 
+const log = logger.child({ module: 'haravan' });
 const TOKEN = process.env.HARAVAN_API_TOKEN!;
 const BASE = 'https://apis.haravan.com/com';
 
@@ -65,6 +67,7 @@ export async function createHaravanOrder(
 
   if (!res.ok) {
     const body = await res.text().catch(() => '');
+    log.error({ orderCode, status: res.status, body }, 'Haravan order creation failed');
     throw new Error(`Haravan order creation failed: ${res.status} ${body}`);
   }
 }
@@ -78,7 +81,10 @@ export async function fetchProductData(slug: string): Promise<HaravanProduct> {
     next: { revalidate: 60 },
   });
 
-  if (!res.ok) return { variants: [], optionName: null };
+  if (!res.ok) {
+    log.warn({ slug, status: res.status }, 'fetchProductData returned non-OK status');
+    return { variants: [], optionName: null };
+  }
 
   const data = await res.json();
   const product = data.products?.[0];
