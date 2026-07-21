@@ -47,6 +47,7 @@ export async function createHaravanOrder(
     body: JSON.stringify({
       order: {
         financial_status: 'paid',
+        tags: 'payos',
         note: [customer.note ? `Note: ${customer.note}` : null, `PayOS order code: ${orderCode}`]
           .filter(Boolean)
           .join(' | '),
@@ -56,6 +57,7 @@ export async function createHaravanOrder(
           phone: customer.phone,
         },
         line_items: items.map((item) => ({
+          variant_id: item.variantId,
           title: item.productTitle,
           variant_title: item.variantTitle || undefined,
           quantity: item.quantity,
