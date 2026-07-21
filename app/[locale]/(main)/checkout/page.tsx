@@ -11,7 +11,7 @@ import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
 import { useCartStore } from '@/app/store/cartStore';
-import { type CheckoutCustomer, checkoutCustomerSchema } from '@/lib/checkout';
+import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
 import { formatPrice } from '@/lib/utils';
 
 type FieldErrors = Partial<Record<keyof CheckoutCustomer, string>>;
@@ -20,6 +20,12 @@ const FIELD_CLASS =
   'w-full border border-(--green-deep)/20 rounded-lg px-4 py-3 text-[14px] text-(--green-deep) bg-transparent placeholder:text-(--green-deep)/30 outline-none focus:border-(--green-deep)/60 transition-colors duration-200 aria-invalid:border-red-400';
 
 const LABEL_CLASS = 'text-[12px] font-semibold tracking-[0.04em] uppercase text-(--green-deep)';
+
+const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
+  [CheckoutErrorCode.OutOfStock]: 'errorOutOfStock',
+  [CheckoutErrorCode.NotFound]: 'errorNotFound',
+  [CheckoutErrorCode.PaymentUnavailable]: 'errorPaymentUnavailable',
+};
 
 export default function CheckoutPage() {
   const t = useTranslations('checkout');
@@ -67,7 +73,8 @@ export default function CheckoutPage() {
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        setServerError(body.error ?? 'Something went wrong. Please try again.');
+        const key = ERROR_KEY_MAP[body.error as CheckoutErrorCode] ?? 'errorGeneric';
+        setServerError(t(key, { product: body.product ?? '' }));
         setLoading(false);
         return;
       }
@@ -75,7 +82,7 @@ export default function CheckoutPage() {
       const { paymentUrl } = await res.json();
       window.location.replace(paymentUrl);
     } catch {
-      setServerError('Network error. Please check your connection and try again.');
+      setServerError(t('errorNetwork'));
       setLoading(false);
     }
   }

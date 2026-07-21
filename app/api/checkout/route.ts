@@ -2,7 +2,7 @@ import { createHmac, randomInt } from 'crypto';
 import { type NextRequest } from 'next/server';
 import { z } from 'zod';
 
-import { checkoutCustomerSchema, SLUG_PATTERN } from '@/lib/checkout';
+import { checkoutCustomerSchema, CheckoutErrorCode, SLUG_PATTERN } from '@/lib/checkout';
 import { fetchProductData } from '@/lib/haravan';
 import { savePendingOrder } from '@/lib/orderStore';
 
@@ -23,8 +23,8 @@ const bodySchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
 });
 
-function err(status: number, message: string) {
-  return Response.json({ error: message }, { status });
+function err(status: number, code: string, extra?: Record<string, string>) {
+  return Response.json({ error: code, ...extra }, { status });
 }
 
 function signPayload(data: Record<string, string | number>, checksumKey: string): string {
@@ -37,8 +37,11 @@ export async function POST(req: NextRequest) {
   // CSRF: reject requests from other origins
   const origin = req.headers.get('origin');
   const siteUrl = process.env.SITE_URL;
-  if (!siteUrl) return err(500, 'Server misconfiguration.');
-  if (origin !== siteUrl) return err(403, 'Forbidden.');
+  if (!siteUrl) {
+    console.error('[checkout] SITE_URL env var is not configured');
+    return err(500, CheckoutErrorCode.ServerError);
+  }
+  if (origin !== siteUrl) return err(403, CheckoutErrorCode.Forbidden);
 
   // Parse + validate body
   const body = await req.json().catch(() => null);
@@ -59,8 +62,9 @@ export async function POST(req: NextRequest) {
     const product = productMap[item.productSlug];
     const variant = product?.variants.find((v) => v.id === item.variantId);
 
-    if (!variant) return err(422, `Variant not found for "${item.productTitle}".`);
-    if (!variant.available) return err(422, `"${item.productTitle}" is out of stock.`);
+    if (!variant) return err(422, CheckoutErrorCode.NotFound, { product: item.productTitle });
+    if (!variant.available)
+      return err(422, CheckoutErrorCode.OutOfStock, { product: item.productTitle });
 
     verifiedItems.push({
       name: `${item.productTitle}${item.variantTitle ? ` - ${item.variantTitle}` : ''}`.slice(
@@ -74,13 +78,16 @@ export async function POST(req: NextRequest) {
 
   // Compute server-side total
   const amount = verifiedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  if (amount <= 0) return err(422, 'Order total must be greater than zero.');
+  if (amount <= 0) return err(422, CheckoutErrorCode.ZeroTotal);
 
   // PayOS credentials
   const clientId = process.env.PAYOS_CLIENT_ID;
   const apiKey = process.env.PAYOS_API_KEY;
   const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
-  if (!clientId || !apiKey || !checksumKey) return err(500, 'Server misconfiguration.');
+  if (!clientId || !apiKey || !checksumKey) {
+    console.error('[checkout] PayOS credentials are not configured');
+    return err(500, CheckoutErrorCode.ServerError);
+  }
 
   const orderCode = randomInt(1_000_000_000, 9_999_999_999);
   const returnUrl = `${siteUrl}/checkout/success`;
@@ -112,10 +119,13 @@ export async function POST(req: NextRequest) {
     body: JSON.stringify(payload),
   });
 
-  if (!payosRes.ok) return err(502, 'Payment service unavailable. Please try again.');
+  if (!payosRes.ok) return err(502, CheckoutErrorCode.PaymentUnavailable);
 
   const payosData = await payosRes.json();
-  if (payosData.code !== '00') return err(502, payosData.desc ?? 'Payment service error.');
+  if (payosData.code !== '00') {
+    console.error('[checkout] PayOS error:', payosData.code, payosData.desc);
+    return err(502, CheckoutErrorCode.PaymentUnavailable);
+  }
 
   savePendingOrder(orderCode, {
     customer,
