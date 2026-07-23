@@ -1,3 +1,5 @@
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 import { createHmac, randomInt } from 'crypto';
 import { type NextRequest } from 'next/server';
 import { z } from 'zod';
@@ -6,6 +8,12 @@ import { checkoutCustomerSchema, CheckoutErrorCode, SLUG_PATTERN } from '@/lib/c
 import { fetchProductData } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { savePendingOrder } from '@/lib/orderStore';
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, '1 m'),
+  prefix: 'ratelimit:checkout',
+});
 
 const log = logger.child({ module: 'checkout' });
 
@@ -48,6 +56,14 @@ export async function POST(req: NextRequest) {
   if (origin !== siteUrl) {
     log.warn({ origin, siteUrl }, 'CSRF: request from unexpected origin');
     return err(403, CheckoutErrorCode.Forbidden);
+  }
+
+  // Rate limit by IP
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    log.warn({ ip }, 'Rate limit exceeded');
+    return err(429, CheckoutErrorCode.ServerError);
   }
 
   // Parse + validate body
