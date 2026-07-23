@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
 
   log.info({ orderCode: data.orderCode, amount: data.amount }, 'Payment confirmed, creating order');
 
-  const order = takePendingOrder(data.orderCode);
+  const order = await takePendingOrder(data.orderCode);
   if (!order) {
     log.warn({ orderCode: data.orderCode }, 'Order already processed or expired');
     return Response.json({ message: 'Order already processed or expired.' }, { status: 200 });

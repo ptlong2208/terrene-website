@@ -147,7 +147,7 @@ export async function POST(req: NextRequest) {
 
   log.info({ orderCode, amount }, 'Payment link created');
 
-  savePendingOrder(orderCode, {
+  await savePendingOrder(orderCode, {
     customer,
     items: items.map((item) => ({
       variantId: item.variantId,

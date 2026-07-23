@@ -1,3 +1,5 @@
+import { Redis } from '@upstash/redis';
+
 import type { CheckoutCustomer } from '@/lib/checkout';
 
 export interface PendingOrderItem {
@@ -15,26 +17,19 @@ export interface PendingOrder {
   expiresAt: number; // ms
 }
 
-// In-memory store keyed by orderCode (random 10-digit integer).
-// Works for single-instance deployments. For multi-instance (Vercel serverless),
-// replace with an external KV store such as Upstash Redis or Vercel KV.
-const store = new Map<number, PendingOrder>();
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
-export function savePendingOrder(orderCode: number, order: PendingOrder) {
-  store.set(orderCode, order);
+const key = (orderCode: number) => `order:${orderCode}`;
+
+export async function savePendingOrder(orderCode: number, order: PendingOrder): Promise<void> {
+  const ttlSeconds = Math.ceil((order.expiresAt - Date.now()) / 1000);
+  await redis.set(key(orderCode), order, { ex: ttlSeconds });
 }
 
-export function takePendingOrder(orderCode: number): PendingOrder | undefined {
-  const order = store.get(orderCode);
-  if (order) store.delete(orderCode);
-  return order;
+// Atomically get and delete — prevents double-processing across instances
+export async function takePendingOrder(orderCode: number): Promise<PendingOrder | null> {
+  return redis.getdel<PendingOrder>(key(orderCode));
 }
-
-const CLEANUP_INTERVAL_MS = 60_000;
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [code, order] of store) {
-    if (order.expiresAt < now) store.delete(code);
-  }
-}, CLEANUP_INTERVAL_MS);
