@@ -3,11 +3,19 @@
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll() {
+  const pathname = usePathname();
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    lenisRef.current?.scrollTo(0, { immediate: true });
+  }, [pathname]);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -16,6 +24,7 @@ export default function SmoothScroll() {
       touchMultiplier: 1,
     });
 
+    lenisRef.current = lenis;
     (window as unknown as Record<string, unknown>).lenis = lenis;
 
     lenis.on('scroll', ScrollTrigger.update);
@@ -34,6 +43,7 @@ export default function SmoothScroll() {
     return () => {
       gsap.ticker.remove(onTick);
       window.removeEventListener('preloader:complete', onPreloaderDone);
+      lenisRef.current = null;
       delete (window as unknown as Record<string, unknown>).lenis;
       lenis.destroy();
     };
