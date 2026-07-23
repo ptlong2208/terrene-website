@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Terrene Website
+
+E-commerce storefront for Terrene — a Vietnamese specialty coffee brand. Built with Next.js, Tailwind CSS, and integrates Strapi, Haravan, PayOS, Brevo, and Upstash Redis.
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
+cp .env.example .env.local
+# Fill in the env vars (see below)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+### Strapi CMS
 
-To learn more about Next.js, take a look at the following resources:
+| Variable                 | Description              |
+| ------------------------ | ------------------------ |
+| `NEXT_PUBLIC_STRAPI_URL` | Your Strapi instance URL |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**How to get:** Strapi Cloud dashboard → your project → the base URL shown (e.g. `https://xxx.strapiapp.com`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### Haravan
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable            | Description           |
+| ------------------- | --------------------- |
+| `HARAVAN_API_TOKEN` | Private app API token |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**How to get:**
+
+1. Haravan admin → **Ứng dụng** → **Quản lý ứng dụng riêng** → create a private app
+2. Enable scopes: `com.read_products`, `com.write_orders`
+3. Copy the API token
+
+---
+
+### Brevo
+
+| Variable            | Description                          |
+| ------------------- | ------------------------------------ |
+| `BREVO_API_KEY`     | API key                              |
+| `BREVO_TEMPLATE_ID` | Order confirmation email template ID |
+| `BREVO_LIST_ID`     | Newsletter contact list ID           |
+
+**How to get:**
+
+1. [app.brevo.com](https://app.brevo.com) → **Settings → API Keys** → create a key
+2. **Email Templates** → open your order confirmation template → note the numeric ID in the URL
+3. **Contacts → Lists** → open your newsletter list → note the numeric ID
+
+---
+
+### Site URL
+
+| Variable   | Description                                                      |
+| ---------- | ---------------------------------------------------------------- |
+| `SITE_URL` | Production domain, no trailing slash (e.g. `https://terrene.vn`) |
+
+Set this in Vercel scoped to **Production** only. Preview deployments fall back to `VERCEL_URL` automatically — no need to set it there.
+
+---
+
+### PayOS
+
+| Variable             | Description                                     |
+| -------------------- | ----------------------------------------------- |
+| `PAYOS_CLIENT_ID`    | Client ID                                       |
+| `PAYOS_API_KEY`      | API key                                         |
+| `PAYOS_CHECKSUM_KEY` | Checksum key for webhook signature verification |
+
+**How to get:**
+
+1. [my.payos.vn](https://my.payos.vn) → **Kênh thanh toán** → open your channel
+2. Copy **Client ID**, **API Key**, and **Checksum Key**
+3. Under **Thiết lập nâng cao → Webhook URL** → enter `https://your-domain.com/api/webhooks/payment`
+
+---
+
+### Upstash Redis
+
+| Variable                   | Description    |
+| -------------------------- | -------------- |
+| `UPSTASH_REDIS_REST_URL`   | REST API URL   |
+| `UPSTASH_REDIS_REST_TOKEN` | REST API token |
+
+**How to get:**
+
+1. [console.upstash.com](https://console.upstash.com) → **Create database**
+   - Region: `ap-southeast-1` (Singapore)
+   - Eviction: off
+2. Open the database → **REST API** tab → copy the URL and token
+
+**On Vercel:** install the [Upstash integration](https://vercel.com/marketplace) from the marketplace — it fills in these vars automatically, no manual copy needed.
