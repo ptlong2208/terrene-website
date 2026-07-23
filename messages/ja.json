@@ -53,7 +53,8 @@
     "subtotal": "小計",
     "checkout": "チェックアウト",
     "decreaseQty": "数量を減らす",
-    "increaseQty": "数量を増やす"
+    "increaseQty": "数量を増やす",
+    "editQty": "数量を編集"
   },
   "checkout": {
     "title": "チェックアウト",

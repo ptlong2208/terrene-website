@@ -53,7 +53,8 @@
     "subtotal": "Tạm tính",
     "checkout": "Thanh toán",
     "decreaseQty": "Giảm số lượng",
-    "increaseQty": "Tăng số lượng"
+    "increaseQty": "Tăng số lượng",
+    "editQty": "Chỉnh số lượng"
   },
   "checkout": {
     "title": "Thanh toán",

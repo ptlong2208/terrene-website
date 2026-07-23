@@ -53,7 +53,8 @@
     "subtotal": "Subtotal",
     "checkout": "Checkout",
     "decreaseQty": "Decrease quantity",
-    "increaseQty": "Increase quantity"
+    "increaseQty": "Increase quantity",
+    "editQty": "Edit quantity"
   },
   "checkout": {
     "title": "Checkout",

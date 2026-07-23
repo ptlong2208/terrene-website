@@ -3,10 +3,12 @@
 import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import SlotText from '@/app/components/ui/SlotText';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
+import type { CartItem } from '@/app/store/cartStore';
 import { useCartStore } from '@/app/store/cartStore';
 import { formatPrice } from '@/lib/utils';
 
@@ -15,9 +17,54 @@ export default function CartDrawer() {
   const t = useTranslations('cart');
   const tCommon = useTranslations('common');
   const mounted = useIsMounted();
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState('');
 
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  const startEdit = (item: CartItem) => {
+    setEditingId(item.variantId);
+    setEditValue(String(item.quantity));
+  };
+
+  const commitEdit = (item: CartItem) => {
+    setEditingId(null);
+    const raw = parseInt(editValue, 10);
+    const max = item.inventoryQuantity ?? Infinity;
+    const newQty = isNaN(raw) || raw <= 0 ? 0 : Math.min(raw, max);
+    if (newQty === item.quantity) return;
+    updateQty(item.variantId, newQty);
+    if (newQty > item.quantity) {
+      sendGAEvent('event', 'add_to_cart', {
+        currency: 'VND',
+        value: item.price * (newQty - item.quantity),
+        items: [
+          {
+            item_id: String(item.variantId),
+            item_name: item.productTitle,
+            item_variant: item.variantTitle,
+            price: item.price,
+            quantity: newQty - item.quantity,
+          },
+        ],
+      });
+    } else {
+      sendGAEvent('event', 'remove_from_cart', {
+        currency: 'VND',
+        value: item.price * (item.quantity - newQty),
+        items: [
+          {
+            item_id: String(item.variantId),
+            item_name: item.productTitle,
+            item_variant: item.variantTitle,
+            price: item.price,
+            quantity: item.quantity - newQty,
+          },
+        ],
+      });
+    }
+  };
 
   if (!mounted) return null;
 
@@ -109,9 +156,34 @@ export default function CartDrawer() {
                     >
                       −
                     </button>
-                    <span className="min-w-3.5 text-center text-[13px] tabular-nums">
-                      {item.quantity}
-                    </span>
+
+                    {editingId === item.variantId ? (
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        value={editValue}
+                        autoFocus
+                        onChange={(e) => setEditValue(e.target.value.replace(/\D/g, ''))}
+                        onBlur={() => commitEdit(item)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') commitEdit(item);
+                          if (e.key === 'Escape') setEditingId(null);
+                        }}
+                        className="w-6 border-none bg-transparent text-center text-[13px] text-(--green-deep) tabular-nums outline-none"
+                        aria-label={t('editQty')}
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => startEdit(item)}
+                        className="min-w-3.5 cursor-text border-0 bg-transparent text-center text-[13px] text-(--green-deep) tabular-nums"
+                        aria-label={t('editQty')}
+                      >
+                        {item.quantity}
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() => {
