@@ -85,7 +85,7 @@ export default function CtaPhysics({ className }: CtaPhysicsProps) {
           if (walls.length) World.remove(engine.world, walls);
           walls = [
             Bodies.rectangle(W / 2, H + T / 2, W + T * 4, T, { isStatic: true }),
-            Bodies.rectangle(W * 0.5, H / 2, T, H * 5, { isStatic: true }),
+            Bodies.rectangle(-T / 2, H / 2, T, H * 5, { isStatic: true }),
             Bodies.rectangle(W + T / 2, H / 2, T, H * 5, { isStatic: true }),
           ];
           World.add(engine.world, walls);

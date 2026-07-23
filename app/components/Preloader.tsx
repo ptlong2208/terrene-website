@@ -38,7 +38,10 @@ export default function Preloader({ siteName, quote }: PreloaderProps) {
 
     if (!shouldShow) {
       gsap.set(loader, { display: 'none' });
-      if (!isPreloaderDone()) window.dispatchEvent(new CustomEvent('preloader:complete'));
+      if (!isPreloaderDone()) {
+        const id = setTimeout(() => window.dispatchEvent(new CustomEvent('preloader:complete')), 0);
+        return () => clearTimeout(id);
+      }
       return;
     }
 

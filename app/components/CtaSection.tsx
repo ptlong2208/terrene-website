@@ -1,10 +1,8 @@
 'use client';
 
-import Link from 'next/link';
-
 import CtaPhysics from '@/app/components/CtaPhysics';
+import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
-import SlotText from '@/app/components/ui/SlotText';
 import type { NavLink, SectionHeaderData } from '@/lib/types';
 
 interface CtaSectionProps {
@@ -23,12 +21,7 @@ export default function CtaSection({ header, link }: CtaSectionProps) {
     >
       <div className="relative z-10">
         {link && (
-          <Link
-            href={link.href}
-            className="group mt-[clamp(34px,4.5vh,52px)] inline-flex items-center gap-2.5 self-start border-b border-current pb-0.75 text-[12px] font-semibold tracking-[0.12em] text-(--green-deep) uppercase no-underline"
-          >
-            <SlotText text={link.label} />
-          </Link>
+          <CtaLink href={link.href} label={link.label} className="mt-[clamp(34px,4.5vh,52px)]" />
         )}
       </div>
       <CtaPhysics />
