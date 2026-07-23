@@ -9,6 +9,8 @@ import { getMessages } from 'next-intl/server';
 
 import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
+import { fetchStrapiSingle } from '@/lib/strapi';
+import type { GlobalData } from '@/lib/types';
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: '--font-faculty-glyphic',
@@ -17,10 +19,18 @@ const facultyGlyphic = Faculty_Glyphic({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Terrene | The Ritual of Matcha',
-  description: 'The Ritual of Matcha',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const global = await fetchStrapiSingle<GlobalData>('/api/global', { locale });
+  return {
+    title: global.site_name,
+    description: global.site_description ?? undefined,
+  };
+}
 
 export default async function LocaleLayout({
   children,

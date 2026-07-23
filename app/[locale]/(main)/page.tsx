@@ -7,44 +7,72 @@ import ProcessSection from '@/app/components/ProcessSection';
 import QuoteSection from '@/app/components/QuoteSection';
 import StorySection from '@/app/components/StorySection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
+import { SITE_URL } from '@/lib/config';
 import { fetchProductPricesBySlugs } from '@/lib/haravan';
 import { fetchStrapiSingle, strapiMediaUrl } from '@/lib/strapi';
-import type { HomepageData } from '@/lib/types';
+import type { GlobalData, HomepageData } from '@/lib/types';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
-  const homepage = await fetchStrapiSingle<HomepageData>('/api/homepage', {
-    'populate[hero_background_video]': 'true',
-    'populate[hero_video_poster]': 'true',
-    'populate[story_header]': 'true',
-    'populate[story_image]': 'true',
-    'populate[story_cta]': 'true',
-    'populate[shop_header]': 'true',
-    'populate[shop_products][populate][image]': 'true',
-    'populate[shop_products][populate][tags]': 'true',
-    'populate[shop_products][populate][category]': 'true',
-    'populate[benefits_header]': 'true',
-    'populate[benefits_items]': 'true',
-    'populate[process_header]': 'true',
-    'populate[process_steps][populate][image]': 'true',
-    'populate[process_cta]': 'true',
-    'populate[partners_header]': 'true',
-    'populate[partners_items]': 'true',
-    'populate[testimonials_header]': 'true',
-    'populate[testimonials_items][populate][image]': 'true',
-    'populate[journal_header]': 'true',
-    'populate[journal_view_all]': 'true',
-    'populate[journal_posts][populate][cover_image]': 'true',
-    'populate[journal_posts][populate][category]': 'true',
-    locale,
-  });
+  const [homepage, global] = await Promise.all([
+    fetchStrapiSingle<HomepageData>('/api/homepage', {
+      'populate[hero_background_video]': 'true',
+      'populate[hero_video_poster]': 'true',
+      'populate[story_header]': 'true',
+      'populate[story_image]': 'true',
+      'populate[story_cta]': 'true',
+      'populate[shop_header]': 'true',
+      'populate[shop_products][populate][image]': 'true',
+      'populate[shop_products][populate][tags]': 'true',
+      'populate[shop_products][populate][category]': 'true',
+      'populate[benefits_header]': 'true',
+      'populate[benefits_items]': 'true',
+      'populate[process_header]': 'true',
+      'populate[process_steps][populate][image]': 'true',
+      'populate[process_cta]': 'true',
+      'populate[partners_header]': 'true',
+      'populate[partners_items]': 'true',
+      'populate[testimonials_header]': 'true',
+      'populate[testimonials_items][populate][image]': 'true',
+      'populate[journal_header]': 'true',
+      'populate[journal_view_all]': 'true',
+      'populate[journal_posts][populate][cover_image]': 'true',
+      'populate[journal_posts][populate][category]': 'true',
+      locale,
+    }),
+    fetchStrapiSingle<GlobalData>('/api/global', {
+      'populate[social_links]': 'true',
+      locale,
+    }),
+  ]);
 
   const featuredProducts = homepage.shop_products.slice(0, 6);
   const productPrices = await fetchProductPricesBySlugs(featuredProducts.map((p) => p.slug));
 
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: global.site_name,
+      url: SITE_URL,
+      email: global.email ?? undefined,
+      sameAs: global.social_links.map((l) => l.url),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: global.site_name,
+      url: SITE_URL,
+    },
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <HeroSection
         title={homepage.hero_title ?? undefined}
         description={homepage.hero_description ?? undefined}
