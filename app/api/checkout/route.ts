@@ -181,5 +181,6 @@ export async function POST(req: NextRequest) {
   return Response.json({
     paymentUrl: payosData.data.checkoutUrl,
     expiresAt: expiredAt * 1000,
+    orderCode,
   });
 }

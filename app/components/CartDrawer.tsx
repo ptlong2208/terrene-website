@@ -1,5 +1,6 @@
 'use client';
 
+import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { createPortal } from 'react-dom';
@@ -87,7 +88,22 @@ export default function CartDrawer() {
                   <div className="border-line flex shrink-0 items-center gap-3 rounded-full border px-3 py-1.25">
                     <button
                       type="button"
-                      onClick={() => updateQty(item.variantId, item.quantity - 1)}
+                      onClick={() => {
+                        updateQty(item.variantId, item.quantity - 1);
+                        sendGAEvent('event', 'remove_from_cart', {
+                          currency: 'VND',
+                          value: item.price,
+                          items: [
+                            {
+                              item_id: String(item.variantId),
+                              item_name: item.productTitle,
+                              item_variant: item.variantTitle,
+                              price: item.price,
+                              quantity: 1,
+                            },
+                          ],
+                        });
+                      }}
                       className="text-ink w-3.5 cursor-pointer border-0 bg-transparent text-center text-[15px] leading-none transition-colors hover:text-(--green-deep)"
                       aria-label={t('decreaseQty')}
                     >
@@ -98,7 +114,22 @@ export default function CartDrawer() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => updateQty(item.variantId, item.quantity + 1)}
+                      onClick={() => {
+                        updateQty(item.variantId, item.quantity + 1);
+                        sendGAEvent('event', 'add_to_cart', {
+                          currency: 'VND',
+                          value: item.price,
+                          items: [
+                            {
+                              item_id: String(item.variantId),
+                              item_name: item.productTitle,
+                              item_variant: item.variantTitle,
+                              price: item.price,
+                              quantity: 1,
+                            },
+                          ],
+                        });
+                      }}
                       disabled={
                         item.inventoryQuantity !== null && item.quantity >= item.inventoryQuantity
                       }

@@ -130,6 +130,17 @@ export default function Header({
     return () => clearTimeout(timer);
   }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
 
+  // If no music is configured, fire music-consent:done so CookieConsent can show.
+  useEffect(() => {
+    if (!preloaderDone) return;
+    if (audioSrc && musicConsentText && musicConsentAccept && musicConsentDecline) return;
+    const timer = setTimeout(
+      () => window.dispatchEvent(new CustomEvent('music-consent:done')),
+      2000
+    );
+    return () => clearTimeout(timer);
+  }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
+
   const playMusic = async () => {
     const audio = audioRef.current;
     if (!audio || !audioSrc) return;
@@ -155,6 +166,7 @@ export default function Header({
   const handleConsentAccept = () => {
     setShowConsent(false);
     void playMusic();
+    window.dispatchEvent(new CustomEvent('music-consent:done'));
   };
 
   return (
@@ -194,7 +206,10 @@ export default function Header({
         acceptLabel={musicConsentAccept ?? ''}
         declineLabel={musicConsentDecline ?? ''}
         onAccept={handleConsentAccept}
-        onDecline={() => setShowConsent(false)}
+        onDecline={() => {
+          setShowConsent(false);
+          window.dispatchEvent(new CustomEvent('music-consent:done'));
+        }}
       />
     </>
   );

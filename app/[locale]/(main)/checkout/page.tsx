@@ -1,10 +1,11 @@
 'use client';
 
+import { sendGAEvent } from '@next/third-parties/google';
 import * as Form from '@radix-ui/react-form';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
@@ -35,6 +36,22 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (items.length === 0) return;
+    sendGAEvent('event', 'begin_checkout', {
+      currency: 'VND',
+      value: items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      items: items.map((i) => ({
+        item_id: String(i.variantId),
+        item_name: i.productTitle,
+        item_variant: i.variantTitle,
+        price: i.price,
+        quantity: i.quantity,
+      })),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!mounted) return null;
 
@@ -79,7 +96,21 @@ export default function CheckoutPage() {
         return;
       }
 
-      const { paymentUrl } = await res.json();
+      const { paymentUrl, orderCode } = await res.json();
+      localStorage.setItem(
+        'pending_purchase',
+        JSON.stringify({
+          transactionId: String(orderCode),
+          value: total,
+          items: items.map((i) => ({
+            item_id: String(i.variantId),
+            item_name: i.productTitle,
+            item_variant: i.variantTitle,
+            price: i.price,
+            quantity: i.quantity,
+          })),
+        })
+      );
       window.location.replace(paymentUrl);
     } catch {
       setServerError(t('errorNetwork'));

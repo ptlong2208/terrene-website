@@ -99,5 +99,10 @@
   "notFound": {
     "message": "Trang này đã đi lạc. Hãy quay về trang chủ nhé.",
     "backHome": "Về trang chủ"
+  },
+  "cookies": {
+    "message": "Chúng tôi dùng cookie để cải thiện trải nghiệm của bạn. Bạn có đồng ý không?",
+    "accept": "Đồng ý",
+    "decline": "Từ chối"
   }
 }

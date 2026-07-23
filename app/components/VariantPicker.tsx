@@ -1,5 +1,6 @@
 'use client';
 
+import { sendGAEvent } from '@next/third-parties/google';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -52,6 +53,19 @@ export default function VariantPicker({
       variantTitle: selected.title,
       price: selected.price,
       inventoryQuantity: stockLeft,
+    });
+    sendGAEvent('event', 'add_to_cart', {
+      currency: 'VND',
+      value: selected.price,
+      items: [
+        {
+          item_id: String(selected.id),
+          item_name: productTitle,
+          item_variant: selected.title,
+          price: selected.price,
+          quantity: 1,
+        },
+      ],
     });
   };
 

@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
+import CookieConsent from '@/app/components/CookieConsent';
 import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
 import { fetchStrapiSingle } from '@/lib/strapi';
@@ -50,6 +51,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll />
           {children}
+          <CookieConsent gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
         </NextIntlClientProvider>
       </body>
     </html>

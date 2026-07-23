@@ -19,6 +19,22 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Environment Variables
 
+### Google Analytics
+
+| Variable            | Description        |
+| ------------------- | ------------------ |
+| `NEXT_PUBLIC_GA_ID` | GA4 Measurement ID |
+
+**How to get:**
+
+1. [analytics.google.com](https://analytics.google.com) → **Admin** → **Create property**
+2. Property created → **Data collection → Web** → add a web data stream with your domain
+3. Copy the **Measurement ID** (format: `G-XXXXXXXXXX`)
+
+GA is only loaded after the user accepts the cookie consent banner — no data is collected before that.
+
+---
+
 ### Strapi CMS
 
 | Variable                 | Description              |

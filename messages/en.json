@@ -99,5 +99,10 @@
   "notFound": {
     "message": "This page has wandered off the path. Let's get you back to solid ground.",
     "backHome": "Back to home"
+  },
+  "cookies": {
+    "message": "We use cookies to improve your experience. Do you consent?",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

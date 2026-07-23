@@ -94,5 +94,10 @@
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"
+  },
+  "cookies": {
+    "message": "より良い体験のためにCookieを使用しています。同意しますか？",
+    "accept": "同意する",
+    "decline": "断る"
   }
 }
