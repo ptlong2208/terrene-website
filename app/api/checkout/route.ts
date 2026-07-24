@@ -62,7 +62,10 @@ export async function POST(req: NextRequest) {
     log.error('Neither SITE_URL nor VERCEL_URL is set');
     return err(500, CheckoutErrorCode.ServerError);
   }
-  if (origin !== siteUrl) {
+  const branchUrl = process.env.VERCEL_BRANCH_URL
+    ? `https://${process.env.VERCEL_BRANCH_URL}`
+    : null;
+  if (origin !== siteUrl && origin !== branchUrl) {
     log.warn({ origin, siteUrl }, 'CSRF: request from unexpected origin');
     return err(403, CheckoutErrorCode.Forbidden);
   }
