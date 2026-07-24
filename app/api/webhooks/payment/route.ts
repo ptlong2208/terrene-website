@@ -35,13 +35,13 @@ interface PayOSWebhookBody {
 }
 
 function verifySignature(data: PayOSWebhookData, signature: string, checksumKey: string): boolean {
-  // Sort ALL data fields alphabetically and format as key=value pairs
   const sorted = Object.keys(data)
     .sort()
     .map((k) => `${k}=${data[k as keyof PayOSWebhookData] ?? ''}`)
     .join('&');
 
   const expected = createHmac('sha256', checksumKey).update(sorted).digest('hex');
+  log.debug({ sorted, expected, received: signature }, 'Signature debug');
   return expected === signature;
 }
 
