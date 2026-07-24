@@ -10,7 +10,7 @@ import logger from '@/lib/logger';
 import { savePendingOrder } from '@/lib/orderStore';
 
 const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
+  redis: new Redis({ url: process.env.KV_REST_API_URL!, token: process.env.KV_REST_API_TOKEN! }),
   limiter: Ratelimit.slidingWindow(5, '1 m'),
   prefix: 'ratelimit:checkout',
 });
