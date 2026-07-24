@@ -17,19 +17,25 @@ export interface PendingOrder {
   expiresAt: number; // ms
 }
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
+let _redis: Redis | null = null;
+function getRedis() {
+  if (!_redis) {
+    _redis = new Redis({
+      url: process.env.KV_REST_API_URL!,
+      token: process.env.KV_REST_API_TOKEN!,
+    });
+  }
+  return _redis;
+}
 
 const key = (orderCode: number) => `order:${orderCode}`;
 
 export async function savePendingOrder(orderCode: number, order: PendingOrder): Promise<void> {
   const ttlSeconds = Math.ceil((order.expiresAt - Date.now()) / 1000);
-  await redis.set(key(orderCode), order, { ex: ttlSeconds });
+  await getRedis().set(key(orderCode), order, { ex: ttlSeconds });
 }
 
 // Atomically get and delete — prevents double-processing across instances
 export async function takePendingOrder(orderCode: number): Promise<PendingOrder | null> {
-  return redis.getdel<PendingOrder>(key(orderCode));
+  return getRedis().getdel<PendingOrder>(key(orderCode));
 }

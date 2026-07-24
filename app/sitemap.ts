@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'fields[0]': 'slug',
     'fields[1]': 'createdAt',
     'pagination[limit]': '100',
-  });
+  }).catch(() => []);
 
   const staticRoutes = locales.flatMap((locale) => [
     { url: `${SITE_URL}/${locale}`, changeFrequency: 'weekly' as const, priority: 1 },

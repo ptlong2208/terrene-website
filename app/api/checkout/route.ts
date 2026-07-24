@@ -9,11 +9,20 @@ import { fetchProductData } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { savePendingOrder } from '@/lib/orderStore';
 
-const ratelimit = new Ratelimit({
-  redis: new Redis({ url: process.env.KV_REST_API_URL!, token: process.env.KV_REST_API_TOKEN! }),
-  limiter: Ratelimit.slidingWindow(5, '1 m'),
-  prefix: 'ratelimit:checkout',
-});
+let _ratelimit: Ratelimit | null = null;
+function getRatelimit() {
+  if (!_ratelimit) {
+    _ratelimit = new Ratelimit({
+      redis: new Redis({
+        url: process.env.KV_REST_API_URL!,
+        token: process.env.KV_REST_API_TOKEN!,
+      }),
+      limiter: Ratelimit.slidingWindow(5, '1 m'),
+      prefix: 'ratelimit:checkout',
+    });
+  }
+  return _ratelimit;
+}
 
 const log = logger.child({ module: 'checkout' });
 
@@ -60,7 +69,7 @@ export async function POST(req: NextRequest) {
 
   // Rate limit by IP
   const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
-  const { success } = await ratelimit.limit(ip);
+  const { success } = await getRatelimit().limit(ip);
   if (!success) {
     log.warn({ ip }, 'Rate limit exceeded');
     return err(429, CheckoutErrorCode.ServerError);
