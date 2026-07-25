@@ -56,6 +56,15 @@ export async function createHaravanOrder(
           email: customer.email,
           phone: customer.phone,
         },
+        shipping_address: {
+          first_name: customer.name,
+          phone: customer.phone,
+          address1: customer.street,
+          city: customer.ward,
+          province: 'Hồ Chí Minh',
+          country: 'Việt Nam',
+          country_code: 'VN',
+        },
         line_items: items.map((item) => ({
           variant_id: item.variantId,
           title: item.productTitle,

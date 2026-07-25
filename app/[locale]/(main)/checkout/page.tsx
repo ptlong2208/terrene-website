@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
+import WardCombobox from '@/app/components/ui/WardCombobox';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
 import { useCartStore } from '@/app/store/cartStore';
 import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
@@ -22,6 +23,8 @@ const FIELD_CLASS =
 
 const LABEL_CLASS = 'text-[12px] font-semibold tracking-[0.04em] uppercase text-(--green-deep)';
 
+const EMPTY_FORM: CheckoutCustomer = { name: '', phone: '', email: '', ward: '', street: '' };
+
 const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
   [CheckoutErrorCode.OutOfStock]: 'errorOutOfStock',
   [CheckoutErrorCode.NotFound]: 'errorNotFound',
@@ -33,12 +36,12 @@ export default function CheckoutPage() {
   const mounted = useIsMounted();
   const { items, count } = useCartStore();
   const [form, setForm] = useState<CheckoutCustomer>(() => {
-    if (typeof window === 'undefined') return { name: '', phone: '', email: '', note: '' };
+    if (typeof window === 'undefined') return EMPTY_FORM;
     try {
       const draft = sessionStorage.getItem('checkout_draft');
-      return draft ? JSON.parse(draft) : { name: '', phone: '', email: '', note: '' };
+      return draft ? JSON.parse(draft) : EMPTY_FORM;
     } catch {
-      return { name: '', phone: '', email: '', note: '' };
+      return EMPTY_FORM;
     }
   });
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -83,6 +86,8 @@ export default function CheckoutPage() {
         if (field === 'name') fieldErrors.name = t('errorNameMin');
         else if (field === 'phone') fieldErrors.phone = t('errorPhoneInvalid');
         else if (field === 'email') fieldErrors.email = t('errorEmailInvalid');
+        else if (field === 'ward') fieldErrors.ward = t('errorWardRequired');
+        else if (field === 'street') fieldErrors.street = t('errorStreetMin');
       }
       setErrors(fieldErrors);
       return;
@@ -256,6 +261,48 @@ export default function CheckoutPage() {
             </Form.Control>
             {errors.email && (
               <Form.Message className="text-[12px] text-red-500">{errors.email}</Form.Message>
+            )}
+          </Form.Field>
+
+          <Form.Field name="ward" serverInvalid={!!errors.ward} className="flex flex-col gap-1.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <Form.Label className={LABEL_CLASS}>{t('ward')}</Form.Label>
+              <span className="text-ink-soft text-[11px]">{t('wardNote')}</span>
+            </div>
+            <WardCombobox
+              value={form.ward}
+              onChange={(ward) => {
+                setForm((prev) => ({ ...prev, ward }));
+                setErrors((prev) => ({ ...prev, ward: undefined }));
+              }}
+              error={errors.ward}
+              placeholder={t('wardPlaceholder')}
+              emptyText={t('wardEmpty')}
+              inputClassName={`${FIELD_CLASS}${errors.ward ? ' aria-invalid' : ''}`}
+            />
+            {errors.ward && (
+              <Form.Message className="text-[12px] text-red-500">{errors.ward}</Form.Message>
+            )}
+          </Form.Field>
+
+          <Form.Field
+            name="street"
+            serverInvalid={!!errors.street}
+            className="flex flex-col gap-1.5"
+          >
+            <Form.Label className={LABEL_CLASS}>{t('street')}</Form.Label>
+            <Form.Control asChild>
+              <input
+                type="text"
+                autoComplete="street-address"
+                placeholder={t('streetPlaceholder')}
+                value={form.street}
+                onChange={handleChange}
+                className={FIELD_CLASS}
+              />
+            </Form.Control>
+            {errors.street && (
+              <Form.Message className="text-[12px] text-red-500">{errors.street}</Form.Message>
             )}
           </Form.Field>
 
