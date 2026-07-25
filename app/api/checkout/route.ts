@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { createHmac, randomInt } from 'crypto';
@@ -166,12 +167,18 @@ export async function POST(req: NextRequest) {
 
   if (!payosRes.ok) {
     log.error({ status: payosRes.status }, 'PayOS HTTP error');
+    Sentry.captureException(new Error(`PayOS HTTP error ${payosRes.status}`), {
+      tags: { orderCode },
+    });
     return err(502, CheckoutErrorCode.PaymentUnavailable);
   }
 
   const payosData = await payosRes.json();
   if (payosData.code !== '00') {
     log.error({ code: payosData.code, desc: payosData.desc }, 'PayOS returned non-success code');
+    Sentry.captureException(new Error(`PayOS error ${payosData.code}: ${payosData.desc}`), {
+      tags: { orderCode },
+    });
     return err(502, CheckoutErrorCode.PaymentUnavailable);
   }
 

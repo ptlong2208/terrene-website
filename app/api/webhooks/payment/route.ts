@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import { createHmac } from 'crypto';
 import { type NextRequest } from 'next/server';
 
@@ -86,6 +87,7 @@ export async function POST(req: NextRequest) {
     log.info({ orderCode: data.orderCode }, 'Haravan order created successfully');
   } catch (err) {
     log.error({ err, orderCode: data.orderCode }, 'Haravan order creation failed');
+    Sentry.captureException(err, { tags: { orderCode: data.orderCode } });
     // Return 500 so PayOS retries the webhook
     return Response.json({ error: 'Order creation failed.' }, { status: 500 });
   }
