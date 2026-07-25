@@ -1,3 +1,4 @@
+import Card from '@/app/components/ui/Card';
 import type { ProductInfoItem } from '@/lib/types';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
 
 export default function ProductInfoCard({ title, items }: Props) {
   return (
-    <div className="border-line border bg-white p-[clamp(20px,2.4vw,32px)]">
+    <Card>
       <h2 className="text-[clamp(20px,2vw,26px)] font-semibold tracking-[-0.02em] text-(--green-deep)">
         {title}
       </h2>
@@ -26,6 +27,6 @@ export default function ProductInfoCard({ title, items }: Props) {
           </details>
         ))}
       </div>
-    </div>
+    </Card>
   );
 }

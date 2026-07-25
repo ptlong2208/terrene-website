@@ -107,6 +107,20 @@ export default function CheckoutPage() {
       const { paymentUrl, orderCode } = await res.json();
       sessionStorage.setItem('checkout_draft', JSON.stringify(result.data));
       sessionStorage.setItem(
+        'order_confirmation',
+        JSON.stringify({
+          orderCode: String(orderCode),
+          total,
+          items: items.map((i) => ({
+            productTitle: i.productTitle,
+            variantTitle: i.variantTitle,
+            price: i.price,
+            quantity: i.quantity,
+          })),
+          customer: { name: result.data.name, phone: result.data.phone },
+        })
+      );
+      sessionStorage.setItem(
         'pending_purchase',
         JSON.stringify({
           transactionId: String(orderCode),

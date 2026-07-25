@@ -84,6 +84,8 @@
     "total": "Total",
     "successTitle": "Order confirmed",
     "successMessage": "Thank you for your order. We'll prepare it with care and be in touch soon.",
+    "orderCode": "Order code",
+    "successContact": "We'll contact {phone} to confirm and arrange delivery.",
     "successCta": "Continue shopping",
     "cancelTitle": "Payment cancelled",
     "cancelMessage": "Your payment was not completed. Your cart is saved — you can try again whenever you're ready.",

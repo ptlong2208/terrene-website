@@ -84,6 +84,8 @@
     "total": "Tổng cộng",
     "successTitle": "Đặt hàng thành công",
     "successMessage": "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ chuẩn bị đơn hàng cẩn thận và liên hệ với bạn sớm.",
+    "orderCode": "Mã đơn hàng",
+    "successContact": "Chúng tôi sẽ liên hệ {phone} để xác nhận và sắp xếp giao hàng.",
     "successCta": "Tiếp tục mua sắm",
     "cancelTitle": "Thanh toán bị huỷ",
     "cancelMessage": "Thanh toán chưa hoàn tất. Giỏ hàng của bạn vẫn được lưu — bạn có thể thử lại bất cứ lúc nào.",

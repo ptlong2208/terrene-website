@@ -79,6 +79,8 @@
     "total": "合計",
     "successTitle": "ご注文が確定しました",
     "successMessage": "ご注文ありがとうございます。丁寧に準備してお届けします。近日中にご連絡いたします。",
+    "orderCode": "注文番号",
+    "successContact": "{phone} にご連絡して配送の確認をいたします。",
     "successCta": "お買い物を続ける",
     "cancelTitle": "お支払いがキャンセルされました",
     "cancelMessage": "お支払いが完了しませんでした。カートは保存されていますので、いつでもやり直せます。",
