@@ -32,7 +32,15 @@ export default function CheckoutPage() {
   const t = useTranslations('checkout');
   const mounted = useIsMounted();
   const { items, count } = useCartStore();
-  const [form, setForm] = useState<CheckoutCustomer>({ name: '', phone: '', email: '', note: '' });
+  const [form, setForm] = useState<CheckoutCustomer>(() => {
+    if (typeof window === 'undefined') return { name: '', phone: '', email: '', note: '' };
+    try {
+      const draft = sessionStorage.getItem('checkout_draft');
+      return draft ? JSON.parse(draft) : { name: '', phone: '', email: '', note: '' };
+    } catch {
+      return { name: '', phone: '', email: '', note: '' };
+    }
+  });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -97,7 +105,8 @@ export default function CheckoutPage() {
       }
 
       const { paymentUrl, orderCode } = await res.json();
-      localStorage.setItem(
+      sessionStorage.setItem('checkout_draft', JSON.stringify(result.data));
+      sessionStorage.setItem(
         'pending_purchase',
         JSON.stringify({
           transactionId: String(orderCode),

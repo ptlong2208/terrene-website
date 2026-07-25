@@ -5,9 +5,10 @@ import { useEffect } from 'react';
 
 export default function PurchaseTracker() {
   useEffect(() => {
-    const raw = localStorage.getItem('pending_purchase');
+    const raw = sessionStorage.getItem('pending_purchase');
     if (!raw) return;
-    localStorage.removeItem('pending_purchase');
+    sessionStorage.removeItem('pending_purchase');
+    sessionStorage.removeItem('checkout_draft');
     try {
       const { transactionId, value, items } = JSON.parse(raw);
       sendGAEvent('event', 'purchase', {
