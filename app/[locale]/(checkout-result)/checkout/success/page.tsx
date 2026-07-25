@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import CartClearer from '@/app/components/CartClearer';
@@ -7,7 +8,16 @@ import TerreneLogo from '@/app/components/TerreneLogo';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
 
-export default async function CheckoutSuccessPage() {
+export default async function CheckoutSuccessPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const [{ locale }, sp] = await Promise.all([params, searchParams]);
+  if (sp.status !== 'PAID' || sp.code !== '00') redirect(`/${locale}`);
+
   const t = await getTranslations('checkout');
 
   return (
