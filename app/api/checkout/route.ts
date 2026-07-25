@@ -57,7 +57,9 @@ export async function POST(req: NextRequest) {
   // CSRF: reject requests from other origins
   const origin = req.headers.get('origin');
   const siteUrl =
-    process.env.SITE_URL ?? (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
+    process.env.SITE_URL ??
+    (process.env.VERCEL_BRANCH_URL ? `https://${process.env.VERCEL_BRANCH_URL}` : null) ??
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null);
   if (!siteUrl) {
     log.error('Neither SITE_URL nor VERCEL_URL is set');
     return err(500, CheckoutErrorCode.ServerError);
