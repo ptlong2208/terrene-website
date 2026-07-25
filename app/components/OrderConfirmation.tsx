@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 
 import Card from '@/app/components/ui/Card';
 import { formatPrice } from '@/lib/utils';
@@ -22,17 +22,19 @@ interface OrderData {
 
 export default function OrderConfirmation() {
   const t = useTranslations('checkout');
-  const [order] = useState<OrderData | null>(() => {
-    if (typeof window === 'undefined') return null;
+  const [order, setOrder] = useState<OrderData | null>(null);
+
+  useEffect(() => {
     try {
       const raw = sessionStorage.getItem('order_confirmation');
-      if (!raw) return null;
+      if (!raw) return;
       sessionStorage.removeItem('order_confirmation');
-      return JSON.parse(raw);
+      const data = JSON.parse(raw) as OrderData;
+      startTransition(() => setOrder(data));
     } catch {
-      return null;
+      // malformed data
     }
-  });
+  }, []);
 
   if (!order) return null;
 
