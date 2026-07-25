@@ -64,6 +64,10 @@ export default function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem('checkout_draft', JSON.stringify(form));
+  }, [form]);
+
   if (!mounted) return null;
 
   const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
