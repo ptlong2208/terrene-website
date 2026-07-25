@@ -33,11 +33,16 @@ export async function fetchProductPricesBySlugs(slugs: string[]): Promise<Record
   return Object.fromEntries(entries);
 }
 
+function localPhone(phone: string): string {
+  return phone.startsWith('+84') ? '0' + phone.slice(3) : phone;
+}
+
 export async function createHaravanOrder(
   customer: CheckoutCustomer,
   items: PendingOrderItem[],
   orderCode: number
 ): Promise<void> {
+  const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
     method: 'POST',
     headers: {
@@ -54,11 +59,11 @@ export async function createHaravanOrder(
         customer: {
           first_name: customer.name,
           email: customer.email,
-          phone: customer.phone,
+          phone: phone,
         },
         shipping_address: {
           first_name: customer.name,
-          phone: customer.phone,
+          phone: phone,
           address1: customer.street,
           city: customer.ward,
           province: 'Hồ Chí Minh',
