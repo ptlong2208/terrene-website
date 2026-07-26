@@ -91,14 +91,25 @@ export async function createHaravanOrder(
   return data.order.id as number;
 }
 
-export async function updateHaravanOrderPaid(haravanOrderId: number): Promise<void> {
-  const res = await fetch(`${BASE}/orders/${haravanOrderId}.json`, {
-    method: 'PUT',
+export async function updateHaravanOrderPaid(
+  haravanOrderId: number,
+  amount: number
+): Promise<void> {
+  const res = await fetch(`${BASE}/orders/${haravanOrderId}/transactions.json`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${TOKEN}`,
     },
-    body: JSON.stringify({ order: { id: haravanOrderId, financial_status: 'paid' } }),
+    body: JSON.stringify({
+      transaction: {
+        kind: 'sale',
+        status: 'success',
+        amount: String(amount),
+        currency: 'VND',
+        gateway: 'payos',
+      },
+    }),
   });
 
   if (!res.ok) {

@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
   // Payment confirmed — update Haravan order to paid
   log.info({ orderCode: data.orderCode, amount: data.amount }, 'Payment confirmed, updating order');
   try {
-    await updateHaravanOrderPaid(order.haravanOrderId);
+    await updateHaravanOrderPaid(order.haravanOrderId, order.amount);
     log.info({ orderCode: data.orderCode }, 'Haravan order marked as paid');
   } catch (err) {
     log.error({ err, orderCode: data.orderCode }, 'Haravan order update to paid failed');
