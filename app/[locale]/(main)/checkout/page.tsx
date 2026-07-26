@@ -17,6 +17,8 @@ import { useCartStore } from '@/app/store/cartStore';
 import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
 import { formatPrice } from '@/lib/utils';
 
+import CheckoutOrderSummary from './CheckoutOrderSummary';
+
 type DraftForm = CheckoutCustomer & { paymentMethod: 'payos' | 'cod' };
 
 type FieldErrors = Partial<Record<keyof CheckoutCustomer, string>>;
@@ -243,37 +245,7 @@ export default function CheckoutPage() {
         </Link>
       </div>
       <div className="mx-auto grid w-full max-w-360 grid-cols-[1fr_0.85fr] items-start gap-[clamp(32px,6vw,96px)] max-md:grid-cols-1">
-        {/* Order summary */}
-        <div>
-          <h2 className="mb-6 text-[12px] font-semibold tracking-[0.08em] text-(--green-deep) uppercase opacity-50">
-            {t('orderSummary')}
-          </h2>
-          <ul className="flex flex-col gap-4">
-            {items.map((item) => (
-              <li key={item.variantId} className="flex items-start justify-between gap-4">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-[14px] font-semibold text-(--green-deep)">
-                    {item.productTitle}
-                  </span>
-                  <span className="text-[12px] text-(--green-deep) opacity-50">
-                    {item.variantTitle} x {item.quantity}
-                  </span>
-                </div>
-                <span className="shrink-0 text-[14px] font-semibold text-(--green-deep)">
-                  {formatPrice(item.price * item.quantity)}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <div className="border-line mt-6 flex items-center justify-between border-t pt-6">
-            <span className="text-[13px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
-              {t('total')}
-            </span>
-            <span className="font-sans text-[20px] font-extrabold text-(--green-deep)">
-              {formatPrice(total)}
-            </span>
-          </div>
-        </div>
+        <CheckoutOrderSummary items={items} total={total} />
 
         {/* Customer form */}
         <Form.Root onSubmit={handleSubmit} className="flex flex-col gap-4">
