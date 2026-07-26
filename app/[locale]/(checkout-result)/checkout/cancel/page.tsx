@@ -1,12 +1,34 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import TerreneLogo from '@/app/components/TerreneLogo';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
+import { cancelHaravanOrder } from '@/lib/haravan';
+import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 
-export default async function CheckoutCancelPage() {
+export default async function CheckoutCancelPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string>>;
+}) {
+  const [{ locale }, sp] = await Promise.all([params, searchParams]);
+
+  const orderCode = Number(sp.orderCode);
+  if (!orderCode) redirect(`/${locale}`);
+
+  const order = await getPendingOrder(orderCode);
+  if (order) {
+    await Promise.all([
+      cancelHaravanOrder(order.haravanOrderId).catch(() => {}),
+      deletePendingOrder(orderCode),
+    ]);
+  }
+
   const t = await getTranslations('checkout');
 
   return (

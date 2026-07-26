@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   const orderCode = randomInt(1_000_000_000, 9_999_999_999);
   const successToken = randomUUID();
   const returnUrl = `${siteUrl}/checkout/success?token=${successToken}`;
-  const cancelUrl = `${siteUrl}/checkout/cancel`;
+  const cancelUrl = `${siteUrl}/checkout/cancel?orderCode=${orderCode}`;
   const description = 'Terrene Order';
   const expiredAt = Math.floor(Date.now() / 1000) + SESSION_MINUTES * 60;
 
