@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import CtaLink from '@/app/components/ui/CtaLink';
+import Modal from '@/app/components/ui/Modal';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
 import WardCombobox from '@/app/components/ui/WardCombobox';
@@ -16,6 +17,8 @@ import { useCartStore } from '@/app/store/cartStore';
 import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
 import { formatPrice } from '@/lib/utils';
 
+type DraftForm = CheckoutCustomer & { paymentMethod: 'payos' | 'cod' };
+
 type FieldErrors = Partial<Record<keyof CheckoutCustomer, string>>;
 
 const FIELD_CLASS =
@@ -23,7 +26,14 @@ const FIELD_CLASS =
 
 const LABEL_CLASS = 'text-[12px] font-semibold tracking-[0.04em] uppercase text-(--green-deep)';
 
-const EMPTY_FORM: CheckoutCustomer = { name: '', phone: '', email: '', ward: '', street: '' };
+const EMPTY_FORM: DraftForm = {
+  name: '',
+  phone: '',
+  email: '',
+  ward: '',
+  street: '',
+  paymentMethod: 'payos',
+};
 
 const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
   [CheckoutErrorCode.OutOfStock]: 'errorOutOfStock',
@@ -35,19 +45,27 @@ export default function CheckoutPage() {
   const t = useTranslations('checkout');
   const mounted = useIsMounted();
   const { items, count } = useCartStore();
-  const [form, setForm] = useState<CheckoutCustomer>(() => {
+  const [form, setForm] = useState<DraftForm>(() => {
     if (typeof window === 'undefined') return EMPTY_FORM;
     try {
       const draft = sessionStorage.getItem('checkout_draft');
-      return draft ? JSON.parse(draft) : EMPTY_FORM;
+      const parsed = draft ? JSON.parse(draft) : null;
+      return parsed
+        ? {
+            ...EMPTY_FORM,
+            ...parsed,
+            paymentMethod: parsed.paymentMethod === 'cod' ? 'cod' : 'payos',
+          }
+        : EMPTY_FORM;
     } catch {
       return EMPTY_FORM;
     }
   });
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [paymentMethod, setPaymentMethod] = useState<'payos' | 'cod'>('payos');
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showCodConfirm, setShowCodConfirm] = useState(false);
+  const [confirmedCustomer, setConfirmedCustomer] = useState<CheckoutCustomer | null>(null);
 
   useEffect(() => {
     if (items.length === 0) return;
@@ -79,10 +97,7 @@ export default function CheckoutPage() {
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   }
 
-  async function handleSubmit(e: React.SyntheticEvent) {
-    e.preventDefault();
-    setServerError(null);
-
+  function validateForm(): CheckoutCustomer | null {
     const result = checkoutCustomerSchema.safeParse(form);
     if (!result.success) {
       const fieldErrors: FieldErrors = {};
@@ -95,16 +110,35 @@ export default function CheckoutPage() {
         else if (field === 'street') fieldErrors.street = t('errorStreetMin');
       }
       setErrors(fieldErrors);
+      return null;
+    }
+    return result.data;
+  }
+
+  async function handleSubmit(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setServerError(null);
+
+    const customer = validateForm();
+    if (!customer) return;
+
+    if (form.paymentMethod === 'cod') {
+      setConfirmedCustomer(customer);
+      setShowCodConfirm(true);
       return;
     }
 
+    await submitOrder(customer);
+  }
+
+  async function submitOrder(customer: CheckoutCustomer) {
     setLoading(true);
     try {
-      const endpoint = paymentMethod === 'cod' ? '/api/checkout/cod' : '/api/checkout/payos';
+      const endpoint = form.paymentMethod === 'cod' ? '/api/checkout/cod' : '/api/checkout/payos';
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customer: result.data, items }),
+        body: JSON.stringify({ customer, items }),
       });
 
       if (!res.ok) {
@@ -116,16 +150,16 @@ export default function CheckoutPage() {
       }
 
       const data = await res.json();
-      sessionStorage.setItem('checkout_draft', JSON.stringify(result.data));
+      sessionStorage.setItem('checkout_draft', JSON.stringify(customer));
 
-      if (paymentMethod === 'cod') {
+      if (form.paymentMethod === 'cod') {
         sessionStorage.setItem(
           'order_confirmation',
           JSON.stringify({
             orderCode: data.orderName,
             total: data.total,
             items: data.items,
-            customer: { name: result.data.name, phone: result.data.phone },
+            customer: { name: customer.name, phone: customer.phone },
           })
         );
         sessionStorage.setItem(
@@ -155,7 +189,7 @@ export default function CheckoutPage() {
               price: i.price,
               quantity: i.quantity,
             })),
-            customer: { name: result.data.name, phone: result.data.phone },
+            customer: { name: customer.name, phone: customer.phone },
           })
         );
         sessionStorage.setItem(
@@ -366,9 +400,9 @@ export default function CheckoutPage() {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setPaymentMethod(value)}
+                  onClick={() => setForm((prev) => ({ ...prev, paymentMethod: value }))}
                   className={`flex cursor-pointer flex-col gap-0.5 rounded-lg border px-4 py-3 text-left transition-colors duration-150 ${
-                    paymentMethod === value
+                    form.paymentMethod === value
                       ? 'border-(--green-deep) bg-(--green-deep)/5'
                       : 'border-(--green-deep)/20 hover:border-(--green-deep)/40'
                   }`}
@@ -392,6 +426,60 @@ export default function CheckoutPage() {
           </Form.Submit>
         </Form.Root>
       </div>
+
+      {/* COD confirmation dialog */}
+      <Modal
+        isOpen={showCodConfirm}
+        onClose={() => setShowCodConfirm(false)}
+        title={t('codConfirmTitle')}
+        description={t('codConfirmDesc')}
+        primaryText={t('codConfirmAction')}
+        secondaryText={t('codConfirmBack')}
+        onPrimary={() => {
+          setShowCodConfirm(false);
+          if (confirmedCustomer) submitOrder(confirmedCustomer);
+        }}
+        loading={loading}
+      >
+        {confirmedCustomer && (
+          <div className="mb-5 flex flex-col gap-1 rounded-lg border border-(--green-deep)/15 px-4 py-3 text-[13px] text-(--green-deep)">
+            <span className="font-semibold">{confirmedCustomer.name}</span>
+            <span className="opacity-60">{confirmedCustomer.phone}</span>
+            <span className="opacity-60">
+              {confirmedCustomer.street}, {confirmedCustomer.ward}
+            </span>
+          </div>
+        )}
+
+        <p className="mb-3 text-[11px] font-semibold tracking-[0.06em] text-(--green-deep) uppercase opacity-50">
+          {t('orderSummary')}
+        </p>
+        <ul className="mb-4 flex flex-col gap-3">
+          {items.map((item) => (
+            <li key={item.variantId} className="flex items-start justify-between gap-4">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[13px] font-semibold text-(--green-deep)">
+                  {item.productTitle}
+                </span>
+                <span className="text-[11px] text-(--green-deep) opacity-50">
+                  {item.variantTitle} × {item.quantity}
+                </span>
+              </div>
+              <span className="shrink-0 text-[13px] font-semibold text-(--green-deep)">
+                {formatPrice(item.price * item.quantity)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <div className="border-line mb-5 flex items-center justify-between border-t pt-4">
+          <span className="text-[12px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
+            {t('total')}
+          </span>
+          <span className="text-[18px] font-extrabold text-(--green-deep)">
+            {formatPrice(total)}
+          </span>
+        </div>
+      </Modal>
     </Section>
   );
 }
