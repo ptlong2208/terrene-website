@@ -99,7 +99,7 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/checkout', {
+      const res = await fetch('/api/checkout/payos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer: result.data, items }),

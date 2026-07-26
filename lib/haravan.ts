@@ -40,8 +40,9 @@ function localPhone(phone: string): string {
 export async function createHaravanOrder(
   customer: CheckoutCustomer,
   items: PendingOrderItem[],
-  orderCode: number
-): Promise<number> {
+  orderCode: number | null,
+  paymentMethod: 'payos' | 'cod' = 'payos'
+): Promise<{ haravanOrderId: number; orderName: string }> {
   const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
     method: 'POST',
@@ -52,10 +53,16 @@ export async function createHaravanOrder(
     body: JSON.stringify({
       order: {
         financial_status: 'pending',
-        tags: 'payos',
-        note: [customer.note ? `Note: ${customer.note}` : null, `PayOS order code: ${orderCode}`]
-          .filter(Boolean)
-          .join(' | '),
+        tags: paymentMethod,
+        gateway: paymentMethod === 'cod' ? 'Thanh toán khi giao hàng (COD)' : 'PayOS',
+        gateway_code: paymentMethod === 'cod' ? 'COD' : 'PAYOS',
+        note:
+          [
+            customer.note ? `Note: ${customer.note}` : null,
+            paymentMethod === 'payos' && orderCode ? `PayOS order code: ${orderCode}` : null,
+          ]
+            .filter(Boolean)
+            .join(' | ') || undefined,
         customer: {
           first_name: customer.name,
           email: customer.email,
@@ -88,7 +95,7 @@ export async function createHaravanOrder(
   }
 
   const data = await res.json();
-  return data.order.id as number;
+  return { haravanOrderId: data.order.id as number, orderName: data.order.name as string };
 }
 
 export async function updateHaravanOrderPaid(
