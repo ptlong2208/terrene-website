@@ -1,11 +1,13 @@
 import * as Sentry from '@sentry/nextjs';
 import { type Ratelimit } from '@upstash/ratelimit';
+import { randomUUID } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
+import { saveSuccessToken } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {
@@ -14,6 +16,8 @@ function getRatelimit() {
 }
 
 const log = logger.child({ module: 'checkout/cod' });
+
+const COD_TOKEN_TTL = 5 * 60; // 5 minutes — immediate redirect
 
 export async function POST(req: NextRequest) {
   const validated = await validateCheckoutRequest(req, getRatelimit());
@@ -29,8 +33,12 @@ export async function POST(req: NextRequest) {
     return errResponse(502, CheckoutErrorCode.ServerError);
   }
 
+  const successToken = randomUUID();
+  await saveSuccessToken(successToken, COD_TOKEN_TTL);
+
   return Response.json({
-    orderCode: orderName,
+    orderName,
+    token: successToken,
     total: amount,
     items: pendingItems.map((item) => ({
       productTitle: item.productTitle,

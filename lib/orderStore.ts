@@ -43,3 +43,14 @@ export async function getPendingOrder(orderCode: number): Promise<PendingOrder |
 export async function deletePendingOrder(orderCode: number): Promise<void> {
   await getRedis().del(key(orderCode));
 }
+
+const successKey = (token: string) => `success-token:${token}`;
+
+export async function saveSuccessToken(token: string, ttlSeconds: number): Promise<void> {
+  await getRedis().set(successKey(token), '1', { ex: ttlSeconds });
+}
+
+export async function consumeSuccessToken(token: string): Promise<boolean> {
+  const result = await getRedis().getdel(successKey(token));
+  return result !== null;
+}

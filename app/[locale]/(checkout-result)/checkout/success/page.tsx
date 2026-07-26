@@ -7,6 +7,7 @@ import PurchaseTracker from '@/app/components/PurchaseTracker';
 import TerreneLogo from '@/app/components/TerreneLogo';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
+import { consumeSuccessToken } from '@/lib/orderStore';
 
 export default async function CheckoutSuccessPage({
   params,
@@ -16,7 +17,10 @@ export default async function CheckoutSuccessPage({
   searchParams: Promise<Record<string, string>>;
 }) {
   const [{ locale }, sp] = await Promise.all([params, searchParams]);
-  if (sp.status !== 'PAID' || sp.code !== '00') redirect(`/${locale}`);
+
+  if (!sp.token) redirect(`/${locale}`);
+  const valid = await consumeSuccessToken(sp.token);
+  if (!valid) redirect(`/${locale}`);
 
   const t = await getTranslations('checkout');
 

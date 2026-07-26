@@ -1,13 +1,13 @@
 import * as Sentry from '@sentry/nextjs';
 import { type Ratelimit } from '@upstash/ratelimit';
-import { createHmac, randomInt } from 'crypto';
+import { createHmac, randomInt, randomUUID } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
-import { savePendingOrder } from '@/lib/orderStore';
+import { savePendingOrder, saveSuccessToken } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {
@@ -40,15 +40,22 @@ export async function POST(req: NextRequest) {
   }
 
   const orderCode = randomInt(1_000_000_000, 9_999_999_999);
-  const returnUrl = `${siteUrl}/checkout/success`;
+  const successToken = randomUUID();
+  const returnUrl = `${siteUrl}/checkout/success?token=${successToken}`;
   const cancelUrl = `${siteUrl}/checkout/cancel`;
   const description = 'Terrene Order';
   const expiredAt = Math.floor(Date.now() / 1000) + SESSION_MINUTES * 60;
 
   let haravanOrderId: number;
+  let orderName: string;
   try {
-    ({ haravanOrderId } = await createHaravanOrder(customer, pendingItems, orderCode, 'payos'));
-    log.info({ orderCode, haravanOrderId }, 'Haravan order created (pending)');
+    ({ haravanOrderId, orderName } = await createHaravanOrder(
+      customer,
+      pendingItems,
+      orderCode,
+      'payos'
+    ));
+    log.info({ orderCode, haravanOrderId, orderName }, 'Haravan order created (pending)');
   } catch (e) {
     Sentry.captureException(e, { tags: { orderCode } });
     return errResponse(502, CheckoutErrorCode.ServerError);
@@ -105,17 +112,20 @@ export async function POST(req: NextRequest) {
 
   log.info({ orderCode, amount }, 'Payment link created');
 
-  await savePendingOrder(orderCode, {
-    customer,
-    items: pendingItems,
-    amount,
-    expiresAt: expiredAt * 1000,
-    haravanOrderId,
-  });
+  await Promise.all([
+    savePendingOrder(orderCode, {
+      customer,
+      items: pendingItems,
+      amount,
+      expiresAt: expiredAt * 1000,
+      haravanOrderId,
+    }),
+    saveSuccessToken(successToken, SESSION_MINUTES * 60),
+  ]);
 
   return Response.json({
     paymentUrl: payosData.data.checkoutUrl,
     expiresAt: expiredAt * 1000,
-    orderCode,
+    orderName,
   });
 }

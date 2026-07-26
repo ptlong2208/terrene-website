@@ -45,6 +45,7 @@ export default function CheckoutPage() {
     }
   });
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [paymentMethod, setPaymentMethod] = useState<'payos' | 'cod'>('payos');
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -99,7 +100,8 @@ export default function CheckoutPage() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/checkout/payos', {
+      const endpoint = paymentMethod === 'cod' ? '/api/checkout/cod' : '/api/checkout/payos';
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer: result.data, items }),
@@ -113,37 +115,65 @@ export default function CheckoutPage() {
         return;
       }
 
-      const { paymentUrl, orderCode } = await res.json();
+      const data = await res.json();
       sessionStorage.setItem('checkout_draft', JSON.stringify(result.data));
-      sessionStorage.setItem(
-        'order_confirmation',
-        JSON.stringify({
-          orderCode: String(orderCode),
-          total,
-          items: items.map((i) => ({
-            productTitle: i.productTitle,
-            variantTitle: i.variantTitle,
-            price: i.price,
-            quantity: i.quantity,
-          })),
-          customer: { name: result.data.name, phone: result.data.phone },
-        })
-      );
-      sessionStorage.setItem(
-        'pending_purchase',
-        JSON.stringify({
-          transactionId: String(orderCode),
-          value: total,
-          items: items.map((i) => ({
-            item_id: String(i.variantId),
-            item_name: i.productTitle,
-            item_variant: i.variantTitle,
-            price: i.price,
-            quantity: i.quantity,
-          })),
-        })
-      );
-      window.location.replace(paymentUrl);
+
+      if (paymentMethod === 'cod') {
+        sessionStorage.setItem(
+          'order_confirmation',
+          JSON.stringify({
+            orderCode: data.orderName,
+            total: data.total,
+            items: data.items,
+            customer: { name: result.data.name, phone: result.data.phone },
+          })
+        );
+        sessionStorage.setItem(
+          'pending_purchase',
+          JSON.stringify({
+            transactionId: data.orderName,
+            value: data.total,
+            items: items.map((i) => ({
+              item_id: String(i.variantId),
+              item_name: i.productTitle,
+              item_variant: i.variantTitle,
+              price: i.price,
+              quantity: i.quantity,
+            })),
+          })
+        );
+        window.location.replace(`/checkout/success?token=${data.token}`);
+      } else {
+        sessionStorage.setItem(
+          'order_confirmation',
+          JSON.stringify({
+            orderCode: data.orderName,
+            total,
+            items: items.map((i) => ({
+              productTitle: i.productTitle,
+              variantTitle: i.variantTitle,
+              price: i.price,
+              quantity: i.quantity,
+            })),
+            customer: { name: result.data.name, phone: result.data.phone },
+          })
+        );
+        sessionStorage.setItem(
+          'pending_purchase',
+          JSON.stringify({
+            transactionId: data.orderName,
+            value: total,
+            items: items.map((i) => ({
+              item_id: String(i.variantId),
+              item_name: i.productTitle,
+              item_variant: i.variantTitle,
+              price: i.price,
+              quantity: i.quantity,
+            })),
+          })
+        );
+        window.location.replace(data.paymentUrl);
+      }
     } catch {
       setServerError(t('errorNetwork'));
       setLoading(false);
@@ -322,6 +352,33 @@ export default function CheckoutPage() {
               />
             </Form.Control>
           </Form.Field>
+
+          {/* Payment method */}
+          <div className="flex flex-col gap-2">
+            <span className={LABEL_CLASS}>{t('paymentMethod')}</span>
+            <div className="grid grid-cols-2 gap-2">
+              {(
+                [
+                  { value: 'payos', label: t('paymentOnline'), desc: t('paymentOnlineDesc') },
+                  { value: 'cod', label: t('paymentCod'), desc: t('paymentCodDesc') },
+                ] as const
+              ).map(({ value, label, desc }) => (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setPaymentMethod(value)}
+                  className={`flex cursor-pointer flex-col gap-0.5 rounded-lg border px-4 py-3 text-left transition-colors duration-150 ${
+                    paymentMethod === value
+                      ? 'border-(--green-deep) bg-(--green-deep)/5'
+                      : 'border-(--green-deep)/20 hover:border-(--green-deep)/40'
+                  }`}
+                >
+                  <span className="text-[13px] font-semibold text-(--green-deep)">{label}</span>
+                  <span className="text-[11px] text-(--green-deep) opacity-50">{desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {serverError && (
             <p className="rounded-lg bg-red-50 px-4 py-3 text-[13px] text-red-600">{serverError}</p>

@@ -44,7 +44,7 @@ export default function OrderConfirmation() {
         <p className="mb-1 text-[12px] font-semibold tracking-[0.06em] text-(--green-deep) uppercase opacity-50">
           {t('orderCode')}
         </p>
-        <p className="mb-6 text-[15px] font-semibold text-(--green-deep)">#{order.orderCode}</p>
+        <p className="mb-6 text-[15px] font-semibold text-(--green-deep)">{order.orderCode}</p>
 
         <h2 className="border-line mb-4 border-t pt-4 text-[12px] font-semibold tracking-[0.08em] text-(--green-deep) uppercase opacity-50">
           {t('orderSummary')}
