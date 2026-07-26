@@ -15,6 +15,7 @@ export interface PendingOrder {
   items: PendingOrderItem[];
   amount: number;
   expiresAt: number; // ms
+  haravanOrderId: number;
 }
 
 let _redis: Redis | null = null;
@@ -35,7 +36,10 @@ export async function savePendingOrder(orderCode: number, order: PendingOrder): 
   await getRedis().set(key(orderCode), order, { ex: ttlSeconds });
 }
 
-// Atomically get and delete — prevents double-processing across instances
-export async function takePendingOrder(orderCode: number): Promise<PendingOrder | null> {
-  return getRedis().getdel<PendingOrder>(key(orderCode));
+export async function getPendingOrder(orderCode: number): Promise<PendingOrder | null> {
+  return getRedis().get<PendingOrder>(key(orderCode));
+}
+
+export async function deletePendingOrder(orderCode: number): Promise<void> {
+  await getRedis().del(key(orderCode));
 }

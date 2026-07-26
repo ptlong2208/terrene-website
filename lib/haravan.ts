@@ -41,7 +41,7 @@ export async function createHaravanOrder(
   customer: CheckoutCustomer,
   items: PendingOrderItem[],
   orderCode: number
-): Promise<void> {
+): Promise<number> {
   const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
     method: 'POST',
@@ -51,7 +51,7 @@ export async function createHaravanOrder(
     },
     body: JSON.stringify({
       order: {
-        financial_status: 'paid',
+        financial_status: 'pending',
         tags: 'payos',
         note: [customer.note ? `Note: ${customer.note}` : null, `PayOS order code: ${orderCode}`]
           .filter(Boolean)
@@ -85,6 +85,43 @@ export async function createHaravanOrder(
     const body = await res.text().catch(() => '');
     log.error({ orderCode, status: res.status, body }, 'Haravan order creation failed');
     throw new Error(`Haravan order creation failed: ${res.status} ${body}`);
+  }
+
+  const data = await res.json();
+  return data.order.id as number;
+}
+
+export async function updateHaravanOrderPaid(haravanOrderId: number): Promise<void> {
+  const res = await fetch(`${BASE}/orders/${haravanOrderId}.json`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${TOKEN}`,
+    },
+    body: JSON.stringify({ order: { id: haravanOrderId, financial_status: 'paid' } }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    log.error({ haravanOrderId, status: res.status, body }, 'Haravan order update to paid failed');
+    throw new Error(`Haravan order update failed: ${res.status} ${body}`);
+  }
+}
+
+export async function cancelHaravanOrder(haravanOrderId: number): Promise<void> {
+  const res = await fetch(`${BASE}/orders/${haravanOrderId}/cancel.json`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${TOKEN}`,
+    },
+    body: JSON.stringify({}),
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    log.error({ haravanOrderId, status: res.status, body }, 'Haravan order cancel failed');
+    throw new Error(`Haravan order cancel failed: ${res.status} ${body}`);
   }
 }
 

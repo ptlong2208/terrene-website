@@ -6,7 +6,7 @@ import { type NextRequest } from 'next/server';
 import { z } from 'zod';
 
 import { checkoutCustomerSchema, CheckoutErrorCode, SLUG_PATTERN } from '@/lib/checkout';
-import { fetchProductData } from '@/lib/haravan';
+import { cancelHaravanOrder, createHaravanOrder, fetchProductData } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { savePendingOrder } from '@/lib/orderStore';
 
@@ -141,6 +141,25 @@ export async function POST(req: NextRequest) {
   const description = 'Terrene Order'; // PayOS max 25 chars
   const expiredAt = Math.floor(Date.now() / 1000) + SESSION_MINUTES * 60;
 
+  const pendingItems = items.map((item) => ({
+    variantId: item.variantId,
+    productTitle: item.productTitle,
+    variantTitle: item.variantTitle,
+    quantity: item.quantity,
+    price: Math.round(
+      productMap[item.productSlug].variants.find((v) => v.id === item.variantId)!.price
+    ),
+  }));
+
+  let haravanOrderId: number;
+  try {
+    haravanOrderId = await createHaravanOrder(customer, pendingItems, orderCode);
+    log.info({ orderCode, haravanOrderId }, 'Haravan order created (pending)');
+  } catch (e) {
+    Sentry.captureException(e, { tags: { orderCode } });
+    return err(502, CheckoutErrorCode.ServerError);
+  }
+
   const payload = {
     orderCode,
     amount,
@@ -170,6 +189,7 @@ export async function POST(req: NextRequest) {
     Sentry.captureException(new Error(`PayOS HTTP error ${payosRes.status}`), {
       tags: { orderCode },
     });
+    await cancelHaravanOrder(haravanOrderId).catch(() => {});
     return err(502, CheckoutErrorCode.PaymentUnavailable);
   }
 
@@ -179,6 +199,7 @@ export async function POST(req: NextRequest) {
     Sentry.captureException(new Error(`PayOS error ${payosData.code}: ${payosData.desc}`), {
       tags: { orderCode },
     });
+    await cancelHaravanOrder(haravanOrderId).catch(() => {});
     return err(502, CheckoutErrorCode.PaymentUnavailable);
   }
 
@@ -186,17 +207,10 @@ export async function POST(req: NextRequest) {
 
   await savePendingOrder(orderCode, {
     customer,
-    items: items.map((item) => ({
-      variantId: item.variantId,
-      productTitle: item.productTitle,
-      variantTitle: item.variantTitle,
-      quantity: item.quantity,
-      price: Math.round(
-        productMap[item.productSlug].variants.find((v) => v.id === item.variantId)!.price
-      ),
-    })),
+    items: pendingItems,
     amount,
     expiresAt: expiredAt * 1000,
+    haravanOrderId,
   });
 
   return Response.json({

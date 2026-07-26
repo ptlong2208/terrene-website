@@ -2,9 +2,9 @@ import * as Sentry from '@sentry/nextjs';
 import { createHmac } from 'crypto';
 import { type NextRequest } from 'next/server';
 
-import { createHaravanOrder } from '@/lib/haravan';
+import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
-import { takePendingOrder } from '@/lib/orderStore';
+import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 
 const log = logger.child({ module: 'webhook/payment' });
 
@@ -68,29 +68,37 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Invalid signature.' }, { status: 401 });
   }
 
-  // Only process successful payments (code '00')
-  if (!success || code !== '00') {
-    log.info({ orderCode: data.orderCode, code }, 'Ignoring non-success webhook event');
-    return Response.json({ message: 'Ignored non-success event.' }, { status: 200 });
-  }
-
-  log.info({ orderCode: data.orderCode, amount: data.amount }, 'Payment confirmed, creating order');
-
-  const order = await takePendingOrder(data.orderCode);
+  const order = await getPendingOrder(data.orderCode);
   if (!order) {
     log.warn({ orderCode: data.orderCode }, 'Order already processed or expired');
     return Response.json({ message: 'Order already processed or expired.' }, { status: 200 });
   }
 
-  try {
-    await createHaravanOrder(order.customer, order.items, data.orderCode);
-    log.info({ orderCode: data.orderCode }, 'Haravan order created successfully');
-  } catch (err) {
-    log.error({ err, orderCode: data.orderCode }, 'Haravan order creation failed');
-    Sentry.captureException(err, { tags: { orderCode: data.orderCode } });
-    // Return 500 so PayOS retries the webhook
-    return Response.json({ error: 'Order creation failed.' }, { status: 500 });
+  // Payment cancelled or expired — cancel the Haravan order
+  if (!success || code !== '00') {
+    log.info({ orderCode: data.orderCode, code }, 'Payment not successful, cancelling order');
+    try {
+      await cancelHaravanOrder(order.haravanOrderId);
+    } catch (err) {
+      log.error({ err, orderCode: data.orderCode }, 'Haravan order cancel failed');
+      Sentry.captureException(err, { tags: { orderCode: data.orderCode } });
+    }
+    await deletePendingOrder(data.orderCode);
+    return Response.json({ message: 'Order cancelled.' }, { status: 200 });
   }
 
+  // Payment confirmed — update Haravan order to paid
+  log.info({ orderCode: data.orderCode, amount: data.amount }, 'Payment confirmed, updating order');
+  try {
+    await updateHaravanOrderPaid(order.haravanOrderId);
+    log.info({ orderCode: data.orderCode }, 'Haravan order marked as paid');
+  } catch (err) {
+    log.error({ err, orderCode: data.orderCode }, 'Haravan order update to paid failed');
+    Sentry.captureException(err, { tags: { orderCode: data.orderCode } });
+    // Return 500 so PayOS retries
+    return Response.json({ error: 'Order update failed.' }, { status: 500 });
+  }
+
+  await deletePendingOrder(data.orderCode);
   return Response.json({ message: 'OK' }, { status: 200 });
 }
