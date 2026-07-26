@@ -7,7 +7,7 @@ import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
-import { savePendingOrder, saveSuccessToken } from '@/lib/orderStore';
+import { savePendingOrder, saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
       expiresAt: expiredAt * 1000,
       haravanOrderId,
     }),
-    saveSuccessToken(successToken, SESSION_MINUTES * 60),
+    saveSuccessToken(successToken, SESSION_MINUTES * 60 + SUCCESS_TOKEN_BUFFER_SECONDS),
   ]);
 
   return Response.json({

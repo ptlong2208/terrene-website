@@ -7,7 +7,7 @@ import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
-import { saveSuccessToken } from '@/lib/orderStore';
+import { saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {
@@ -16,8 +16,6 @@ function getRatelimit() {
 }
 
 const log = logger.child({ module: 'checkout/cod' });
-
-const COD_TOKEN_TTL = 5 * 60; // 5 minutes — immediate redirect
 
 export async function POST(req: NextRequest) {
   const validated = await validateCheckoutRequest(req, getRatelimit());
@@ -34,7 +32,7 @@ export async function POST(req: NextRequest) {
   }
 
   const successToken = randomUUID();
-  await saveSuccessToken(successToken, COD_TOKEN_TTL);
+  await saveSuccessToken(successToken, SUCCESS_TOKEN_BUFFER_SECONDS);
 
   return Response.json({
     orderName,

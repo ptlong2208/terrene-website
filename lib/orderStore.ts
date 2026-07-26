@@ -46,6 +46,8 @@ export async function deletePendingOrder(orderCode: number): Promise<void> {
 
 const successKey = (token: string) => `success-token:${token}`;
 
+export const SUCCESS_TOKEN_BUFFER_SECONDS = 5 * 60;
+
 export async function saveSuccessToken(token: string, ttlSeconds: number): Promise<void> {
   await getRedis().set(successKey(token), '1', { ex: ttlSeconds });
 }
