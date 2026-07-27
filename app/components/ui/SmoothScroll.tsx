@@ -14,6 +14,8 @@ export default function SmoothScroll() {
 
   useEffect(() => {
     lenisRef.current?.scrollTo(0, { immediate: true });
+    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => cancelAnimationFrame(id);
   }, [pathname]);
 
   useEffect(() => {
