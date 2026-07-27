@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 
+import Card from '@/app/components/ui/Card';
 import { type CartItem } from '@/app/store/cartStore';
 import { formatPrice } from '@/lib/utils';
 
@@ -12,7 +13,7 @@ export default function CheckoutOrderSummary({ items, total }: CheckoutOrderSumm
   const t = useTranslations('checkout');
 
   return (
-    <div>
+    <Card className="sticky top-[12vh]">
       <h2 className="mb-6 text-[12px] font-semibold tracking-[0.08em] text-(--green-deep) uppercase opacity-50">
         {t('orderSummary')}
       </h2>
@@ -41,6 +42,6 @@ export default function CheckoutOrderSummary({ items, total }: CheckoutOrderSumm
           {formatPrice(total)}
         </span>
       </div>
-    </div>
+    </Card>
   );
 }

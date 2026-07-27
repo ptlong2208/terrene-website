@@ -174,7 +174,9 @@ export default function Header({
       <header
         ref={headerRef}
         className={`md:px-gutter fixed top-0 right-0 left-0 z-1000 grid h-22 grid-cols-[1fr_auto_1fr] items-center px-5 transition-colors duration-400 md:h-16 ${
-          hasBg ? 'bg-cream text-(--green-deep)' : 'text-cream bg-transparent'
+          hasBg
+            ? 'bg-cream border-b border-(--green-deep)/10 text-(--green-deep)'
+            : 'text-cream bg-transparent'
         }`}
       >
         <audio ref={audioRef} src={audioSrc} loop preload="metadata" />

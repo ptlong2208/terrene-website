@@ -245,8 +245,6 @@ export default function CheckoutPage() {
         </Link>
       </div>
       <div className="mx-auto grid w-full max-w-360 grid-cols-[1fr_0.85fr] items-start gap-[clamp(32px,6vw,96px)] max-md:grid-cols-1">
-        <CheckoutOrderSummary items={items} total={total} />
-
         {/* Customer form */}
         <Form.Root onSubmit={handleSubmit} className="flex flex-col gap-4">
           <h2 className="mb-2 text-[12px] font-semibold tracking-[0.08em] text-(--green-deep) uppercase opacity-50">
@@ -397,6 +395,8 @@ export default function CheckoutPage() {
             {loading ? t('processing') : <SlotText text={t('placeOrder')} />}
           </Form.Submit>
         </Form.Root>
+
+        <CheckoutOrderSummary items={items} total={total} />
       </div>
 
       {/* COD confirmation dialog */}
