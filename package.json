@@ -47,6 +47,16 @@
       "prettier --write"
     ]
   },
+  "overrides": {
+    "postcss": ">=8.5.10",
+    "sharp": ">=0.35.0",
+    "minimatch@^3": {
+      "brace-expansion": "1.1.16"
+    },
+    "minimatch@^10": {
+      "brace-expansion": "5.0.8"
+    }
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/matter-js": "^0.20.2",
