@@ -138,22 +138,16 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
     );
 
     const next = useCallback(() => {
-      const nextIndex =
-        currentTextIndex === texts.length - 1
-          ? loop
-            ? 0
-            : currentTextIndex
-          : currentTextIndex + 1;
+      const atEnd = currentTextIndex === texts.length - 1;
+      const loopedNext = loop ? 0 : currentTextIndex;
+      const nextIndex = atEnd ? loopedNext : currentTextIndex + 1;
       if (nextIndex !== currentTextIndex) handleIndexChange(nextIndex);
     }, [currentTextIndex, texts.length, loop, handleIndexChange]);
 
     const previous = useCallback(() => {
-      const prevIndex =
-        currentTextIndex === 0
-          ? loop
-            ? texts.length - 1
-            : currentTextIndex
-          : currentTextIndex - 1;
+      const atStart = currentTextIndex === 0;
+      const loopedPrev = loop ? texts.length - 1 : currentTextIndex;
+      const prevIndex = atStart ? loopedPrev : currentTextIndex - 1;
       if (prevIndex !== currentTextIndex) handleIndexChange(prevIndex);
     }, [currentTextIndex, texts.length, loop, handleIndexChange]);
 

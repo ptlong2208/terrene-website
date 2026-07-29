@@ -54,11 +54,8 @@ export default async function ProductDetailPage({
 
   if (!product) notFound();
 
-  const galleryImages = product.gallery?.length
-    ? product.gallery
-    : product.image
-      ? [product.image]
-      : [];
+  const fallbackImage = product.image ? [product.image] : [];
+  const galleryImages = product.gallery?.length ? product.gallery : fallbackImage;
 
   const prices = variants.map((v) => v.price).filter((p) => p > 0);
   const hasStock = variants.some((v) => v.available);
