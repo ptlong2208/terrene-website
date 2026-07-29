@@ -1,12 +1,20 @@
 import * as Sentry from '@sentry/nextjs';
+import { type Ratelimit } from '@upstash/ratelimit';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { type NextRequest } from 'next/server';
 
+import { makeRatelimit } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 
 const log = logger.child({ module: 'webhook/payment' });
+
+let _ratelimit: Ratelimit | null = null;
+function getRatelimit() {
+  if (!_ratelimit) _ratelimit = makeRatelimit('ratelimit:webhook');
+  return _ratelimit;
+}
 
 interface PayOSWebhookData {
   orderCode: number;
@@ -49,6 +57,13 @@ function verifySignature(data: PayOSWebhookData, signature: string, checksumKey:
 }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
+  const { success: withinLimit } = await getRatelimit().limit(ip);
+  if (!withinLimit) {
+    log.warn({ ip }, 'Webhook rate limit exceeded');
+    return Response.json({ error: 'Too many requests.' }, { status: 429 });
+  }
+
   const checksumKey = process.env.PAYOS_CHECKSUM_KEY;
   if (!checksumKey) {
     log.error('PAYOS_CHECKSUM_KEY env var is not configured');
