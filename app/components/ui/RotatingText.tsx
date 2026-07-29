@@ -124,7 +124,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
           const randomIndex = Math.floor(Math.random() * totalChars);
           return Math.abs(randomIndex - index) * staggerDuration;
         }
-        return Math.abs((staggerFrom as number) - index) * staggerDuration;
+        return Math.abs(staggerFrom - index) * staggerDuration;
       },
       [staggerFrom, staggerDuration]
     );
@@ -181,7 +181,7 @@ const RotatingText = forwardRef<RotatingTextRef, RotatingTextProps>(
         className={cn('relative flex flex-wrap whitespace-pre-wrap', mainClassName)}
         {...rest}
         layout
-        transition={transition as Transition}
+        transition={transition}
       >
         <span className="sr-only">{texts[currentTextIndex]}</span>
         <AnimatePresence mode={animatePresenceMode} initial={animatePresenceInitial}>

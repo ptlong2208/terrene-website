@@ -119,7 +119,7 @@ export default function ComingSoonContent({ siteName, data }: ComingSoonContentP
               </div>
               {state && 'error' in state && (
                 <p className="text-center text-[11px] tracking-[-0.02em] text-red-600/80">
-                  {t(state.error as Parameters<typeof t>[0])}
+                  {t(state.error)}
                 </p>
               )}
               {submitLabel && (

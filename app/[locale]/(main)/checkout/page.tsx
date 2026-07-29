@@ -409,7 +409,7 @@ export default function CheckoutPage() {
         secondaryText={t('codConfirmBack')}
         onPrimary={() => {
           setShowCodConfirm(false);
-          if (confirmedCustomer) submitOrder(confirmedCustomer);
+          if (confirmedCustomer) void submitOrder(confirmedCustomer);
         }}
         loading={loading}
       >

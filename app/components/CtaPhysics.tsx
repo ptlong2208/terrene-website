@@ -35,7 +35,7 @@ export default function CtaPhysics({ className }: CtaPhysicsProps) {
     let resizeTimer: ReturnType<typeof setTimeout>;
     let destroyFn: (() => void) | null = null;
 
-    import('matter-js').then(
+    void import('matter-js').then(
       ({ Engine, Runner, World, Bodies, Body, Mouse, MouseConstraint, Events }) => {
         if (cancelled) return;
 

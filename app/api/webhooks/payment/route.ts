@@ -38,7 +38,7 @@ interface PayOSWebhookBody {
 function verifySignature(data: PayOSWebhookData, signature: string, checksumKey: string): boolean {
   // Sort ALL data fields alphabetically and format as key=value pairs
   const sorted = Object.keys(data)
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .map((k) => `${k}=${data[k as keyof PayOSWebhookData] ?? ''}`)
     .join('&');
 

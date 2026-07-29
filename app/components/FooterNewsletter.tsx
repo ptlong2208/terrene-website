@@ -47,9 +47,7 @@ export default function FooterNewsletter({ label, placeholder }: FooterNewslette
             </div>
           </form>
           {state && 'error' in state && (
-            <p className="text-[11px] tracking-[-0.01em] text-red-400/80">
-              {t(state.error as Parameters<typeof t>[0])}
-            </p>
+            <p className="text-[11px] tracking-[-0.01em] text-red-400/80">{t(state.error)}</p>
           )}
         </>
       ) : (

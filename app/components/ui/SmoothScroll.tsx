@@ -29,7 +29,7 @@ export default function SmoothScroll() {
     lenisRef.current = lenis;
     (window as unknown as Record<string, unknown>).lenis = lenis;
 
-    lenis.on('scroll', ScrollTrigger.update);
+    lenis.on('scroll', () => ScrollTrigger.update());
 
     const onTick = (time: number) => {
       lenis.raf(time * 1000);
