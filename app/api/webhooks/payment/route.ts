@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-import { createHmac } from 'crypto';
+import { createHmac, timingSafeEqual } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
@@ -42,8 +42,10 @@ function verifySignature(data: PayOSWebhookData, signature: string, checksumKey:
     .map((k) => `${k}=${data[k as keyof PayOSWebhookData] ?? ''}`)
     .join('&');
 
-  const expected = createHmac('sha256', checksumKey).update(sorted).digest('hex');
-  return expected === signature;
+  const expected = createHmac('sha256', checksumKey).update(sorted).digest();
+  const received = Buffer.from(signature, 'hex');
+  if (expected.length !== received.length) return false;
+  return timingSafeEqual(expected, received);
 }
 
 export async function POST(req: NextRequest) {

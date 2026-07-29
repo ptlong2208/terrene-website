@@ -96,7 +96,10 @@ export async function POST(req: NextRequest) {
     Sentry.captureException(new Error(`PayOS HTTP error ${payosRes.status}`), {
       tags: { orderCode },
     });
-    await cancelHaravanOrder(haravanOrderId).catch(() => {});
+    await cancelHaravanOrder(haravanOrderId).catch((e: unknown) => {
+      log.error({ orderCode, haravanOrderId }, 'Haravan cancel failed after PayOS HTTP error');
+      Sentry.captureException(e, { tags: { orderCode } });
+    });
     return errResponse(502, CheckoutErrorCode.PaymentUnavailable);
   }
 
@@ -106,7 +109,10 @@ export async function POST(req: NextRequest) {
     Sentry.captureException(new Error(`PayOS error ${payosData.code}: ${payosData.desc}`), {
       tags: { orderCode },
     });
-    await cancelHaravanOrder(haravanOrderId).catch(() => {});
+    await cancelHaravanOrder(haravanOrderId).catch((e: unknown) => {
+      log.error({ orderCode, haravanOrderId }, 'Haravan cancel failed after PayOS error code');
+      Sentry.captureException(e, { tags: { orderCode } });
+    });
     return errResponse(502, CheckoutErrorCode.PaymentUnavailable);
   }
 
