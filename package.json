@@ -19,7 +19,7 @@
     "@sanity/client": "^7.25.0",
     "@sanity/document-internationalization": "^6.2.27",
     "@sanity/image-url": "^2.1.1",
-    "@sanity/vision": "^5.31.1",
+    "@sanity/vision": "^6.8.0",
     "@sentry/nextjs": "^10.68.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
@@ -36,7 +36,7 @@
     "pino": "^10.3.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sanity": "^5.31.1",
+    "sanity": "^6.8.0",
     "styled-components": "^6.4.4",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
