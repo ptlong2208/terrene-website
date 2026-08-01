@@ -14,7 +14,7 @@ const supportedLanguages = [
 ];
 
 const secondaryLocales = supportedLanguages.filter((l) => l.id !== 'vi').map((l) => l.id);
-const i18nTypes = ['comingSoon', 'homepage'];
+const i18nTypes = ['comingSoon', 'homepage', 'journalPost'];
 
 export default defineConfig({
   basePath: '/studio',
@@ -34,7 +34,7 @@ export default defineConfig({
     structureTool({ structure }),
     documentInternationalization({
       supportedLanguages,
-      schemaTypes: ['comingSoon', 'homepage'],
+      schemaTypes: ['comingSoon', 'homepage', 'journalPost'],
     }),
     visionTool({ defaultApiVersion: apiVersion }),
   ],

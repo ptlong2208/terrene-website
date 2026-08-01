@@ -8,4 +8,15 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.documentTypeListItem('comingSoon').title('Coming Soon'),
       S.documentTypeListItem('homepage').title('Homepage'),
+      S.divider(),
+      S.listItem()
+        .title('Journal')
+        .child(
+          S.list()
+            .title('Journal')
+            .items([
+              S.documentTypeListItem('journalCategory').title('Categories'),
+              S.documentTypeListItem('journalPost').title('Posts'),
+            ])
+        ),
     ]);

@@ -3,6 +3,8 @@ import { type SchemaTypeDefinition } from 'sanity';
 import { comingSoon } from './documents/comingSoon';
 import { global } from './documents/global';
 import { homepage } from './documents/homepage';
+import { journalCategory } from './documents/journalCategory';
+import { journalPost } from './documents/journalPost';
 import { benefitItem } from './objects/benefitItem';
 import { localizedString, localizedText } from './objects/localizedString';
 import { navLink } from './objects/navLink';
@@ -30,5 +32,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     global,
     comingSoon,
     homepage,
+    journalCategory,
+    journalPost,
   ],
 };
