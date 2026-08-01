@@ -22,9 +22,22 @@ export const shopProduct = defineType({
     defineField({
       name: 'slug',
       title: 'Slug',
-      type: 'slug',
-      options: { source: 'title' },
-      validation: (Rule) => Rule.required(),
+      type: 'string',
+      description:
+        'Copy from Haravan admin → Products → [product] → "Handle" field (e.g. terrene-jasmine-tea). Must match exactly.',
+      validation: (Rule) =>
+        Rule.required().custom(async (slug, context) => {
+          if (!slug) return true;
+          const { document, getClient } = context;
+          const client = getClient({ apiVersion: '2024-01-01' });
+          const currentId = (document?._id as string).replace('drafts.', '');
+          const language = document?.language as string | undefined;
+          const count = await client.fetch<number>(
+            `count(*[_type == "shopProduct" && slug == $slug && language == $language && _id != $id && !(_id in path("drafts.**"))])`,
+            { slug, language, id: currentId }
+          );
+          return count > 0 ? `A "${language}" product with slug "${slug}" already exists` : true;
+        }),
     }),
     defineField({
       name: 'category',
