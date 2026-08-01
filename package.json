@@ -11,6 +11,7 @@
   "dependencies": {
     "@fontsource-variable/mona-sans": "^5.2.8",
     "@sanity/client": "^7.25.0",
+    "@sanity/document-internationalization": "^6.2.27",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^5.31.1",
     "clsx": "^2.1.1",
