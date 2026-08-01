@@ -1,9 +1,11 @@
+import { HomeIcon } from '@sanity/icons/Home';
 import { defineField, defineType } from 'sanity';
 
 export const homepage = defineType({
   name: 'homepage',
   title: 'Homepage',
   type: 'document',
+  icon: HomeIcon,
   fields: [
     defineField({
       name: 'language',
@@ -63,6 +65,13 @@ export const homepage = defineType({
       ],
     }),
     defineField({ name: 'shop_header', title: 'Shop Header', type: 'sectionHeaderPlain' }),
+    defineField({
+      name: 'shop_products',
+      title: 'Featured Products',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'shopProduct' }] }],
+      validation: (Rule) => Rule.max(6),
+    }),
     defineField({ name: 'benefits_header', title: 'Benefits Header', type: 'sectionHeaderPlain' }),
     defineField({
       name: 'benefits_items',
@@ -115,6 +124,12 @@ export const homepage = defineType({
         defineField({ name: 'label', title: 'Label', type: 'string' }),
         defineField({ name: 'href', title: 'URL', type: 'string' }),
       ],
+    }),
+    defineField({
+      name: 'journal_posts',
+      title: 'Featured Journal Posts',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'journalPost' }] }],
     }),
   ],
   preview: {

@@ -1,9 +1,11 @@
+import { DocumentTextIcon } from '@sanity/icons/DocumentText';
 import { defineField, defineType } from 'sanity';
 
 export const journalPost = defineType({
   name: 'journalPost',
   title: 'Journal Post',
   type: 'document',
+  icon: DocumentTextIcon,
   fields: [
     defineField({
       name: 'language',

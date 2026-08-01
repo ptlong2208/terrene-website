@@ -1,9 +1,11 @@
+import { RocketIcon } from '@sanity/icons/Rocket';
 import { defineField, defineType } from 'sanity';
 
 export const comingSoon = defineType({
   name: 'comingSoon',
   title: 'Coming Soon',
   type: 'document',
+  icon: RocketIcon,
   fields: [
     defineField({
       name: 'language',
