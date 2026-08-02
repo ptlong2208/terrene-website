@@ -20,11 +20,11 @@ const log = logger.child({ module: 'checkout/cod' });
 export async function POST(req: NextRequest) {
   const validated = await validateCheckoutRequest(req, getRatelimit());
   if (validated instanceof Response) return validated;
-  const { customer, pendingItems, amount } = validated;
+  const { customer, pendingItems, shippingFee, amount } = validated;
 
   let orderName: string;
   try {
-    ({ orderName } = await createHaravanOrder(customer, pendingItems, null, 'cod'));
+    ({ orderName } = await createHaravanOrder(customer, pendingItems, null, 'cod', shippingFee));
     log.info({ orderName }, 'Haravan COD order created');
   } catch (e) {
     Sentry.captureException(e);

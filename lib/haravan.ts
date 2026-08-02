@@ -41,7 +41,8 @@ export async function createHaravanOrder(
   customer: CheckoutCustomer,
   items: PendingOrderItem[],
   orderCode: number | null,
-  paymentMethod: 'payos' | 'cod' = 'payos'
+  paymentMethod: 'payos' | 'cod' = 'payos',
+  shippingFee: number = 0
 ): Promise<{ haravanOrderId: number; orderName: string }> {
   const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
@@ -84,6 +85,8 @@ export async function createHaravanOrder(
           quantity: item.quantity,
           price: String(item.price),
         })),
+        shipping_lines:
+          shippingFee > 0 ? [{ title: 'GHN', price: String(shippingFee), code: 'GHN' }] : undefined,
       },
     }),
   });

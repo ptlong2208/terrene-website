@@ -9,6 +9,7 @@ import {
   CheckoutErrorCode,
   SLUG_PATTERN,
 } from '@/lib/checkout';
+import { getShippingFee } from '@/lib/ghn';
 import { fetchProductData, type HaravanProduct } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
@@ -27,6 +28,7 @@ export const itemSchema = z.object({
 export const checkoutBodySchema = z.object({
   customer: checkoutCustomerSchema,
   items: z.array(itemSchema).min(1).max(20),
+  shippingFee: z.number().int().nonnegative().nullable(),
 });
 
 export function errResponse(status: number, code: string, extra?: Record<string, string>) {
@@ -91,6 +93,8 @@ export async function validateCheckoutRequest(
       siteUrl: string;
       customer: CheckoutCustomer;
       pendingItems: PendingOrderItem[];
+      subtotal: number;
+      shippingFee: number;
       amount: number;
     }
   | Response
@@ -113,17 +117,23 @@ export async function validateCheckoutRequest(
     return errResponse(400, 'Invalid request.');
   }
 
-  const { customer, items } = parsed.data;
+  const { customer, items, shippingFee: clientFee } = parsed.data;
 
   const productMap = await fetchProductMap(items);
   const itemResult = verifyItems(items, productMap);
   if (itemResult instanceof Response) return itemResult;
   const pendingItems = itemResult;
 
-  const amount = pendingItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  if (amount <= 0) return errResponse(422, CheckoutErrorCode.ZeroTotal);
+  const subtotal = pendingItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  if (subtotal <= 0) return errResponse(422, CheckoutErrorCode.ZeroTotal);
 
-  return { siteUrl, customer, pendingItems, amount };
+  const shippingFee: number = await getShippingFee(customer.districtId, customer.wardCode);
+  if (clientFee !== null && clientFee !== shippingFee) {
+    log.warn({ clientFee, shippingFee }, 'Shipping fee mismatch');
+    return errResponse(409, CheckoutErrorCode.ShippingFeeChanged, { fee: String(shippingFee) });
+  }
+
+  return { siteUrl, customer, pendingItems, subtotal, shippingFee, amount: subtotal + shippingFee };
 }
 
 /**
