@@ -86,8 +86,12 @@
     "errorNameMin": "Họ và tên phải có ít nhất 2 ký tự",
     "errorPhoneInvalid": "Số điện thoại không hợp lệ (VD: 0901 234 567)",
     "errorEmailInvalid": "Email không hợp lệ",
+    "errorDistrictRequired": "Vui lòng chọn quận/huyện từ danh sách",
     "errorWardRequired": "Vui lòng chọn phường/xã từ danh sách",
     "errorStreetMin": "Vui lòng nhập số nhà và tên đường (tối thiểu 5 ký tự)",
+    "district": "Quận/Huyện",
+    "districtPlaceholder": "Tìm quận/huyện...",
+    "districtEmpty": "Không tìm thấy quận/huyện",
     "ward": "Phường/Xã",
     "wardPlaceholder": "Tìm phường/xã...",
     "wardNote": "Trong TP. Hồ Chí Minh",
@@ -99,6 +103,7 @@
     "errorOutOfStock": "{product} hiện đã hết hàng.",
     "errorNotFound": "{product} không còn có sẵn.",
     "errorPaymentUnavailable": "Dịch vụ thanh toán tạm thời không khả dụng. Vui lòng thử lại sau.",
+    "errorShippingFeeChanged": "Phí vận chuyển vừa thay đổi. Vui lòng kiểm tra lại và đặt hàng.",
     "total": "Tổng cộng",
     "successTitle": "Đặt hàng thành công",
     "successMessage": "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ chuẩn bị đơn hàng cẩn thận và liên hệ với bạn sớm.",
@@ -108,7 +113,11 @@
     "cancelTitle": "Thanh toán bị huỷ",
     "cancelMessage": "Thanh toán chưa hoàn tất. Giỏ hàng của bạn vẫn được lưu — bạn có thể thử lại bất cứ lúc nào.",
     "cancelCta": "Quay lại thanh toán",
-    "cancelShop": "Về cửa hàng"
+    "cancelShop": "Về cửa hàng",
+    "shipping": "Phí vận chuyển",
+    "shippingFree": "Miễn phí",
+    "shippingLoading": "Đang tính...",
+    "shipsFrom": "Địa chỉ shop: {address}"
   },
   "partners": {
     "visit": "Ghé thăm"

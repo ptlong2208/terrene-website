@@ -3,25 +3,36 @@
 import { Command } from 'cmdk';
 import { useEffect, useRef, useState } from 'react';
 
-import { HCMC_WARDS } from '@/lib/hcmc-wards';
-
-const normalize = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+export interface ComboboxItem {
+  id: string | number;
+  name: string;
+}
 
 interface Props {
+  items: ComboboxItem[];
   value: string;
-  onChange: (ward: string) => void;
+  onSelect: (item: ComboboxItem) => void;
+  disabled?: boolean;
+  loading?: boolean;
   error?: string;
   placeholder?: string;
   emptyText?: string;
   inputClassName?: string;
 }
 
+function normalize(s: string) {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
 export default function WardCombobox({
+  items,
   value,
-  onChange,
+  onSelect,
+  disabled = false,
+  loading = false,
   error,
   placeholder,
-  emptyText = 'Không tìm thấy phường/xã',
+  emptyText = 'Không tìm thấy',
   inputClassName,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -31,23 +42,21 @@ export default function WardCombobox({
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (!containerRef.current?.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (!containerRef.current?.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
-  function select(ward: string) {
-    onChange(ward);
+  function select(item: ComboboxItem) {
+    onSelect(item);
     setSearch('');
     setOpen(false);
   }
 
-  const filtered = (HCMC_WARDS as readonly string[]).filter((w) =>
-    normalize(w).includes(normalize(search))
-  );
+  const filtered = items.filter((item) => normalize(item.name).includes(normalize(search)));
+
+  const displayValue = open ? search : value;
 
   return (
     <Command
@@ -59,31 +68,34 @@ export default function WardCombobox({
       }}
     >
       <Command.Input
-        value={open ? search : value}
-        placeholder={placeholder}
+        value={displayValue}
+        placeholder={loading ? 'Đang tải...' : placeholder}
         aria-invalid={!!error}
+        disabled={disabled || loading}
         className={inputClassName}
         onFocus={() => {
-          setSearch(value);
-          setOpen(true);
+          if (!disabled && !loading) {
+            setSearch(value);
+            setOpen(true);
+          }
         }}
         onValueChange={(v) => setSearch(v)}
       />
 
-      {open && (
+      {open && !loading && (
         <Command.List className="absolute z-50 mt-1 w-full border border-(--green-deep)/20 bg-white shadow-md">
           <div className="max-h-48 overflow-y-auto">
             <Command.Empty className="px-4 py-2.5 text-[13px] text-(--green-deep) opacity-40">
               {emptyText}
             </Command.Empty>
-            {filtered.map((ward) => (
+            {filtered.map((item) => (
               <Command.Item
-                key={ward}
-                value={ward}
-                onSelect={select}
+                key={item.id}
+                value={String(item.id)}
+                onSelect={() => select(item)}
                 className="cursor-pointer px-4 py-2.5 text-[14px] text-(--green-deep) data-[selected=true]:bg-(--green-deep)/5"
               >
-                {ward}
+                {item.name}
               </Command.Item>
             ))}
           </div>

@@ -86,8 +86,12 @@
     "errorNameMin": "Name must be at least 2 characters",
     "errorPhoneInvalid": "Invalid phone number (e.g. 0901 234 567)",
     "errorEmailInvalid": "Please enter a valid email address",
+    "errorDistrictRequired": "Please select a district from the list",
     "errorWardRequired": "Please select a ward from the list",
     "errorStreetMin": "Please enter your house number and street (at least 5 characters)",
+    "district": "District",
+    "districtPlaceholder": "Search district...",
+    "districtEmpty": "No district found",
     "ward": "Ward",
     "wardPlaceholder": "Search ward...",
     "wardNote": "Ho Chi Minh City only",
@@ -99,6 +103,7 @@
     "errorOutOfStock": "{product} is currently out of stock.",
     "errorNotFound": "{product} is no longer available.",
     "errorPaymentUnavailable": "Our payment service is temporarily unavailable. Please try again in a moment.",
+    "errorShippingFeeChanged": "The shipping fee has changed. Please review the new fee and place your order again.",
     "total": "Total",
     "successTitle": "Order confirmed",
     "successMessage": "Thank you for your order. We'll prepare it with care and be in touch soon.",
@@ -108,7 +113,11 @@
     "cancelTitle": "Payment cancelled",
     "cancelMessage": "Your payment was not completed. Your cart is saved — you can try again whenever you're ready.",
     "cancelCta": "Return to checkout",
-    "cancelShop": "Back to shop"
+    "cancelShop": "Back to shop",
+    "shipping": "Shipping",
+    "shippingFree": "Free",
+    "shippingLoading": "Calculating...",
+    "shipsFrom": "Shop address: {address}"
   },
   "partners": {
     "visit": "Visit"
