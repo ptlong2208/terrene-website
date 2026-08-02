@@ -15,8 +15,7 @@ export interface ProductVariant {
   inventory_quantity: number;
   available: boolean;
   sku: string | null;
-  weight: number;
-  weight_unit: 'g' | 'kg' | 'lb' | 'oz';
+  grams: number;
 }
 
 export interface HaravanProduct {

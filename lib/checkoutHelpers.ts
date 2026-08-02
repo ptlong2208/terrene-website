@@ -9,6 +9,7 @@ import {
   CheckoutErrorCode,
   SLUG_PATTERN,
 } from '@/lib/checkout';
+import { DEFAULT_ITEM_WEIGHT_GRAMS, GHN_MAX_ORDER_WEIGHT } from '@/lib/config';
 import { getShippingFee } from '@/lib/ghn';
 import { fetchProductData, type HaravanProduct } from '@/lib/haravan';
 import logger from '@/lib/logger';
@@ -70,19 +71,6 @@ export function makeRatelimit(prefix: string): Ratelimit {
   });
 }
 
-function toGrams(weight: number, unit: 'g' | 'kg' | 'lb' | 'oz'): number {
-  switch (unit) {
-    case 'kg':
-      return weight * 1000;
-    case 'lb':
-      return weight * 453.592;
-    case 'oz':
-      return weight * 28.3495;
-    default:
-      return weight;
-  }
-}
-
 /** Fetches Haravan product data for all unique slugs in the item list. */
 export async function fetchProductMap(
   items: Array<{ productSlug: string }>
@@ -142,9 +130,16 @@ export async function validateCheckoutRequest(
 
   const totalWeightGrams = items.reduce((sum, item) => {
     const variant = productMap[item.productSlug]?.variants.find((v) => v.id === item.variantId);
-    if (!variant?.weight) return sum + 200 * item.quantity;
-    return sum + toGrams(variant.weight, variant.weight_unit) * item.quantity;
+    if (!variant?.grams) return sum + DEFAULT_ITEM_WEIGHT_GRAMS * item.quantity;
+    return sum + variant.grams * item.quantity;
   }, 0);
+
+  if (totalWeightGrams > GHN_MAX_ORDER_WEIGHT) {
+    log.warn({ totalWeightGrams, limit: GHN_MAX_ORDER_WEIGHT }, 'Order exceeds max weight');
+    return errResponse(422, CheckoutErrorCode.OrderTooHeavy, {
+      limit: String(Math.round(GHN_MAX_ORDER_WEIGHT / 1000)),
+    });
+  }
 
   const shippingFee: number = await getShippingFee(
     customer.districtId,

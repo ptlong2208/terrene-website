@@ -104,6 +104,7 @@
     "errorNotFound": "{product} is no longer available.",
     "errorPaymentUnavailable": "Our payment service is temporarily unavailable. Please try again in a moment.",
     "errorShippingFeeChanged": "The shipping fee has changed. Please review the new fee and place your order again.",
+    "errorOrderTooHeavy": "We don't ship orders over {limit}kg. Please contact the shop for bulk orders.",
     "total": "Total",
     "successTitle": "Order confirmed",
     "successMessage": "Thank you for your order. We'll prepare it with care and be in touch soon.",

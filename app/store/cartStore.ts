@@ -9,6 +9,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   inventoryQuantity: number | null; // null = unlimited
+  weightGrams: number;
 }
 
 interface CartState {

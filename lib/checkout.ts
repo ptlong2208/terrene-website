@@ -10,6 +10,7 @@ export enum CheckoutErrorCode {
   ZeroTotal = 'zero_total',
   PaymentUnavailable = 'payment_unavailable',
   ShippingFeeChanged = 'shipping_fee_changed',
+  OrderTooHeavy = 'order_too_heavy',
 }
 
 export const checkoutCustomerSchema = z.object({

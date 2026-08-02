@@ -53,6 +53,7 @@ export default function VariantPicker({
       variantTitle: selected.title,
       price: selected.price,
       inventoryQuantity: stockLeft,
+      weightGrams: selected.grams,
     });
     sendGAEvent('event', 'add_to_cart', {
       currency: 'VND',

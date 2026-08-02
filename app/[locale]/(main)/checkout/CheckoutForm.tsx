@@ -47,6 +47,7 @@ const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
   [CheckoutErrorCode.OutOfStock]: 'errorOutOfStock',
   [CheckoutErrorCode.NotFound]: 'errorNotFound',
   [CheckoutErrorCode.PaymentUnavailable]: 'errorPaymentUnavailable',
+  [CheckoutErrorCode.OrderTooHeavy]: 'errorOrderTooHeavy',
 };
 
 function readDraftForm(): Partial<DraftForm> | null {
@@ -122,15 +123,25 @@ export default function CheckoutForm({ initialDistricts }: Props) {
     if (!form.districtId || !form.wardCode) return;
     const timer = setTimeout(() => {
       void fetch(
-        `/api/shipping/fee?districtId=${form.districtId}&wardCode=${encodeURIComponent(form.wardCode)}&weight=${items.reduce((sum, i) => sum + i.quantity * 200, 0)}`
+        `/api/shipping/fee?districtId=${form.districtId}&wardCode=${encodeURIComponent(form.wardCode)}&weight=${items.reduce((sum, i) => sum + i.quantity * i.weightGrams, 0)}`
       )
-        .then((r) => r.json())
-        .then((data: { fee?: number }) => setShippingFee(data.fee ?? null))
+        .then(async (r) => {
+          const data = (await r.json()) as { fee?: number; error?: string; limit?: string };
+          if (!r.ok) {
+            if (data.error === CheckoutErrorCode.OrderTooHeavy) {
+              setServerError(t('errorOrderTooHeavy', { limit: data.limit ?? '' }));
+            }
+            setShippingFee(null);
+            return;
+          }
+          setShippingFee(data.fee ?? null);
+          setServerError(null);
+        })
         .catch(() => setShippingFee(null))
         .finally(() => setShippingLoading(false));
     }, 400);
     return () => clearTimeout(timer);
-  }, [form.districtId, form.wardCode]);
+  }, [form.districtId, form.wardCode, items, t]);
 
   if (!mounted) return null;
 
@@ -199,7 +210,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
           return;
         }
         const key = ERROR_KEY_MAP[body.error as CheckoutErrorCode] ?? 'errorGeneric';
-        setServerError(t(key, { product: body.product ?? '' }));
+        setServerError(t(key, { product: body.product ?? '', limit: body.limit ?? '' }));
         setLoading(false);
         return;
       }
