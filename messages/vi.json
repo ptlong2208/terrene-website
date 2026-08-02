@@ -105,6 +105,7 @@
     "errorPaymentUnavailable": "Dịch vụ thanh toán tạm thời không khả dụng. Vui lòng thử lại sau.",
     "errorShippingFeeChanged": "Phí vận chuyển vừa thay đổi. Vui lòng kiểm tra lại và đặt hàng.",
     "errorOrderTooHeavy": "Không hỗ trợ giao hàng quá {limit}kg. Vui lòng liên hệ shop để đặt số lượng lớn.",
+    "errorPriceChanged": "Giá {product} vừa thay đổi, vui lòng kiểm tra lại giỏ hàng.",
     "total": "Tổng cộng",
     "successTitle": "Đặt hàng thành công",
     "successMessage": "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ chuẩn bị đơn hàng cẩn thận và liên hệ với bạn sớm.",

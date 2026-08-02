@@ -11,6 +11,7 @@ export enum CheckoutErrorCode {
   PaymentUnavailable = 'payment_unavailable',
   ShippingFeeChanged = 'shipping_fee_changed',
   OrderTooHeavy = 'order_too_heavy',
+  PriceChanged = 'price_changed',
 }
 
 export const checkoutCustomerSchema = z.object({

@@ -174,6 +174,13 @@ export function verifyItems(
       log.warn({ slug: item.productSlug, variantId: item.variantId }, 'Variant out of stock');
       return errResponse(422, CheckoutErrorCode.OutOfStock, { product: item.productTitle });
     }
+    if (Math.round(item.price) !== Math.round(variant.price)) {
+      log.warn(
+        { slug: item.productSlug, clientPrice: item.price, serverPrice: variant.price },
+        'Price mismatch'
+      );
+      return errResponse(409, CheckoutErrorCode.PriceChanged, { product: item.productTitle });
+    }
 
     pendingItems.push({
       variantId: item.variantId,

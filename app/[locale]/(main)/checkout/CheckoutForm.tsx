@@ -48,6 +48,7 @@ const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
   [CheckoutErrorCode.NotFound]: 'errorNotFound',
   [CheckoutErrorCode.PaymentUnavailable]: 'errorPaymentUnavailable',
   [CheckoutErrorCode.OrderTooHeavy]: 'errorOrderTooHeavy',
+  [CheckoutErrorCode.PriceChanged]: 'errorPriceChanged',
 };
 
 function readDraftForm(): Partial<DraftForm> | null {
