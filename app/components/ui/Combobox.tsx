@@ -24,7 +24,7 @@ function normalize(s: string) {
   return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
-export default function WardCombobox({
+export default function Combobox({
   items,
   value,
   onSelect,
@@ -84,7 +84,7 @@ export default function WardCombobox({
 
       {open && !loading && (
         <Command.List className="absolute z-50 mt-1 w-full border border-(--green-deep)/20 bg-white shadow-md">
-          <div className="max-h-48 overflow-y-auto">
+          <div data-lenis-prevent className="max-h-48 overflow-y-auto">
             <Command.Empty className="px-4 py-2.5 text-[13px] text-(--green-deep) opacity-40">
               {emptyText}
             </Command.Empty>

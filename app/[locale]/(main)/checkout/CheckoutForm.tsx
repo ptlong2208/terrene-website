@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
+import Combobox, { type ComboboxItem } from '@/app/components/ui/Combobox';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Modal from '@/app/components/ui/Modal';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
-import WardCombobox, { type ComboboxItem } from '@/app/components/ui/WardCombobox';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
 import { useCartStore } from '@/app/store/cartStore';
 import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
@@ -365,7 +365,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
                 <Form.Label className={LABEL_CLASS}>{t('district')}</Form.Label>
                 <span className="text-[11px] text-(--green-deep) opacity-50">{t('wardNote')}</span>
               </div>
-              <WardCombobox
+              <Combobox
                 items={initialDistricts}
                 value={form.district}
                 onSelect={(item) => {
@@ -394,7 +394,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
 
             <Form.Field name="ward" serverInvalid={!!errors.ward} className="flex flex-col gap-1.5">
               <Form.Label className={LABEL_CLASS}>{t('ward')}</Form.Label>
-              <WardCombobox
+              <Combobox
                 items={wards}
                 value={form.ward}
                 onSelect={(item) => {
