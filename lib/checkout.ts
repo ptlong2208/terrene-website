@@ -20,7 +20,7 @@ export const checkoutCustomerSchema = z.object({
   district: z.string().min(1).max(100),
   districtId: z.number().int().positive(),
   ward: z.string().min(1).max(100),
-  wardCode: z.string().min(1).max(20),
+  wardCode: z.string().regex(/^\d{1,20}$/),
   street: z.string().min(5).max(200),
   note: z.string().max(500).optional(),
 });
