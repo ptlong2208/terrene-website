@@ -62,7 +62,11 @@ export async function fetchGhnWards(districtId: number): Promise<GhnWard[]> {
   }));
 }
 
-export async function getShippingFee(districtId: number, wardCode: string): Promise<number> {
+export async function getShippingFee(
+  districtId: number,
+  wardCode: string,
+  weightGrams = 200
+): Promise<number> {
   const token = process.env.GHN_API_TOKEN;
   const shopId = process.env.GHN_SHOP_ID;
 
@@ -79,7 +83,7 @@ export async function getShippingFee(districtId: number, wardCode: string): Prom
         to_district_id: districtId,
         to_ward_code: wardCode,
         service_type_id: 2,
-        weight: 300,
+        weight: Math.max(Math.round(weightGrams), 1),
       }),
     });
 

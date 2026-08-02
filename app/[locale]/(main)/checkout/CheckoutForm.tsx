@@ -122,7 +122,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
     if (!form.districtId || !form.wardCode) return;
     const timer = setTimeout(() => {
       void fetch(
-        `/api/shipping/fee?districtId=${form.districtId}&wardCode=${encodeURIComponent(form.wardCode)}`
+        `/api/shipping/fee?districtId=${form.districtId}&wardCode=${encodeURIComponent(form.wardCode)}&weight=${items.reduce((sum, i) => sum + i.quantity * 200, 0)}`
       )
         .then((r) => r.json())
         .then((data: { fee?: number }) => setShippingFee(data.fee ?? null))
@@ -369,15 +369,19 @@ export default function CheckoutForm({ initialDistricts }: Props) {
                 items={initialDistricts}
                 value={form.district}
                 onSelect={(item) => {
+                  const newDistrictId = item.id as number;
+                  const districtChanged = newDistrictId !== form.districtId;
                   setForm((prev) => ({
                     ...prev,
                     district: item.name,
-                    districtId: item.id as number,
+                    districtId: newDistrictId,
                     ward: '',
                     wardCode: '',
                   }));
-                  setWards([]);
-                  setWardsLoading(true);
+                  if (districtChanged) {
+                    setWards([]);
+                    setWardsLoading(true);
+                  }
                   setShippingFee(null);
                   setShippingLoading(false);
                   setErrors((prev) => ({ ...prev, district: undefined, ward: undefined }));
@@ -398,8 +402,9 @@ export default function CheckoutForm({ initialDistricts }: Props) {
                 items={wards}
                 value={form.ward}
                 onSelect={(item) => {
-                  setForm((prev) => ({ ...prev, ward: item.name, wardCode: String(item.id) }));
-                  setShippingLoading(true);
+                  const newWardCode = String(item.id);
+                  if (newWardCode !== form.wardCode) setShippingLoading(true);
+                  setForm((prev) => ({ ...prev, ward: item.name, wardCode: newWardCode }));
                   setErrors((prev) => ({ ...prev, ward: undefined }));
                 }}
                 disabled={!form.districtId}

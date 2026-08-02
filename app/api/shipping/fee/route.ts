@@ -11,6 +11,8 @@ export async function GET(req: NextRequest) {
     return Response.json({ error: 'districtId and wardCode are required' }, { status: 400 });
   }
 
-  const fee = await getShippingFee(districtId, wardCode);
+  const rawWeight = Number(searchParams.get('weight'));
+  const weight = Number.isFinite(rawWeight) && rawWeight > 0 ? rawWeight : 200;
+  const fee = await getShippingFee(districtId, wardCode, weight);
   return Response.json({ fee });
 }

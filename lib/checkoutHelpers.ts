@@ -70,6 +70,19 @@ export function makeRatelimit(prefix: string): Ratelimit {
   });
 }
 
+function toGrams(weight: number, unit: 'g' | 'kg' | 'lb' | 'oz'): number {
+  switch (unit) {
+    case 'kg':
+      return weight * 1000;
+    case 'lb':
+      return weight * 453.592;
+    case 'oz':
+      return weight * 28.3495;
+    default:
+      return weight;
+  }
+}
+
 /** Fetches Haravan product data for all unique slugs in the item list. */
 export async function fetchProductMap(
   items: Array<{ productSlug: string }>
@@ -127,7 +140,17 @@ export async function validateCheckoutRequest(
   const subtotal = pendingItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
   if (subtotal <= 0) return errResponse(422, CheckoutErrorCode.ZeroTotal);
 
-  const shippingFee: number = await getShippingFee(customer.districtId, customer.wardCode);
+  const totalWeightGrams = items.reduce((sum, item) => {
+    const variant = productMap[item.productSlug]?.variants.find((v) => v.id === item.variantId);
+    if (!variant?.weight) return sum + 200 * item.quantity;
+    return sum + toGrams(variant.weight, variant.weight_unit) * item.quantity;
+  }, 0);
+
+  const shippingFee: number = await getShippingFee(
+    customer.districtId,
+    customer.wardCode,
+    totalWeightGrams
+  );
   if (clientFee !== null && clientFee !== shippingFee) {
     log.warn({ clientFee, shippingFee }, 'Shipping fee mismatch');
     return errResponse(409, CheckoutErrorCode.ShippingFeeChanged, { fee: String(shippingFee) });
