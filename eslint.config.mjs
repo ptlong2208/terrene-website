@@ -33,7 +33,7 @@ const eslintConfig = defineConfig([
       ],
       // allow numbers in template literals: `${count} items`
       '@typescript-eslint/restrict-template-expressions': ['warn', { allowNumber: true }],
-      // external API responses (Haravan, Strapi, PayOS) are untyped — warn until typed
+      // external API responses (Haravan, PayOS) are untyped — warn until typed
       '@typescript-eslint/no-unsafe-assignment': 'warn',
       '@typescript-eslint/no-unsafe-member-access': 'warn',
       '@typescript-eslint/no-unsafe-call': 'warn',
