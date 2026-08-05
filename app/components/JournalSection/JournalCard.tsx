@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { strapiMediaUrl } from '@/lib/strapi';
 import type { JournalPost } from '@/lib/types';
 
 function formatDate(dateStr: string) {
@@ -26,7 +25,7 @@ export default function JournalCard({ post, href }: JournalCardProps) {
         >
           {post.cover_image ? (
             <Image
-              src={strapiMediaUrl(post.cover_image.url)}
+              src={post.cover_image.url}
               alt={post.cover_image.alternativeText ?? post.title}
               fill
               className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"

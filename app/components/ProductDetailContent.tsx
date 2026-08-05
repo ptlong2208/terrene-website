@@ -14,12 +14,11 @@ import ScrollFade from '@/app/components/ui/ScrollFade';
 import SlotText from '@/app/components/ui/SlotText';
 import VariantPicker from '@/app/components/VariantPicker';
 import type { ProductVariant } from '@/lib/haravan';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { ShopProduct, StrapiMedia } from '@/lib/types';
+import type { MediaAsset, ShopProduct } from '@/lib/types';
 
 interface ProductDetailContentProps {
   product: ShopProduct;
-  galleryImages: StrapiMedia[];
+  galleryImages: MediaAsset[];
   variants: ProductVariant[];
   optionName: string | null;
   jsonLd: object;
@@ -105,12 +104,9 @@ export default function ProductDetailContent({
           <div ref={galleryRef} className="flex flex-col gap-3.5">
             {galleryImages.length > 0 ? (
               galleryImages.map((img, i) => (
-                <div
-                  key={img.id ?? i}
-                  className="bg-card relative aspect-4/5 w-full overflow-hidden"
-                >
+                <div key={i} className="bg-card relative aspect-4/5 w-full overflow-hidden">
                   <Image
-                    src={strapiMediaUrl(img.url)}
+                    src={img.url}
                     alt={img.alternativeText ?? product.title}
                     fill
                     className="object-cover"
@@ -148,7 +144,7 @@ export default function ProductDetailContent({
                 {product.title}
               </h1>
 
-              <ScrollFade className="scrollbar-thin min-h-0 flex-1 overflow-y-auto pr-1">
+              <ScrollFade className="min-h-0 flex-1 scrollbar-thin overflow-y-auto pr-1">
                 {product.description && (
                   <p className="text-ink-soft mb-4 max-w-[48ch] text-[13px] leading-[1.65]">
                     {product.description}

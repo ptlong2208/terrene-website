@@ -1,127 +1,81 @@
-// ---------------------------------------------------------------------------
-// Shared primitives
-// ---------------------------------------------------------------------------
-
-export interface StrapiMedia {
-  id: number;
-  documentId: string;
+export interface MediaAsset {
   url: string;
   alternativeText: string | null;
-  width: number | null;
-  height: number | null;
-  mime: string;
 }
 
 export interface NavLink {
-  id: number;
+  id?: string;
   label: string;
   href: string;
 }
 
 export interface SocialLink {
-  id: number;
+  id: string;
   platform: string;
   url: string;
+  label: string | null;
 }
 
 export interface TextItem {
-  id: number;
+  id: string;
   text: string;
 }
 
-// ---------------------------------------------------------------------------
-// Global (single type)
-// ---------------------------------------------------------------------------
-
 export interface GlobalData {
-  id: number;
+  id: string;
   documentId: string;
 
-  // Site
   site_name: string;
   site_description: string | null;
 
-  // Loader / Audio
   loader_quote: string | null;
-  ambient_audio: StrapiMedia | null;
+  ambient_audio: MediaAsset | null;
   music_consent_text: string | null;
   music_consent_accept: string | null;
   music_consent_decline: string | null;
 
-  // Nav
   nav_links: NavLink[];
   email: string | null;
   nav_shop_link: NavLink | null;
   nav_cart_label: string | null;
-  nav_overlay_image: StrapiMedia | null;
+  nav_overlay_image: MediaAsset | null;
 
-  // Social
   social_links: SocialLink[];
 
-  // Footer
   footer_newsletter_label: string | null;
   footer_newsletter_placeholder: string | null;
   footer_legal_links: NavLink[];
 
-  // CTA (layout-level, shared across pages)
   cta_header: SectionHeaderData | null;
   cta_link: NavLink | null;
 }
 
-// ---------------------------------------------------------------------------
-// Homepage (single type)
-// ---------------------------------------------------------------------------
-
-export interface TimelineStep {
-  id: number;
-  step_number: number;
-  title: string;
-  description: string | null;
-  image: StrapiMedia | null;
-}
-
-// ---------------------------------------------------------------------------
-// Tag (collection type — reusable across products)
-// ---------------------------------------------------------------------------
-
 export interface Tag {
-  id: number;
+  id: string;
   documentId: string;
   label: string;
 }
 
-// ---------------------------------------------------------------------------
-// Shop Category (collection type)
-// ---------------------------------------------------------------------------
-
 export interface ShopCategory {
-  id: number;
+  id: string;
   documentId: string;
   name: string;
 }
-
-// ---------------------------------------------------------------------------
-// Journal Category (collection type)
-// ---------------------------------------------------------------------------
 
 export interface JournalCategory {
-  id: number;
+  id: string;
   documentId: string;
   name: string;
 }
 
-// ---------------------------------------------------------------------------
-// Shop Product (collection type)
-// ---------------------------------------------------------------------------
-
 export interface TasteNote {
-  id: number;
+  id: string;
   label: string;
   value: number;
 }
 
 export interface ProductInfoItem {
-  id: number;
+  id: string;
   title: string;
   body: string | null;
 }
@@ -130,80 +84,78 @@ export interface ProductStory {
   button_label: string;
   title: string;
   content: string;
-  images: StrapiMedia[];
+  images: MediaAsset[];
 }
 
 export interface ShopProduct {
-  id: number;
+  id: string;
   documentId: string;
   createdAt: string;
   title: string;
   slug: string;
   category: ShopCategory | null;
   description: string | null;
-  attribute: string | null;
   tags: Tag[];
-  image: StrapiMedia | null;
-  gallery: StrapiMedia[];
+  image: MediaAsset | null;
+  gallery: MediaAsset[];
   taste_notes: TasteNote[];
   product_info: ProductInfoItem[];
   story: ProductStory | null;
 }
 
 export interface JournalPost {
-  id: number;
+  id: string;
   documentId: string;
   title: string;
   slug: string;
-  cover_image: StrapiMedia | null;
+  cover_image: MediaAsset | null;
   published_date: string | null;
   excerpt: string | null;
   category: JournalCategory | null;
 }
 
 export interface TestimonialItem {
-  id: number;
+  id: string;
   quote: string;
   name: string;
   role: string | null;
-  image: StrapiMedia | null;
+  image: MediaAsset | null;
 }
 
 export interface PartnerItem {
-  id: number;
+  id: string;
   name: string;
   description: string | null;
   url: string | null;
 }
 
 export interface ProcessStep {
-  id: number;
+  id: string;
   name: string;
   description: string | null;
-  image: StrapiMedia | null;
+  image: MediaAsset | null;
 }
 
 export interface BenefitItem {
-  id: number;
+  id: string;
   title: string;
   description: string | null;
 }
 
 export interface SectionHeaderData {
-  id: number;
   kicker: string | null;
   title: string | null;
 }
 
 export interface HomepageData {
-  id: number;
+  id: string;
   documentId: string;
   hero_title: string | null;
   hero_description: string | null;
-  hero_background_video: StrapiMedia | null;
-  hero_video_poster: StrapiMedia | null;
+  hero_background_video: MediaAsset | null;
+  hero_video_poster: MediaAsset | null;
   story_header: SectionHeaderData | null;
-  story_image: StrapiMedia | null;
+  story_image: MediaAsset | null;
   story_side_label: string | null;
   story_body: string | null;
   story_cta: NavLink | null;
@@ -225,12 +177,8 @@ export interface HomepageData {
   journal_posts: JournalPost[];
 }
 
-// ---------------------------------------------------------------------------
-// Coming Soon (single type)
-// ---------------------------------------------------------------------------
-
 export interface ComingSoonData {
-  id: number;
+  id: string;
   documentId: string;
   seo_title: string | null;
   seo_description: string | null;
@@ -241,22 +189,4 @@ export interface ComingSoonData {
   submit_label: string | null;
   email_placeholder: string | null;
   success_message: string | null;
-}
-
-// ---------------------------------------------------------------------------
-// Blog Post (collection type)
-// ---------------------------------------------------------------------------
-
-export interface BlogPost {
-  id: number;
-  documentId: string;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  content: string | null;
-  cover: StrapiMedia | null;
-  category: string | null;
-  read_time: number | null;
-  publishedAt: string;
-  locale: string;
 }

@@ -5,8 +5,7 @@ import CtaSection from '@/app/components/CtaSection';
 import Footer from '@/app/components/Footer';
 import Header from '@/app/components/Header';
 import Preloader from '@/app/components/Preloader';
-import { fetchStrapiSingle } from '@/lib/strapi';
-import type { GlobalData } from '@/lib/types';
+import { getGlobal } from '@/lib/sanity-queries';
 
 export default async function MainLayout({
   children,
@@ -18,7 +17,7 @@ export default async function MainLayout({
   const { locale } = await params;
   const [t, global] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),
-    fetchStrapiSingle<GlobalData>('/api/global', { populate: '*', locale }),
+    getGlobal(locale),
   ]);
 
   return (

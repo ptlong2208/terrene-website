@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import Section from '@/app/components/ui/Section';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { strapiMediaUrl } from '@/lib/strapi';
 import type { SectionHeaderData, TestimonialItem } from '@/lib/types';
 
 interface TestimonialsSectionProps {
@@ -108,7 +107,7 @@ export default function TestimonialsSection({
         <div ref={portraitRef} className="bg-cream/18 aspect-3/4 overflow-hidden max-md:w-35">
           {item.image ? (
             <Image
-              src={strapiMediaUrl(item.image.url)}
+              src={item.image.url}
               alt={item.image.alternativeText ?? item.name}
               width={230}
               height={307}

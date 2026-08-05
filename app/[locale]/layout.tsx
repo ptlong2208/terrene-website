@@ -10,8 +10,7 @@ import { getMessages } from 'next-intl/server';
 import CookieConsent from '@/app/components/CookieConsent';
 import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
-import { fetchStrapiSingle } from '@/lib/strapi';
-import type { GlobalData } from '@/lib/types';
+import { getGlobal } from '@/lib/sanity-queries';
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: '--font-faculty-glyphic',
@@ -26,7 +25,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const global = await fetchStrapiSingle<GlobalData>('/api/global', { locale });
+  const global = await getGlobal(locale);
   return {
     title: global.site_name,
     description: global.site_description ?? undefined,

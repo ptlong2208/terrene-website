@@ -10,12 +10,11 @@ import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
 import { useLineReveal } from '@/app/hooks/useLineReveal';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { NavLink, SectionHeaderData, StrapiMedia } from '@/lib/types';
+import type { MediaAsset, NavLink, SectionHeaderData } from '@/lib/types';
 
 interface StorySectionProps {
   header?: SectionHeaderData | null;
-  image?: StrapiMedia | null;
+  image?: MediaAsset | null;
   sideLabel?: string | null;
   body?: string | null;
   cta?: NavLink | null;
@@ -115,7 +114,7 @@ export default function StorySection({ header, image, sideLabel, body, cta }: St
         {image ? (
           <Image
             ref={imgRef}
-            src={strapiMediaUrl(image.url)}
+            src={image.url}
             alt={image.alternativeText ?? ''}
             fill
             className="object-cover"

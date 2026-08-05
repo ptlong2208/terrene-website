@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 
-import { strapiMediaUrl } from '@/lib/strapi';
 import type { ShopProduct } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 
@@ -94,7 +93,7 @@ export default function ProductCard({
         />
         {product.image && (
           <Image
-            src={strapiMediaUrl(product.image.url)}
+            src={product.image.url}
             alt={product.image.alternativeText ?? product.title}
             fill
             className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] group-hover:scale-[1.03]"

@@ -11,8 +11,7 @@ import MenuOverlay, { type MenuState } from '@/app/components/MenuOverlay';
 import MusicConsentBanner from '@/app/components/MusicConsentBanner';
 import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { NavLink, StrapiMedia } from '@/lib/types';
+import type { MediaAsset, NavLink } from '@/lib/types';
 
 import HeaderLeft from './HeaderLeft';
 import HeaderLogo from './HeaderLogo';
@@ -20,11 +19,11 @@ import HeaderRight from './HeaderRight';
 
 interface HeaderProps {
   siteName: string;
-  ambientAudio?: StrapiMedia;
+  ambientAudio?: MediaAsset;
   navLinks?: NavLink[];
   navShopLink?: NavLink;
   navCartLabel?: string;
-  navOverlayImage?: StrapiMedia | null;
+  navOverlayImage?: MediaAsset | null;
   musicConsentText?: string | null;
   musicConsentAccept?: string | null;
   musicConsentDecline?: string | null;
@@ -55,7 +54,7 @@ export default function Header({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hideHeaderAnimRef = useRef<gsap.core.Timeline | null>(null);
   const isOverFooterRef = useRef(false);
-  const audioSrc = ambientAudio ? strapiMediaUrl(ambientAudio.url) : '';
+  const audioSrc = ambientAudio?.url ?? '';
 
   useEffect(() => {
     if (!headerRef.current) return;

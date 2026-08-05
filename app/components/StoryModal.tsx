@@ -5,7 +5,6 @@ import { useCallback, useRef, useState } from 'react';
 
 import Modal from '@/app/components/ui/Modal';
 import SlotText from '@/app/components/ui/SlotText';
-import { strapiMediaUrl } from '@/lib/strapi';
 import type { ProductStory } from '@/lib/types';
 
 interface StoryModalProps {
@@ -69,8 +68,8 @@ export default function StoryModal({ story }: StoryModalProps) {
           <div className="bg-card relative h-60 shrink-0 overflow-hidden md:h-full">
             {images.map((img, i) => (
               <Image
-                key={img.id ?? i}
-                src={strapiMediaUrl(img.url)}
+                key={i}
+                src={img.url}
                 alt={img.alternativeText ?? title}
                 fill
                 className={`object-cover transition-opacity duration-700 ${i === activeIdx ? 'opacity-100' : 'opacity-0'}`}

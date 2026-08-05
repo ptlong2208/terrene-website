@@ -9,8 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
 
 import SlotText from '@/app/components/ui/SlotText';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { NavLink, StrapiMedia } from '@/lib/types';
+import type { MediaAsset, NavLink } from '@/lib/types';
 
 import styles from './MenuOverlay.module.css';
 
@@ -33,7 +32,7 @@ const linkVariants = {
 interface MenuOverlayProps {
   menuState: MenuState;
   navLinks: NavLink[];
-  overlayImage?: StrapiMedia | null;
+  overlayImage?: MediaAsset | null;
   onClose: () => void;
   onClosed: () => void;
 }
@@ -178,7 +177,7 @@ export default function MenuOverlay({
             className="relative h-[clamp(300px,42vh,520px)] shrink-0 overflow-hidden"
           >
             <Image
-              src={strapiMediaUrl(overlayImage.url)}
+              src={overlayImage.url}
               alt={overlayImage.alternativeText ?? ''}
               fill
               className="object-cover"

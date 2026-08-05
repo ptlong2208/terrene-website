@@ -1,19 +1,13 @@
 import ShopCatalog from '@/app/components/ShopCatalog';
 import { fetchProductPricesBySlugs } from '@/lib/haravan';
-import { fetchStrapiCollection } from '@/lib/strapi';
-import type { ShopCategory, ShopProduct } from '@/lib/types';
+import { getShopCategories, getShopProducts } from '@/lib/sanity-queries';
 
 export default async function ShopPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
   const [products, categories] = await Promise.all([
-    fetchStrapiCollection<ShopProduct>('/api/shop-products', {
-      'populate[image]': 'true',
-      'populate[tags]': 'true',
-      'populate[category]': 'true',
-      locale,
-    }),
-    fetchStrapiCollection<ShopCategory>('/api/shop-categories', { locale }),
+    getShopProducts(locale),
+    getShopCategories(locale),
   ]);
 
   const prices = await fetchProductPricesBySlugs(products.map((p) => p.slug));

@@ -1,16 +1,11 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '@/lib/config';
-import { fetchStrapiCollection } from '@/lib/strapi';
-import type { ShopProduct } from '@/lib/types';
+import { getSitemapProducts } from '@/lib/sanity-queries';
 const locales = ['vi'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await fetchStrapiCollection<ShopProduct>('/api/shop-products', {
-    'fields[0]': 'slug',
-    'fields[1]': 'createdAt',
-    'pagination[limit]': '100',
-  }).catch(() => []);
+  const products = await getSitemapProducts().catch(() => []);
 
   const staticRoutes = locales.flatMap((locale) => [
     { url: `${SITE_URL}/${locale}`, changeFrequency: 'weekly' as const, priority: 1 },

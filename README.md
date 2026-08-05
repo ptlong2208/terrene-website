@@ -1,6 +1,6 @@
 # Terrene Website
 
-E-commerce storefront for Terrene — a Vietnamese specialty coffee brand. Built with Next.js, Tailwind CSS, and integrates Strapi, Haravan, PayOS, Brevo, and Upstash Redis.
+E-commerce storefront for Terrene — a Vietnamese specialty coffee brand. Built with Next.js, Tailwind CSS, and integrates Sanity, Haravan, PayOS, Brevo, and Upstash Redis.
 
 ---
 
@@ -35,13 +35,16 @@ GA is only loaded after the user accepts the cookie consent banner — no data i
 
 ---
 
-### Strapi CMS
+### Sanity CMS
 
-| Variable                 | Description              |
-| ------------------------ | ------------------------ |
-| `NEXT_PUBLIC_STRAPI_URL` | Your Strapi instance URL |
+| Variable                         | Description                             |
+| -------------------------------- | --------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`  | Sanity project ID                       |
+| `NEXT_PUBLIC_SANITY_DATASET`     | Dataset name (e.g. `production`)        |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | API version date (e.g. `2026-07-30`)    |
+| `SANITY_TOKEN`                   | Read token used by the frontend fetches |
 
-**How to get:** Strapi Cloud dashboard → your project → the base URL shown (e.g. `https://xxx.strapiapp.com`).
+**How to get:** [sanity.io/manage](https://sanity.io/manage) → your project → **API** → project ID/dataset are shown on the project overview; create a **Viewer** token under **Tokens**.
 
 ---
 

@@ -3,23 +3,16 @@ import { getTranslations } from 'next-intl/server';
 
 import ComingSoonContent from '@/app/components/ComingSoonContent';
 import Preloader from '@/app/components/Preloader';
-import { fetchStrapiSingle } from '@/lib/strapi';
-import type { ComingSoonData, GlobalData } from '@/lib/types';
+import { getComingSoon, getGlobalMinimal } from '@/lib/sanity-queries';
 
 type Props = { params: Promise<{ locale: string }> };
-
-async function fetchComingSoonData(locale: string) {
-  return fetchStrapiSingle<ComingSoonData>('/api/coming-soon', {
-    populate: '*',
-    locale,
-  });
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'comingSoon' });
   try {
-    const data = await fetchComingSoonData(locale);
+    const data = await getComingSoon(locale);
+    if (!data) throw new Error('Coming soon data not found');
     return {
       title: data.seo_title ?? t('seoTitle'),
       description: data.seo_description ?? t('seoDescription'),
@@ -34,12 +27,8 @@ export default async function ComingSoonPage({ params }: Props) {
 
   const [t, global, comingSoon] = await Promise.all([
     getTranslations({ locale, namespace: 'preloader' }),
-    fetchStrapiSingle<Pick<GlobalData, 'site_name' | 'loader_quote'>>('/api/global', {
-      'fields[0]': 'site_name',
-      'fields[1]': 'loader_quote',
-      locale,
-    }),
-    fetchComingSoonData(locale).catch(() => null),
+    getGlobalMinimal(locale),
+    getComingSoon(locale).catch(() => null),
   ]);
 
   return (

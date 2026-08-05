@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from 'react';
 import CtaLink from '@/app/components/ui/CtaLink';
 import SectionHeader from '@/app/components/ui/SectionHeader';
 import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
-import { strapiMediaUrl } from '@/lib/strapi';
 import type { NavLink, ProcessStep, SectionHeaderData } from '@/lib/types';
 
 import ProcessItem from './ProcessItem';
@@ -76,7 +75,7 @@ export default function ProcessSection({ header, steps = [], cta }: ProcessSecti
             step.image && (
               <Image
                 key={step.id}
-                src={strapiMediaUrl(step.image.url)}
+                src={step.image.url}
                 alt={step.image.alternativeText ?? step.name}
                 fill
                 className={`scale-125 object-cover transition-opacity duration-300 ${i === activeIndex ? 'opacity-100' : 'opacity-0'}`}

@@ -4,8 +4,7 @@ import { notFound } from 'next/navigation';
 import ProductDetailContent from '@/app/components/ProductDetailContent';
 import { SITE_NAME, SITE_URL } from '@/lib/config';
 import { fetchProductData } from '@/lib/haravan';
-import { fetchStrapiBySlug, strapiMediaUrl } from '@/lib/strapi';
-import type { ShopProduct } from '@/lib/types';
+import { getShopProductBySlug } from '@/lib/sanity-queries';
 
 export async function generateMetadata({
   params,
@@ -13,12 +12,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const product = await fetchStrapiBySlug<ShopProduct>('/api/shop-products', slug, {
-    'populate[image]': 'true',
-    locale,
-  });
+  const product = await getShopProductBySlug(slug, locale);
   if (!product) return {};
-  const imageUrl = product.image ? strapiMediaUrl(product.image.url) : undefined;
+  const imageUrl = product.image?.url;
   return {
     title: `${product.title} | ${SITE_NAME}`,
     description: product.description ?? undefined,
@@ -39,16 +35,7 @@ export default async function ProductDetailPage({
   const { locale, slug } = await params;
 
   const [product, { variants, optionName }] = await Promise.all([
-    fetchStrapiBySlug<ShopProduct>('/api/shop-products', slug, {
-      'populate[gallery]': 'true',
-      'populate[image]': 'true',
-      'populate[category]': 'true',
-      'populate[tags]': 'true',
-      'populate[taste_notes]': 'true',
-      'populate[product_info]': 'true',
-      'populate[story][populate][images]': 'true',
-      locale,
-    }),
+    getShopProductBySlug(slug, locale),
     fetchProductData(slug),
   ]);
 
@@ -65,7 +52,7 @@ export default async function ProductDetailPage({
     name: product.title,
     description: product.description ?? undefined,
     brand: { '@type': 'Brand', name: SITE_NAME },
-    image: galleryImages.map((img) => strapiMediaUrl(img.url)).filter(Boolean),
+    image: galleryImages.map((img) => img.url).filter(Boolean),
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: 'VND',
