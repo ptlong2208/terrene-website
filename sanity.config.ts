@@ -5,6 +5,7 @@ import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 
 import { apiVersion, dataset, projectId } from './sanity/env';
+import { vietnameseFont } from './sanity/plugins/vietnameseFont';
 import { schema } from './sanity/schemaTypes';
 import { structure } from './sanity/structure';
 
@@ -37,5 +38,6 @@ export default defineConfig({
       schemaTypes: ['comingSoon', 'homepage', 'journalPost', 'shopProduct'],
     }),
     visionTool({ defaultApiVersion: apiVersion }),
+    vietnameseFont(),
   ],
 });
