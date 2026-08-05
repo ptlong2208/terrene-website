@@ -25,7 +25,7 @@ export interface SocialLink {
 }
 
 export interface TextItem {
-  id: number;
+  id: string;
   text: string;
 }
 
@@ -130,7 +130,7 @@ export interface HomepageData {
 // ---------------------------------------------------------------------------
 
 export interface ComingSoonData {
-  id: number;
+  id: string;
   documentId: string;
   seo_title: string | null;
   seo_description: string | null;
