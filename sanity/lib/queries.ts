@@ -1,4 +1,3 @@
-import { sanityFetch } from '@/lib/sanity-client';
 import type {
   ComingSoonData,
   GlobalData,
@@ -7,6 +6,8 @@ import type {
   ShopCategory,
   ShopProduct,
 } from '@/lib/types';
+
+import { sanityFetch } from './client';
 
 type PortableTextBlock = {
   _type: string;

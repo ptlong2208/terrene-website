@@ -10,7 +10,7 @@ import { getMessages } from 'next-intl/server';
 import CookieConsent from '@/app/components/CookieConsent';
 import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
-import { getGlobal } from '@/lib/sanity-queries';
+import { getGlobal } from '@/sanity/lib/queries';
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: '--font-faculty-glyphic',

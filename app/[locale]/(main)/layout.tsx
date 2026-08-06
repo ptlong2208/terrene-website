@@ -5,7 +5,7 @@ import CtaSection from '@/app/components/CtaSection';
 import Footer from '@/app/components/Footer';
 import Header from '@/app/components/Header';
 import Preloader from '@/app/components/Preloader';
-import { getGlobal } from '@/lib/sanity-queries';
+import { getGlobal } from '@/sanity/lib/queries';
 
 export default async function MainLayout({
   children,

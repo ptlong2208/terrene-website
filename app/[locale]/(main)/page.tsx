@@ -11,7 +11,7 @@ import StorySection from '@/app/components/StorySection';
 import TestimonialsSection from '@/app/components/TestimonialsSection';
 import { SITE_URL } from '@/lib/config';
 import { fetchProductPricesBySlugs } from '@/lib/haravan';
-import { getGlobal, getHomepage } from '@/lib/sanity-queries';
+import { getGlobal, getHomepage } from '@/sanity/lib/queries';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server';
 
 import ComingSoonContent from '@/app/components/ComingSoonContent';
 import Preloader from '@/app/components/Preloader';
-import { getComingSoon, getGlobalMinimal } from '@/lib/sanity-queries';
+import { getComingSoon, getGlobalMinimal } from '@/sanity/lib/queries';
 
 type Props = { params: Promise<{ locale: string }> };
 

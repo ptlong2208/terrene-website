@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import ProductDetailContent from '@/app/components/ProductDetailContent';
 import { SITE_NAME, SITE_URL } from '@/lib/config';
 import { fetchProductData } from '@/lib/haravan';
-import { getShopProductBySlug } from '@/lib/sanity-queries';
+import { getShopProductBySlug } from '@/sanity/lib/queries';
 
 export async function generateMetadata({
   params,

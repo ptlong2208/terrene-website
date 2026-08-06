@@ -6,5 +6,14 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
+  useCdn: true,
 });
+
+export async function sanityFetch<T>(
+  query: string,
+  params: Record<string, unknown> = {}
+): Promise<T> {
+  return client.fetch<T>(query, params, {
+    next: { revalidate: 60 },
+  });
+}

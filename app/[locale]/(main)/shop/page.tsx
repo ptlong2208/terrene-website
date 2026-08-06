@@ -1,6 +1,6 @@
 import ShopCatalog from '@/app/components/ShopCatalog';
 import { fetchProductPricesBySlugs } from '@/lib/haravan';
-import { getShopCategories, getShopProducts } from '@/lib/sanity-queries';
+import { getShopCategories, getShopProducts } from '@/sanity/lib/queries';
 
 export default async function ShopPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

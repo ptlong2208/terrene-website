@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { SITE_URL } from '@/lib/config';
-import { getSitemapProducts } from '@/lib/sanity-queries';
+import { getSitemapProducts } from '@/sanity/lib/queries';
 const locales = ['vi'];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
