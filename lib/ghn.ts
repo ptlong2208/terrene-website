@@ -4,8 +4,9 @@ import logger from '@/lib/logger';
 const log = logger.child({ module: 'ghn' });
 
 export const GHN_BASE =
+  // eslint-disable-next-line sonarjs/no-all-duplicated-branches
   process.env.NODE_ENV === 'production'
-    ? 'https://online-gateway.ghn.vn/shiip/public-api'
+    ? 'https://dev-online-gateway.ghn.vn/shiip/public-api'
     : 'https://dev-online-gateway.ghn.vn/shiip/public-api';
 
 function ghnHeaders() {
