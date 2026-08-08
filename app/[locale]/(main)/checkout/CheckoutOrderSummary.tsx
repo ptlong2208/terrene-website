@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl';
 
 import Card from '@/app/components/ui/Card';
 import { type CartItem } from '@/app/store/cartStore';
-import { STORE_ADDRESS } from '@/lib/config';
 import { formatPrice } from '@/lib/utils';
 
 interface CheckoutOrderSummaryProps {
@@ -82,12 +81,6 @@ export default function CheckoutOrderSummary({
           </span>
         </div>
       </div>
-
-      {STORE_ADDRESS && (
-        <p className="mt-4 border-t border-(--green-deep)/10 pt-4 text-[12px] text-(--green-deep) opacity-55">
-          {t('shipsFrom', { address: STORE_ADDRESS })}
-        </p>
-      )}
     </Card>
   );
 }
