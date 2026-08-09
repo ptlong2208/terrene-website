@@ -114,7 +114,7 @@ export async function updateHaravanOrderPaid(
     },
     body: JSON.stringify({
       transaction: {
-        kind: 'capture',
+        kind: 'sale',
         status: 'success',
         amount: String(amount),
         currency: 'VND',
