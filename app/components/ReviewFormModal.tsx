@@ -7,7 +7,7 @@ import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import Modal from '@/app/components/ui/Modal';
-import SlotText from '@/app/components/ui/SlotText';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import StarRating from '@/app/components/ui/StarRating';
 import type { ProductReview } from '@/lib/types';
 
@@ -208,13 +208,15 @@ export default function ReviewFormModal({
 
         {error && <p className="text-[12px] text-red-500">{error}</p>}
 
-        <button
+        <PrimaryButton
           type="submit"
           disabled={submitting}
-          className="group text-cream mt-1 flex w-full cursor-pointer items-center justify-center overflow-hidden bg-(--green-deep) py-3.75 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85 disabled:opacity-40"
+          loading={submitting}
+          loadingText={t('submitting')}
+          className="mt-1"
         >
-          <SlotText text={submitting ? t('submitting') : t('submit')} />
-        </button>
+          {t('submit')}
+        </PrimaryButton>
       </Form.Root>
     </Modal>
   );

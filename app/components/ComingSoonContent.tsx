@@ -6,8 +6,8 @@ import { Fragment, useActionState, useEffect, useRef } from 'react';
 
 import { subscribeToWishlist } from '@/app/actions/wishlist';
 import TerreneLogo from '@/app/components/TerreneLogo';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import RotatingText from '@/app/components/ui/RotatingText';
-import SlotText from '@/app/components/ui/SlotText';
 import { isPreloaderDone } from '@/app/hooks/usePreloaderDone';
 import type { ComingSoonData } from '@/lib/types';
 
@@ -123,13 +123,9 @@ export default function ComingSoonContent({ siteName, data }: ComingSoonContentP
                 </p>
               )}
               {submitLabel && (
-                <button
-                  type="submit"
-                  disabled={isPending}
-                  className="group text-cream flex w-full cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) p-[clamp(13px,1.6vh,15px)] text-[16px] tracking-[-0.02em] transition-opacity duration-200 hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <SlotText text={submitLabel} />
-                </button>
+                <PrimaryButton type="submit" size="hero" disabled={isPending}>
+                  {submitLabel}
+                </PrimaryButton>
               )}
             </form>
           </>

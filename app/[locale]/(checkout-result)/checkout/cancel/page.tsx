@@ -1,11 +1,10 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import TerreneLogo from '@/app/components/TerreneLogo';
 import CtaLink from '@/app/components/ui/CtaLink';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import Section from '@/app/components/ui/Section';
-import SlotText from '@/app/components/ui/SlotText';
 import { cancelHaravanOrder } from '@/lib/haravan';
 import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 
@@ -42,12 +41,9 @@ export default async function CheckoutCancelPage({
           {t('cancelMessage')}
         </p>
         <div className="mt-[clamp(28px,3.5vh,44px)] flex flex-wrap items-center justify-center gap-6">
-          <Link
-            href="/checkout"
-            className="group text-cream inline-flex items-center justify-center overflow-hidden bg-(--green-deep) px-8 py-3 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85"
-          >
-            <SlotText text={t('cancelCta')} />
-          </Link>
+          <PrimaryButton href="/checkout" fullWidth={false} size="compact">
+            {t('cancelCta')}
+          </PrimaryButton>
           <CtaLink href="/shop" label={t('cancelShop')} />
         </div>
       </div>

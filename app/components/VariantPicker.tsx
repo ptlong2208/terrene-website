@@ -1,11 +1,10 @@
 'use client';
 
 import { sendGAEvent } from '@next/third-parties/google';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-import SlotText from '@/app/components/ui/SlotText';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import { useCartStore } from '@/app/store/cartStore';
 import type { ProductVariant } from '@/lib/haravan';
 import { formatPrice } from '@/lib/utils';
@@ -132,25 +131,11 @@ export default function VariantPicker({
       )}
 
       {price === 0 ? (
-        <Link
-          href="/"
-          className="group text-cream flex w-full shrink-0 cursor-pointer items-center justify-center overflow-hidden bg-(--green-deep) py-3.75 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85"
-        >
-          <SlotText text={t('contactUs')} />
-        </Link>
+        <PrimaryButton href="/">{t('contactUs')}</PrimaryButton>
       ) : (
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={!isAvailable || atLimit}
-          className={`group text-cream flex w-full shrink-0 items-center justify-center overflow-hidden bg-(--green-deep) py-3.75 text-[16px] tracking-[-0.02em] transition-opacity ${
-            !isAvailable || atLimit
-              ? 'cursor-not-allowed opacity-40'
-              : 'cursor-pointer hover:opacity-85'
-          }`}
-        >
-          <SlotText text={t('addToCart')} />
-        </button>
+        <PrimaryButton type="button" onClick={handleAddToCart} disabled={!isAvailable || atLimit}>
+          {t('addToCart')}
+        </PrimaryButton>
       )}
     </>
   );

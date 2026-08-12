@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import Combobox, { type ComboboxItem } from '@/app/components/ui/Combobox';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Modal from '@/app/components/ui/Modal';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
@@ -497,11 +498,15 @@ export default function CheckoutForm({ initialDistricts }: Props) {
             <p className="rounded-lg bg-red-50 px-4 py-3 text-[13px] text-red-600">{serverError}</p>
           )}
 
-          <Form.Submit
-            disabled={loading || shippingLoading}
-            className="group text-cream mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) py-4 text-[16px] tracking-[-0.02em] transition-opacity hover:opacity-85 disabled:opacity-40"
-          >
-            {loading ? t('processing') : <SlotText text={t('placeOrder')} />}
+          <Form.Submit asChild>
+            <PrimaryButton
+              disabled={loading || shippingLoading}
+              loading={loading}
+              loadingText={t('processing')}
+              className="mt-2"
+            >
+              {t('placeOrder')}
+            </PrimaryButton>
           </Form.Submit>
         </Form.Root>
 

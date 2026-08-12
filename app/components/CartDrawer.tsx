@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import SlotText from '@/app/components/ui/SlotText';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
 import type { CartItem } from '@/app/store/cartStore';
@@ -225,13 +226,9 @@ export default function CartDrawer() {
                 {formatPrice(subtotal)}
               </span>
             </div>
-            <Link
-              href="/checkout"
-              onClick={close}
-              className="group text-cream flex w-full items-center justify-center overflow-hidden bg-(--green-deep) py-4 text-[16px] tracking-[-0.02em] no-underline transition-opacity hover:opacity-85"
-            >
-              <SlotText text={t('checkout')} />
-            </Link>
+            <PrimaryButton href="/checkout" onClick={close}>
+              {t('checkout')}
+            </PrimaryButton>
           </div>
         )}
       </aside>

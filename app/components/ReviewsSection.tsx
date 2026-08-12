@@ -6,6 +6,7 @@ import { useState } from 'react';
 import ReviewFormModal from '@/app/components/ReviewFormModal';
 import ReviewItem from '@/app/components/ReviewItem';
 import Card from '@/app/components/ui/Card';
+import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import SlotText from '@/app/components/ui/SlotText';
 import StarRating from '@/app/components/ui/StarRating';
 import type { ProductReview } from '@/lib/types';
@@ -102,13 +103,14 @@ export default function ReviewsSection({ productSlug, productTitle }: ReviewsSec
             <p className="text-ink-soft mt-2 text-[13px]">{t('empty')}</p>
           )}
         </div>
-        <button
+        <PrimaryButton
           type="button"
           onClick={() => setModalOpen(true)}
-          className="group text-cream flex shrink-0 cursor-pointer items-center justify-center overflow-hidden bg-(--green-deep) px-4.5 py-3 text-[16px] tracking-[-0.02em]"
+          fullWidth={false}
+          size="compact"
         >
-          <SlotText text={t('writeReview')} />
-        </button>
+          {t('writeReview')}
+        </PrimaryButton>
       </div>
 
       <div className="flex flex-col">
