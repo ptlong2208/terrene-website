@@ -36,6 +36,7 @@
     "pino": "^10.3.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "react-dropzone": "^20.1.0",
     "sanity": "^6.8.0",
     "styled-components": "^6.4.4",
     "zod": "^4.4.3",

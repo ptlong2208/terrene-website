@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useRef } from 'react';
 
 import ProductInfoCard from '@/app/components/ProductInfoCard';
+import ReviewsSection from '@/app/components/ReviewsSection';
 import StoryModal from '@/app/components/StoryModal';
 import ScrollFade from '@/app/components/ui/ScrollFade';
 import SlotText from '@/app/components/ui/SlotText';
@@ -196,9 +197,13 @@ export default function ProductDetailContent({
         </div>
 
         <div className="mt-[clamp(48px,6vh,88px)] grid grid-cols-[1.35fr_0.65fr] items-start gap-[clamp(20px,2.6vw,44px)] max-md:grid-cols-1">
-          <div />
+          <div className="max-md:order-2">
+            <ReviewsSection productSlug={slug} productTitle={product.title} />
+          </div>
           {product.product_info?.length > 0 && (
-            <ProductInfoCard title={t('productInfoTitle')} items={product.product_info} />
+            <div className="max-md:order-1">
+              <ProductInfoCard title={t('productInfoTitle')} items={product.product_info} />
+            </div>
           )}
         </div>
       </div>

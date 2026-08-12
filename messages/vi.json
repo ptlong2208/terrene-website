@@ -121,6 +121,28 @@
     "shippingLoading": "Đang tính...",
     "shipsFrom": "Địa chỉ shop: {address}"
   },
+  "reviews": {
+    "title": "Đánh giá khách hàng",
+    "count": "{count} đánh giá",
+    "empty": "Chưa có đánh giá nào. Hãy là người đầu tiên!",
+    "writeReview": "Viết đánh giá",
+    "loadMore": "Xem thêm đánh giá",
+    "forProduct": "Sản phẩm:",
+    "rating": "Số sao",
+    "yourName": "Tên của bạn",
+    "yourNamePlaceholder": "Nguyễn Văn A",
+    "email": "Email",
+    "emailPlaceholder": "ban@email.com",
+    "comment": "Cảm nhận",
+    "commentPlaceholder": "Chia sẻ trải nghiệm của bạn về sản phẩm...",
+    "photos": "Hình ảnh (tuỳ chọn)",
+    "addPhoto": "Thêm ảnh",
+    "dropPhotoHere": "Thả ảnh vào đây",
+    "removePhoto": "Xoá ảnh",
+    "submit": "Gửi đánh giá",
+    "submitting": "Đang gửi...",
+    "errorRatingRequired": "Vui lòng chọn số sao"
+  },
   "partners": {
     "visit": "Ghé thăm"
   },

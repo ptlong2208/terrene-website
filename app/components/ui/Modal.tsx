@@ -105,6 +105,7 @@ export default function Modal({
         >
           <Dialog.Content
             ref={contentRef}
+            data-lenis-prevent
             aria-label={isConfirm ? undefined : ariaLabel}
             onEscapeKeyDown={(e) => {
               e.preventDefault();
@@ -177,7 +178,7 @@ export default function Modal({
               <>
                 <Dialog.Title className="sr-only">{ariaLabel}</Dialog.Title>
 
-                <div className="bg-cream border-line hidden h-11 shrink-0 items-center justify-end border-b px-4 max-md:flex">
+                <div className="bg-cream border-line hidden h-11 shrink-0 items-center justify-end border-b px-4 max-md:mb-4 max-md:flex">
                   <button
                     type="button"
                     onClick={handleClose}

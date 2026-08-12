@@ -121,6 +121,28 @@
     "shippingLoading": "Calculating...",
     "shipsFrom": "Shop address: {address}"
   },
+  "reviews": {
+    "title": "Customer reviews",
+    "count": "{count} reviews",
+    "empty": "No reviews yet. Be the first!",
+    "writeReview": "Write a review",
+    "loadMore": "Load more reviews",
+    "forProduct": "Product:",
+    "rating": "Rating",
+    "yourName": "Your name",
+    "yourNamePlaceholder": "Jane Doe",
+    "email": "Email",
+    "emailPlaceholder": "you@email.com",
+    "comment": "Your review",
+    "commentPlaceholder": "Share your experience with this product...",
+    "photos": "Photos (optional)",
+    "addPhoto": "Add photo",
+    "dropPhotoHere": "Drop photos here",
+    "removePhoto": "Remove photo",
+    "submit": "Submit review",
+    "submitting": "Submitting...",
+    "errorRatingRequired": "Please select a rating"
+  },
   "partners": {
     "visit": "Visit"
   },

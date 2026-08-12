@@ -87,6 +87,15 @@ export interface ProductStory {
   images: MediaAsset[];
 }
 
+export interface ProductReview {
+  id: string;
+  reviewerName: string;
+  rating: number;
+  comment: string;
+  photos?: string[];
+  createdAt: string;
+}
+
 export interface ShopProduct {
   id: string;
   documentId: string;
