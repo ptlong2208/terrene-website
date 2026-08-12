@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
+import { FIELD_CLASS, FORM_ERROR_CLASS, LABEL_CLASS } from '@/app/components/ui/formStyles';
 import Modal from '@/app/components/ui/Modal';
 import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import StarRating from '@/app/components/ui/StarRating';
@@ -18,11 +19,6 @@ interface ReviewFormModalProps {
   productTitle: string;
   onSubmitted: (review: ProductReview) => void;
 }
-
-const FIELD_CLASS =
-  'w-full border border-(--green-deep)/20 rounded-lg px-4 py-3 text-[14px] text-(--green-deep) bg-transparent placeholder:text-(--green-deep)/30 outline-none focus:border-(--green-deep)/60 transition-colors duration-200';
-
-const LABEL_CLASS = 'text-[11px] font-bold tracking-[0.06em] text-(--green-deep)/70 uppercase';
 
 interface DraftPhoto {
   file: File;
@@ -170,7 +166,7 @@ export default function ReviewFormModal({
           <span className={LABEL_CLASS}>{t('photos')}</span>
           <div
             {...getRootProps()}
-            className={`text-ink-soft flex w-full cursor-pointer items-center justify-center gap-2 rounded border border-dashed px-3.5 py-4 text-center text-[12px] font-semibold tracking-[0.04em] uppercase transition-colors ${
+            className={`text-ink-soft flex w-full cursor-pointer items-center justify-center gap-2 border border-dashed px-3.5 py-4 text-center text-[12px] font-semibold tracking-[0.04em] uppercase transition-colors ${
               isDragActive
                 ? 'border-(--green-deep) text-(--green-deep)'
                 : 'border-line hover:border-(--green-deep)/50 hover:text-(--green-deep)'
@@ -190,7 +186,7 @@ export default function ReviewFormModal({
                     width={60}
                     height={60}
                     unoptimized
-                    className="h-15 w-15 rounded object-cover"
+                    className="h-15 w-15 object-cover"
                   />
                   <button
                     type="button"
@@ -206,7 +202,7 @@ export default function ReviewFormModal({
           )}
         </div>
 
-        {error && <p className="text-[12px] text-red-500">{error}</p>}
+        {error && <p className={FORM_ERROR_CLASS}>{error}</p>}
 
         <PrimaryButton
           type="submit"

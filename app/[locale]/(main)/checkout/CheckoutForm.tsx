@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 
 import Combobox, { type ComboboxItem } from '@/app/components/ui/Combobox';
 import CtaLink from '@/app/components/ui/CtaLink';
+import { FIELD_CLASS, FORM_ERROR_CLASS, LABEL_CLASS } from '@/app/components/ui/formStyles';
 import Modal from '@/app/components/ui/Modal';
 import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import Section from '@/app/components/ui/Section';
@@ -26,11 +27,6 @@ interface Props {
 
 type DraftForm = CheckoutCustomer & { paymentMethod: 'payos' | 'cod' };
 type FieldErrors = Partial<Record<keyof CheckoutCustomer, string>>;
-
-const FIELD_CLASS =
-  'w-full border border-(--green-deep)/20 rounded-lg px-4 py-3 text-[14px] text-(--green-deep) bg-transparent placeholder:text-(--green-deep)/30 outline-none focus:border-(--green-deep)/60 transition-colors duration-200 aria-invalid:border-red-400';
-
-const LABEL_CLASS = 'text-[12px] font-semibold tracking-[0.04em] uppercase text-(--green-deep)';
 
 const EMPTY_FORM: DraftForm = {
   name: '',
@@ -481,7 +477,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
                   key={value}
                   type="button"
                   onClick={() => setForm((prev) => ({ ...prev, paymentMethod: value }))}
-                  className={`flex cursor-pointer flex-col gap-0.5 rounded-lg border px-4 py-3 text-left transition-colors duration-150 ${
+                  className={`flex cursor-pointer flex-col gap-0.5 border px-4 py-3 text-left transition-colors duration-150 ${
                     form.paymentMethod === value
                       ? 'border-(--green-deep) bg-(--green-deep)/5'
                       : 'border-(--green-deep)/20 hover:border-(--green-deep)/40'
@@ -494,9 +490,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
             </div>
           </div>
 
-          {serverError && (
-            <p className="rounded-lg bg-red-50 px-4 py-3 text-[13px] text-red-600">{serverError}</p>
-          )}
+          {serverError && <p className={FORM_ERROR_CLASS}>{serverError}</p>}
 
           <Form.Submit asChild>
             <PrimaryButton

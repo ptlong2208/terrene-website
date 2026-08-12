@@ -35,7 +35,7 @@ export default function ReviewItem({ review }: ReviewItemProps) {
               width={74}
               height={74}
               unoptimized
-              className="h-[74px] w-[74px] rounded object-cover"
+              className="h-[74px] w-[74px] object-cover"
             />
           ))}
         </div>
