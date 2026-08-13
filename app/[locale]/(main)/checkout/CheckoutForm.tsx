@@ -60,6 +60,7 @@ function readDraftForm(): Partial<DraftForm> | null {
 
 export default function CheckoutForm({ initialDistricts }: Props) {
   const t = useTranslations('checkout');
+  const tField = useTranslations('fieldErrors');
   const mounted = useIsMounted();
   const { items, count } = useCartStore();
   const [form, setForm] = useState<DraftForm>(() => {
@@ -157,9 +158,9 @@ export default function CheckoutForm({ initialDistricts }: Props) {
       const fieldErrors: FieldErrors = {};
       for (const issue of result.error.issues) {
         const field = issue.path[0] as keyof CheckoutCustomer;
-        if (field === 'name') fieldErrors.name = t('errorNameMin');
+        if (field === 'name') fieldErrors.name = tField('nameInvalid');
         else if (field === 'phone') fieldErrors.phone = t('errorPhoneInvalid');
-        else if (field === 'email') fieldErrors.email = t('errorEmailInvalid');
+        else if (field === 'email') fieldErrors.email = tField('emailInvalid');
         else if (field === 'district' || field === 'districtId')
           fieldErrors.district = t('errorDistrictRequired');
         else if (field === 'ward' || field === 'wardCode')
@@ -351,7 +352,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
             <Form.Label className={LABEL_CLASS}>{t('email')}</Form.Label>
             <Form.Control asChild>
               <input
-                type="email"
+                type="text"
                 autoComplete="email"
                 placeholder={t('emailPlaceholder')}
                 value={form.email}

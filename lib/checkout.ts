@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { personEmailSchema, personNameSchema } from '@/lib/validation';
+
 export const SLUG_PATTERN = /^[a-z0-9-]+$/;
 
 export enum CheckoutErrorCode {
@@ -15,9 +17,9 @@ export enum CheckoutErrorCode {
 }
 
 export const checkoutCustomerSchema = z.object({
-  name: z.string().min(2).max(100),
+  name: personNameSchema,
   phone: z.string().regex(/^(0|\+84)\d{8,9}$/),
-  email: z.email().max(254),
+  email: personEmailSchema,
   district: z.string().min(1).max(100),
   districtId: z.number().int().positive(),
   ward: z.string().min(1).max(100),

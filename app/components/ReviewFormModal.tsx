@@ -10,14 +10,14 @@ import { FIELD_CLASS, FORM_ERROR_CLASS, LABEL_CLASS } from '@/app/components/ui/
 import Modal from '@/app/components/ui/Modal';
 import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import StarRating from '@/app/components/ui/StarRating';
-import type { ProductReview } from '@/lib/types';
+import { reviewFieldsSchema } from '@/lib/reviews';
 
 interface ReviewFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   productSlug: string;
   productTitle: string;
-  onSubmitted: (review: ProductReview) => void;
+  onSubmitted: () => void;
 }
 
 interface DraftPhoto {
@@ -25,18 +25,23 @@ interface DraftPhoto {
   previewUrl: string;
 }
 
+type FieldErrors = Partial<Record<'reviewerName' | 'reviewerEmail' | 'comment', string>>;
+
 export default function ReviewFormModal({
   isOpen,
   onClose,
+  productSlug,
   productTitle,
   onSubmitted,
 }: ReviewFormModalProps) {
   const t = useTranslations('reviews');
+  const tField = useTranslations('fieldErrors');
   const [rating, setRating] = useState(0);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [comment, setComment] = useState('');
   const [photos, setPhotos] = useState<DraftPhoto[]>([]);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -47,6 +52,7 @@ export default function ReviewFormModal({
     setComment('');
     photos.forEach((p) => URL.revokeObjectURL(p.previewUrl));
     setPhotos([]);
+    setFieldErrors({});
     setError(null);
   }
 
@@ -75,29 +81,61 @@ export default function ReviewFormModal({
     });
   }
 
+  function validateFields(): boolean {
+    const result = reviewFieldsSchema.safeParse({
+      reviewerName: name,
+      reviewerEmail: email,
+      comment,
+    });
+    if (!result.success) {
+      const nextErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0] as keyof FieldErrors;
+        if (field === 'reviewerName') nextErrors.reviewerName = tField('nameInvalid');
+        else if (field === 'reviewerEmail') nextErrors.reviewerEmail = tField('emailInvalid');
+        else if (field === 'comment') nextErrors.comment = t('errorCommentInvalid');
+      }
+      setFieldErrors(nextErrors);
+      return false;
+    }
+    setFieldErrors({});
+    return true;
+  }
+
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
+    setError(null);
+
     if (rating === 0) {
       setError(t('errorRatingRequired'));
       return;
     }
+    if (!validateFields()) return;
+
     setSubmitting(true);
-    setError(null);
 
-    // TEMP: chưa nối API thật (chờ Supabase) — mock ngay 1 review mới lên UI.
-    // Revert: gọi POST /api/reviews với { productSlug, name, email, rating, comment, photos }.
-    await new Promise((resolve) => setTimeout(resolve, 400));
-    onSubmitted({
-      id: crypto.randomUUID(),
-      reviewerName: name,
-      rating,
-      comment,
-      photos: photos.map((p) => p.previewUrl),
-      createdAt: new Date().toISOString(),
-    });
+    const body = new FormData();
+    body.set('productSlug', productSlug);
+    body.set('rating', String(rating));
+    body.set('reviewerName', name);
+    body.set('reviewerEmail', email);
+    body.set('comment', comment);
+    photos.forEach((p) => body.append('photos', p.file));
 
-    setSubmitting(false);
-    handleClose();
+    try {
+      const res = await fetch('/api/reviews', { method: 'POST', body });
+      if (!res.ok) {
+        setError(t('errorSubmitFailed'));
+        setSubmitting(false);
+        return;
+      }
+      onSubmitted();
+      handleClose();
+    } catch {
+      setError(t('errorSubmitFailed'));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -120,46 +158,79 @@ export default function ReviewFormModal({
           <StarRating value={rating} onChange={setRating} size={28} label={t('rating')} />
         </div>
 
-        <Form.Field name="name" className="flex flex-col gap-1.75">
+        <Form.Field
+          name="name"
+          serverInvalid={!!fieldErrors.reviewerName}
+          className="flex flex-col gap-1.75"
+        >
           <Form.Label className={LABEL_CLASS}>{t('yourName')}</Form.Label>
           <Form.Control asChild>
             <input
               type="text"
-              required
+              autoComplete="name"
               placeholder={t('yourNamePlaceholder')}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, reviewerName: undefined }));
+              }}
               className={FIELD_CLASS}
             />
           </Form.Control>
+          {fieldErrors.reviewerName && (
+            <Form.Message className="text-[12px] text-red-500">
+              {fieldErrors.reviewerName}
+            </Form.Message>
+          )}
         </Form.Field>
 
-        <Form.Field name="email" className="flex flex-col gap-1.75">
+        <Form.Field
+          name="email"
+          serverInvalid={!!fieldErrors.reviewerEmail}
+          className="flex flex-col gap-1.75"
+        >
           <Form.Label className={LABEL_CLASS}>{t('email')}</Form.Label>
           <Form.Control asChild>
             <input
-              type="email"
-              required
+              type="text"
+              autoComplete="email"
               placeholder={t('emailPlaceholder')}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, reviewerEmail: undefined }));
+              }}
               className={FIELD_CLASS}
             />
           </Form.Control>
+          {fieldErrors.reviewerEmail && (
+            <Form.Message className="text-[12px] text-red-500">
+              {fieldErrors.reviewerEmail}
+            </Form.Message>
+          )}
         </Form.Field>
 
-        <Form.Field name="comment" className="flex flex-col gap-1.75">
+        <Form.Field
+          name="comment"
+          serverInvalid={!!fieldErrors.comment}
+          className="flex flex-col gap-1.75"
+        >
           <Form.Label className={LABEL_CLASS}>{t('comment')}</Form.Label>
           <Form.Control asChild>
             <textarea
               rows={4}
-              required
               placeholder={t('commentPlaceholder')}
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              onChange={(e) => {
+                setComment(e.target.value);
+                setFieldErrors((prev) => ({ ...prev, comment: undefined }));
+              }}
               className={`${FIELD_CLASS} resize-none`}
             />
           </Form.Control>
+          {fieldErrors.comment && (
+            <Form.Message className="text-[12px] text-red-500">{fieldErrors.comment}</Form.Message>
+          )}
         </Form.Field>
 
         <div className="flex flex-col gap-1.75">

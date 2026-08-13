@@ -21,6 +21,10 @@
     "networkError": "接続エラーです。もう一度お試しください。",
     "subscribeSuccess": "ご登録ありがとうございます！"
   },
+  "fieldErrors": {
+    "nameInvalid": "お名前は2〜100文字で入力してください",
+    "emailInvalid": "有効なメールアドレスを入力してください"
+  },
   "comingSoon": {
     "seoTitle": "Terrene — もうすぐオープン",
     "seoDescription": "素敵なものが育っています。ウェイトリストに登録して、いち早くお知らせを受け取りましょう。"
@@ -83,9 +87,7 @@
     "emptyCart": "カートに商品がありません。",
     "backToShop": "ショップに戻る",
     "backToForm": "注文情報に戻る",
-    "errorNameMin": "お名前は2文字以上で入力してください",
     "errorPhoneInvalid": "電話番号の形式が正しくありません",
-    "errorEmailInvalid": "有効なメールアドレスを入力してください",
     "total": "合計",
     "successTitle": "ご注文が確定しました",
     "successMessage": "ご注文ありがとうございます。丁寧に準備してお届けします。近日中にご連絡いたします。",

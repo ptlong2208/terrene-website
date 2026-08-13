@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import ReviewFormModal from '@/app/components/ReviewFormModal';
 import ReviewItem from '@/app/components/ReviewItem';
@@ -16,73 +16,60 @@ interface ReviewsSectionProps {
   productTitle: string;
 }
 
-// TEMP: mock data cho tới khi nối Supabase — thay bằng fetch GET /api/reviews?slug=... khi có API thật.
-const MOCK_REVIEWS: ProductReview[] = [
-  {
-    id: '1',
-    reviewerName: 'Linh Trần',
-    rating: 5,
-    comment: 'Matcha thơm, vị thanh và umami rõ. Pha latte cực hợp, đóng gói đẹp. Sẽ ủng hộ tiếp!',
-    createdAt: '2026-07-20',
-  },
-  {
-    id: '2',
-    reviewerName: 'Minh Phạm',
-    rating: 4,
-    comment: 'Chất lượng tốt so với giá, vị cân bằng dễ uống mỗi ngày. Giao hàng nhanh.',
-    createdAt: '2026-07-12',
-  },
-  {
-    id: '3',
-    reviewerName: 'Hà Nguyễn',
-    rating: 5,
-    comment: 'Freeship nội thành rất tiện. Bột mịn, màu xanh đẹp, đánh lên bọt nhanh.',
-    createdAt: '2026-06-30',
-  },
-  {
-    id: '4',
-    reviewerName: 'Quốc Bảo',
-    rating: 4,
-    comment: 'Vị hơi nhạt hơn mình mong đợi nhưng đóng gói kỹ, giao đúng hẹn.',
-    createdAt: '2026-06-18',
-  },
-  {
-    id: '5',
-    reviewerName: 'Thảo Vy',
-    rating: 5,
-    comment: 'Pha usucha ngon, bọt mịn lên nhanh. Sẽ mua lại chắc chắn.',
-    createdAt: '2026-06-05',
-  },
-  {
-    id: '6',
-    reviewerName: 'Đức Anh',
-    rating: 3,
-    comment: 'Ổn trong tầm giá, nhưng mình thích vị đậm hơn nên chưa quá ấn tượng.',
-    createdAt: '2026-05-22',
-  },
-  {
-    id: '7',
-    reviewerName: 'Ngọc Mai',
-    rating: 5,
-    comment: 'Đây là lần thứ 3 mình mua rồi, chất lượng ổn định, nhân viên tư vấn nhiệt tình.',
-    createdAt: '2026-05-10',
-  },
-];
+interface ReviewsResponse {
+  reviews: ProductReview[];
+  total: number;
+  averageRating: number;
+}
 
 const PAGE_SIZE = 5;
 
+async function fetchReviews(slug: string, offset: number): Promise<ReviewsResponse | null> {
+  try {
+    const res = await fetch(
+      `/api/reviews?slug=${encodeURIComponent(slug)}&offset=${offset}&limit=${PAGE_SIZE}`
+    );
+    if (!res.ok) return null;
+    return (await res.json()) as ReviewsResponse;
+  } catch {
+    return null;
+  }
+}
+
 export default function ReviewsSection({ productSlug, productTitle }: ReviewsSectionProps) {
   const t = useTranslations('reviews');
-  const [reviews, setReviews] = useState<ProductReview[]>(MOCK_REVIEWS);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [reviews, setReviews] = useState<ProductReview[]>([]);
+  const [total, setTotal] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const average = reviews.length
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
-    : 0;
+  useEffect(() => {
+    let cancelled = false;
+    void fetchReviews(productSlug, 0).then((data) => {
+      if (cancelled) return;
+      setReviews(data?.reviews ?? []);
+      setTotal(data?.total ?? 0);
+      setAverageRating(data?.averageRating ?? 0);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [productSlug]);
 
-  function handleSubmitted(review: ProductReview) {
-    setReviews((prev) => [review, ...prev]);
+  async function handleLoadMore() {
+    setLoadingMore(true);
+    const data = await fetchReviews(productSlug, reviews.length);
+    if (data) setReviews((prev) => [...prev, ...data.reviews]);
+    setLoadingMore(false);
+  }
+
+  function handleSubmitted() {
+    setModalOpen(false);
+    setSubmitted(true);
   }
 
   return (
@@ -92,15 +79,15 @@ export default function ReviewsSection({ productSlug, productTitle }: ReviewsSec
           <h2 className="text-[clamp(20px,2vw,26px)] font-semibold tracking-[-0.02em] text-(--green-deep)">
             {t('title')}
           </h2>
-          {reviews.length > 0 ? (
+          {!loading && total > 0 ? (
             <div className="mt-2 flex items-center gap-2.5">
-              <StarRating value={average} size={15} label={t('title')} />
+              <StarRating value={averageRating} size={15} label={t('title')} />
               <span className="text-ink-soft text-[13px]">
-                {average.toFixed(1)} · {t('count', { count: reviews.length })}
+                {averageRating.toFixed(1)} · {t('count', { count: total })}
               </span>
             </div>
           ) : (
-            <p className="text-ink-soft mt-2 text-[13px]">{t('empty')}</p>
+            !loading && <p className="text-ink-soft mt-2 text-[13px]">{t('empty')}</p>
           )}
         </div>
         <PrimaryButton
@@ -113,20 +100,27 @@ export default function ReviewsSection({ productSlug, productTitle }: ReviewsSec
         </PrimaryButton>
       </div>
 
+      {submitted && (
+        <p className="mb-5 bg-[#E2E892]/25 px-4 py-3 text-[13px] text-(--green-deep)">
+          {t('submittedPending')}
+        </p>
+      )}
+
       <div className="flex flex-col">
-        {reviews.slice(0, visibleCount).map((review) => (
+        {reviews.map((review) => (
           <ReviewItem key={review.id} review={review} />
         ))}
       </div>
 
-      {visibleCount < reviews.length && (
+      {reviews.length < total && (
         <div className="mt-5 flex justify-center">
           <button
             type="button"
-            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-            className="group inline-flex cursor-pointer items-center border-b border-current pb-0.75 text-[14px] font-semibold text-(--green-deep)"
+            onClick={() => void handleLoadMore()}
+            disabled={loadingMore}
+            className="group inline-flex cursor-pointer items-center border-b border-current pb-0.75 text-[14px] font-semibold text-(--green-deep) disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <SlotText text={t('loadMore')} />
+            <SlotText text={loadingMore ? t('loading') : t('loadMore')} />
           </button>
         </div>
       )}

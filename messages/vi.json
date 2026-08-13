@@ -21,6 +21,10 @@
     "networkError": "Lỗi kết nối. Vui lòng thử lại.",
     "subscribeSuccess": "Cảm ơn bạn đã đăng ký!"
   },
+  "fieldErrors": {
+    "nameInvalid": "Tên phải có 2-100 ký tự",
+    "emailInvalid": "Email không hợp lệ"
+  },
   "comingSoon": {
     "seoTitle": "Terrene — Sắp Ra Mắt",
     "seoDescription": "Điều gì đó tuyệt vời đang được ươm mầm. Đăng ký để nhận thông báo sớm nhất."
@@ -83,9 +87,7 @@
     "emptyCart": "Giỏ hàng của bạn đang trống.",
     "backToShop": "Quay lại cửa hàng",
     "backToForm": "Quay lại thông tin đơn hàng",
-    "errorNameMin": "Họ và tên phải có ít nhất 2 ký tự",
     "errorPhoneInvalid": "Số điện thoại không hợp lệ (VD: 0901 234 567)",
-    "errorEmailInvalid": "Email không hợp lệ",
     "errorDistrictRequired": "Vui lòng chọn quận/huyện từ danh sách",
     "errorWardRequired": "Vui lòng chọn phường/xã từ danh sách",
     "errorStreetMin": "Vui lòng nhập số nhà và tên đường (tối thiểu 5 ký tự)",
@@ -127,6 +129,8 @@
     "empty": "Chưa có đánh giá nào. Hãy là người đầu tiên!",
     "writeReview": "Viết đánh giá",
     "loadMore": "Xem thêm đánh giá",
+    "loading": "Đang tải...",
+    "submittedPending": "Cảm ơn bạn! Đánh giá của bạn đang chờ duyệt trước khi hiển thị.",
     "forProduct": "Sản phẩm:",
     "rating": "Số sao",
     "yourName": "Tên của bạn",
@@ -141,7 +145,9 @@
     "removePhoto": "Xoá ảnh",
     "submit": "Gửi đánh giá",
     "submitting": "Đang gửi...",
-    "errorRatingRequired": "Vui lòng chọn số sao"
+    "errorRatingRequired": "Vui lòng chọn số sao",
+    "errorCommentInvalid": "Cảm nhận phải có ít nhất 10 ký tự",
+    "errorSubmitFailed": "Không thể gửi đánh giá. Vui lòng thử lại."
   },
   "partners": {
     "visit": "Ghé thăm"
