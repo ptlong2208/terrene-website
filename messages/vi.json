@@ -147,6 +147,9 @@
     "submitting": "Đang gửi...",
     "errorRatingRequired": "Vui lòng chọn số sao",
     "errorCommentInvalid": "Cảm nhận phải có ít nhất 10 ký tự",
+    "errorContentFlagged": "Nội dung hoặc hình ảnh không phù hợp. Vui lòng kiểm tra lại.",
+    "errorCommentFlagged": "Cảm nhận có nội dung không phù hợp, vui lòng chỉnh sửa lại",
+    "errorPhotoFlagged": "Ảnh viền đỏ có nội dung không phù hợp, vui lòng xoá trước khi gửi lại",
     "errorSubmitFailed": "Không thể gửi đánh giá. Vui lòng thử lại."
   },
   "partners": {

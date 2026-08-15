@@ -6,8 +6,10 @@ import { type NextRequest } from 'next/server';
 import { SLUG_PATTERN } from '@/lib/checkout';
 import { checkOrigin, errResponse, makeRatelimit } from '@/lib/checkoutHelpers';
 import logger from '@/lib/logger';
+import { isImageFlagged, isTextFlagged } from '@/lib/moderation';
+import { containsVietnameseProfanity } from '@/lib/profanityFilter';
 import { reviewSubmitSchema } from '@/lib/reviews';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabasePublic } from '@/lib/supabase';
 
 const log = logger.child({ module: 'reviews' });
 
@@ -37,7 +39,7 @@ export async function GET(req: NextRequest) {
   );
 
   try {
-    const supabase = supabaseAdmin();
+    const supabase = supabasePublic();
 
     const [page, allRatings] = await Promise.all([
       supabase
@@ -112,7 +114,24 @@ export async function POST(req: NextRequest) {
     .slice(0, MAX_PHOTOS);
 
   try {
-    const supabase = supabaseAdmin();
+    const [openAiFlagged, photoFlags] = await Promise.all([
+      isTextFlagged(comment),
+      Promise.all(photoFiles.map((file) => isImageFlagged(file))),
+    ]);
+    const textFlagged = openAiFlagged || containsVietnameseProfanity(comment);
+    if (textFlagged || photoFlags.some(Boolean)) {
+      log.warn({ productSlug }, 'Review content flagged by moderation, rejected');
+      return Response.json(
+        {
+          error: 'content_flagged',
+          textFlagged,
+          flaggedPhotoIndexes: photoFlags.flatMap((flagged, i) => (flagged ? [i] : [])),
+        },
+        { status: 400 }
+      );
+    }
+
+    const supabase = supabasePublic();
     const photoUrls: string[] = [];
 
     for (const file of photoFiles) {

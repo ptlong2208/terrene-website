@@ -147,6 +147,9 @@
     "submitting": "Submitting...",
     "errorRatingRequired": "Please select a rating",
     "errorCommentInvalid": "Review must be at least 10 characters",
+    "errorContentFlagged": "This content or image isn't allowed. Please review and try again.",
+    "errorCommentFlagged": "Your review text isn't allowed, please edit it",
+    "errorPhotoFlagged": "The photo outlined in red isn't allowed, please remove it before resubmitting",
     "errorSubmitFailed": "Couldn't submit your review. Please try again."
   },
   "partners": {

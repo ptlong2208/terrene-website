@@ -41,6 +41,7 @@ export default function ReviewFormModal({
   const [email, setEmail] = useState('');
   const [comment, setComment] = useState('');
   const [photos, setPhotos] = useState<DraftPhoto[]>([]);
+  const [flaggedPhotoIndexes, setFlaggedPhotoIndexes] = useState<number[]>([]);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -52,6 +53,7 @@ export default function ReviewFormModal({
     setComment('');
     photos.forEach((p) => URL.revokeObjectURL(p.previewUrl));
     setPhotos([]);
+    setFlaggedPhotoIndexes([]);
     setFieldErrors({});
     setError(null);
   }
@@ -79,6 +81,9 @@ export default function ReviewFormModal({
       URL.revokeObjectURL(prev[index].previewUrl);
       return prev.filter((_, i) => i !== index);
     });
+    setFlaggedPhotoIndexes((prev) =>
+      prev.filter((i) => i !== index).map((i) => (i > index ? i - 1 : i))
+    );
   }
 
   function validateFields(): boolean {
@@ -102,9 +107,33 @@ export default function ReviewFormModal({
     return true;
   }
 
+  function applySubmitError(
+    data: {
+      error?: string;
+      textFlagged?: boolean;
+      flaggedPhotoIndexes?: number[];
+    } | null
+  ) {
+    if (data?.error !== 'content_flagged') {
+      setError(t('errorSubmitFailed'));
+      return;
+    }
+    const flaggedPhotos = data.flaggedPhotoIndexes ?? [];
+    if (data.textFlagged) {
+      setFieldErrors((prev) => ({ ...prev, comment: t('errorCommentFlagged') }));
+    }
+    if (flaggedPhotos.length > 0) {
+      setFlaggedPhotoIndexes(flaggedPhotos);
+    }
+    if (!data.textFlagged && flaggedPhotos.length === 0) {
+      setError(t('errorContentFlagged'));
+    }
+  }
+
   async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setError(null);
+    setFlaggedPhotoIndexes([]);
 
     if (rating === 0) {
       setError(t('errorRatingRequired'));
@@ -125,7 +154,12 @@ export default function ReviewFormModal({
     try {
       const res = await fetch('/api/reviews', { method: 'POST', body });
       if (!res.ok) {
-        setError(t('errorSubmitFailed'));
+        const data = (await res.json().catch(() => null)) as {
+          error?: string;
+          textFlagged?: boolean;
+          flaggedPhotoIndexes?: number[];
+        } | null;
+        applySubmitError(data);
         setSubmitting(false);
         return;
       }
@@ -257,7 +291,9 @@ export default function ReviewFormModal({
                     width={60}
                     height={60}
                     unoptimized
-                    className="h-15 w-15 object-cover"
+                    className={`h-15 w-15 object-cover ${
+                      flaggedPhotoIndexes.includes(i) ? 'ring-2 ring-red-500' : ''
+                    }`}
                   />
                   <button
                     type="button"
@@ -270,6 +306,9 @@ export default function ReviewFormModal({
                 </div>
               ))}
             </div>
+          )}
+          {flaggedPhotoIndexes.length > 0 && (
+            <p className="text-[12px] text-red-500">{t('errorPhotoFlagged')}</p>
           )}
         </div>
 
