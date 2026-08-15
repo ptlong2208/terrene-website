@@ -3,6 +3,7 @@ import { type Ratelimit } from '@upstash/ratelimit';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { type NextRequest } from 'next/server';
 
+import { sendPaymentFailureAlert } from '@/lib/alert';
 import { makeRatelimit } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
@@ -112,6 +113,18 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     log.error({ err, orderCode: data.orderCode }, 'Haravan order update to paid failed');
     Sentry.captureException(err, { tags: { orderCode: data.orderCode } });
+    try {
+      await sendPaymentFailureAlert({
+        orderCode: data.orderCode,
+        haravanOrderId: order.haravanOrderId,
+        customer: order.customer,
+        amount: order.amount,
+        error: err,
+      });
+    } catch (alertErr) {
+      log.error({ alertErr, orderCode: data.orderCode }, 'Failed to send payment failure alert');
+      Sentry.captureException(alertErr, { tags: { orderCode: data.orderCode, alertFailed: true } });
+    }
     // Return 500 so PayOS retries
     return Response.json({ error: 'Order update failed.' }, { status: 500 });
   }
