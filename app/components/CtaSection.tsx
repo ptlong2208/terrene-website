@@ -1,5 +1,3 @@
-'use client';
-
 import CtaPhysics from '@/app/components/CtaPhysics';
 import CtaLink from '@/app/components/ui/CtaLink';
 import Section from '@/app/components/ui/Section';
