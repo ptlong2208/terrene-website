@@ -74,7 +74,11 @@ export async function createHaravanOrder(
         shipping_address: {
           first_name: customer.name,
           phone: phone,
-          address1: customer.street,
+          // Haravan's city/province/district/ward fields silently drop values that don't
+          // match its own internal geo database, so fold the full address into address1
+          // (free text, always saved) — staff read this directly when creating the GHTK
+          // shipment manually.
+          address1: `${customer.street}, ${customer.ward}, ${customer.province}`,
           city: customer.ward,
           province: customer.province,
           country: 'Việt Nam',
