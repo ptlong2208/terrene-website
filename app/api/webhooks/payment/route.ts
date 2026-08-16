@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
 import { type Ratelimit } from '@upstash/ratelimit';
-import { createHmac, timingSafeEqual } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { sendPaymentFailureAlert } from '@/lib/alert';
@@ -8,6 +7,7 @@ import { makeRatelimit } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
+import { type PayOSWebhookData, verifySignature } from '@/lib/payos';
 
 const log = logger.child({ module: 'webhook/payment' });
 
@@ -17,44 +17,12 @@ function getRatelimit() {
   return _ratelimit;
 }
 
-interface PayOSWebhookData {
-  orderCode: number;
-  amount: number;
-  description: string;
-  accountNumber: string;
-  reference: string;
-  transactionDateTime: string;
-  currency: string;
-  paymentLinkId: string;
-  code: string;
-  desc: string;
-  counterAccountBankId?: string;
-  counterAccountBankName?: string;
-  counterAccountName?: string;
-  counterAccountNumber?: string;
-  virtualAccountName?: string;
-  virtualAccountNumber?: string;
-}
-
 interface PayOSWebhookBody {
   code: string;
   desc: string;
   success: boolean;
   data: PayOSWebhookData;
   signature: string;
-}
-
-function verifySignature(data: PayOSWebhookData, signature: string, checksumKey: string): boolean {
-  // Sort ALL data fields alphabetically and format as key=value pairs
-  const sorted = Object.keys(data)
-    .sort((a, b) => a.localeCompare(b))
-    .map((k) => `${k}=${data[k as keyof PayOSWebhookData] ?? ''}`)
-    .join('&');
-
-  const expected = createHmac('sha256', checksumKey).update(sorted).digest();
-  const received = Buffer.from(signature, 'hex');
-  if (expected.length !== received.length) return false;
-  return timingSafeEqual(expected, received);
 }
 
 export async function POST(req: NextRequest) {

@@ -18,7 +18,7 @@ export enum CheckoutErrorCode {
 
 export const checkoutCustomerSchema = z.object({
   name: personNameSchema,
-  phone: z.string().regex(/^(0|\+84)\d{8,9}$/),
+  phone: z.string().regex(/^(0|\+84)\d{9}$/),
   email: personEmailSchema,
   district: z.string().min(1).max(100),
   districtId: z.number().int().positive(),
