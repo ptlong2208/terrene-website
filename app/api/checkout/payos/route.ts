@@ -130,6 +130,7 @@ export async function POST(req: NextRequest) {
       amount,
       expiresAt: expiredAt * 1000,
       haravanOrderId,
+      orderName,
     }),
     saveSuccessToken(successToken, SESSION_MINUTES * 60 + SUCCESS_TOKEN_BUFFER_SECONDS),
   ]);

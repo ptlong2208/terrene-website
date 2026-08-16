@@ -85,6 +85,7 @@ export async function POST(req: NextRequest) {
       await sendPaymentFailureAlert({
         orderCode: data.orderCode,
         haravanOrderId: order.haravanOrderId,
+        orderName: order.orderName,
         customer: order.customer,
         amount: order.amount,
         error: err,

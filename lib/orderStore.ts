@@ -16,6 +16,7 @@ export interface PendingOrder {
   amount: number;
   expiresAt: number; // ms
   haravanOrderId: number;
+  orderName: string;
 }
 
 let _redis: Redis | null = null;

@@ -7,6 +7,7 @@ const log = logger.child({ module: 'alert' });
 interface SendPaymentFailureAlertParams {
   orderCode: number;
   haravanOrderId: number;
+  orderName: string;
   customer: CheckoutCustomer;
   amount: number;
   error: unknown;
