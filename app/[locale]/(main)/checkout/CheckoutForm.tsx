@@ -11,33 +11,45 @@ import Combobox, { type ComboboxItem } from '@/app/components/ui/Combobox';
 import CtaLink from '@/app/components/ui/CtaLink';
 import { FIELD_CLASS, FORM_ERROR_CLASS, LABEL_CLASS } from '@/app/components/ui/formStyles';
 import Modal from '@/app/components/ui/Modal';
+import OptionCards from '@/app/components/ui/OptionCards';
 import PrimaryButton from '@/app/components/ui/PrimaryButton';
 import Section from '@/app/components/ui/Section';
 import SlotText from '@/app/components/ui/SlotText';
 import { useIsMounted } from '@/app/hooks/useIsMounted';
 import { useCartStore } from '@/app/store/cartStore';
-import { type CheckoutCustomer, checkoutCustomerSchema, CheckoutErrorCode } from '@/lib/checkout';
+import {
+  type CheckoutCustomer,
+  checkoutCustomerSchema,
+  CheckoutErrorCode,
+  type ShippingMethod,
+} from '@/lib/checkout';
+import { isExpressEligible } from '@/lib/oldSaigonWards';
 import { formatPrice } from '@/lib/utils';
 
 import CheckoutOrderSummary from './CheckoutOrderSummary';
 
 interface Props {
-  initialDistricts: ComboboxItem[];
+  initialProvinces: ComboboxItem[];
 }
 
-type DraftForm = CheckoutCustomer & { paymentMethod: 'payos' | 'cod' };
+type DraftForm = CheckoutCustomer & {
+  provinceCode: string;
+  paymentMethod: 'payos' | 'cod';
+  shippingMethod: ShippingMethod;
+};
 type FieldErrors = Partial<Record<keyof CheckoutCustomer, string>>;
 
 const EMPTY_FORM: DraftForm = {
   name: '',
   phone: '',
   email: '',
-  district: '',
-  districtId: 0,
+  province: '',
+  provinceCode: '',
   ward: '',
   wardCode: '',
   street: '',
   paymentMethod: 'payos',
+  shippingMethod: 'standard',
 };
 
 const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
@@ -46,6 +58,7 @@ const ERROR_KEY_MAP: Partial<Record<CheckoutErrorCode, string>> = {
   [CheckoutErrorCode.PaymentUnavailable]: 'errorPaymentUnavailable',
   [CheckoutErrorCode.OrderTooHeavy]: 'errorOrderTooHeavy',
   [CheckoutErrorCode.PriceChanged]: 'errorPriceChanged',
+  [CheckoutErrorCode.ExpressNotAvailable]: 'errorExpressNotAvailable',
 };
 
 function readDraftForm(): Partial<DraftForm> | null {
@@ -58,7 +71,7 @@ function readDraftForm(): Partial<DraftForm> | null {
   }
 }
 
-export default function CheckoutForm({ initialDistricts }: Props) {
+export default function CheckoutForm({ initialProvinces }: Props) {
   const t = useTranslations('checkout');
   const tField = useTranslations('fieldErrors');
   const mounted = useIsMounted();
@@ -70,6 +83,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
           ...EMPTY_FORM,
           ...parsed,
           paymentMethod: parsed.paymentMethod === 'cod' ? 'cod' : 'payos',
+          shippingMethod: parsed.shippingMethod === 'express' ? 'express' : 'standard',
         }
       : EMPTY_FORM;
   });
@@ -81,11 +95,16 @@ export default function CheckoutForm({ initialDistricts }: Props) {
   const [shippingFee, setShippingFee] = useState<number | null>(null);
   const [shippingLoading, setShippingLoading] = useState(() => {
     const d = readDraftForm();
-    return Boolean(d?.districtId && d?.wardCode);
+    return Boolean(d?.provinceCode && d?.wardCode);
   });
   const [wards, setWards] = useState<ComboboxItem[]>([]);
-  const [wardsLoading, setWardsLoading] = useState(() => Boolean(readDraftForm()?.districtId));
+  const [wardsLoading, setWardsLoading] = useState(() => Boolean(readDraftForm()?.provinceCode));
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const expressEligible = isExpressEligible(form.wardCode, subtotal);
+  // Falls back to standard if the user had picked express but it's no longer eligible
+  // (e.g. they changed the ward) — derived at render time, not stored as separate state.
+  const effectiveShippingMethod =
+    form.shippingMethod === 'express' && !expressEligible ? 'standard' : form.shippingMethod;
 
   useEffect(() => {
     if (items.length === 0) return;
@@ -108,27 +127,35 @@ export default function CheckoutForm({ initialDistricts }: Props) {
   }, [form]);
 
   useEffect(() => {
-    if (!form.districtId) return;
-    void fetch(`/api/ghn/wards?districtId=${form.districtId}`)
+    if (!form.provinceCode) return;
+    void fetch(`/api/address/wards?provinceCode=${form.provinceCode}`)
       .then((r) => r.json())
       .then((data: Array<{ code: string; name: string }>) =>
         setWards(data.map((w) => ({ id: w.code, name: w.name })))
       )
       .catch(() => setWards([]))
       .finally(() => setWardsLoading(false));
-  }, [form.districtId]);
+  }, [form.provinceCode]);
 
   useEffect(() => {
-    if (!form.districtId || !form.wardCode) return;
+    if (!form.province || !form.wardCode) return;
     const timer = setTimeout(() => {
-      void fetch(
-        `/api/shipping/fee?districtId=${form.districtId}&wardCode=${encodeURIComponent(form.wardCode)}&weight=${items.reduce((sum, i) => sum + i.quantity * i.weightGrams, 0)}`
-      )
+      const params = new URLSearchParams({
+        province: form.province,
+        ward: form.ward,
+        wardCode: form.wardCode,
+        weight: String(items.reduce((sum, i) => sum + i.quantity * i.weightGrams, 0)),
+        subtotal: String(subtotal),
+        method: effectiveShippingMethod,
+      });
+      void fetch(`/api/shipping/fee?${params.toString()}`)
         .then(async (r) => {
           const data = (await r.json()) as { fee?: number; error?: string; limit?: string };
           if (!r.ok) {
             if (data.error === CheckoutErrorCode.OrderTooHeavy) {
               setServerError(t('errorOrderTooHeavy', { limit: data.limit ?? '' }));
+            } else if (data.error === CheckoutErrorCode.ExpressNotAvailable) {
+              setServerError(t('errorExpressNotAvailable'));
             }
             setShippingFee(null);
             return;
@@ -140,7 +167,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
         .finally(() => setShippingLoading(false));
     }, 400);
     return () => clearTimeout(timer);
-  }, [form.districtId, form.wardCode, items, t]);
+  }, [form.province, form.ward, form.wardCode, effectiveShippingMethod, items, subtotal, t]);
 
   if (!mounted) return null;
 
@@ -161,8 +188,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
         if (field === 'name') fieldErrors.name = tField('nameInvalid');
         else if (field === 'phone') fieldErrors.phone = t('errorPhoneInvalid');
         else if (field === 'email') fieldErrors.email = tField('emailInvalid');
-        else if (field === 'district' || field === 'districtId')
-          fieldErrors.district = t('errorDistrictRequired');
+        else if (field === 'province') fieldErrors.province = t('errorProvinceRequired');
         else if (field === 'ward' || field === 'wardCode')
           fieldErrors.ward = t('errorWardRequired');
         else if (field === 'street') fieldErrors.street = t('errorStreetMin');
@@ -196,7 +222,12 @@ export default function CheckoutForm({ initialDistricts }: Props) {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ customer, items, shippingFee }),
+        body: JSON.stringify({
+          customer,
+          items,
+          shippingFee,
+          shippingMethod: effectiveShippingMethod,
+        }),
       });
 
       if (!res.ok) {
@@ -367,42 +398,39 @@ export default function CheckoutForm({ initialDistricts }: Props) {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Form.Field
-              name="district"
-              serverInvalid={!!errors.district}
+              name="province"
+              serverInvalid={!!errors.province}
               className="flex flex-col gap-1.5"
             >
-              <div className="flex items-baseline gap-2">
-                <Form.Label className={LABEL_CLASS}>{t('district')}</Form.Label>
-                <span className="text-[11px] text-(--green-deep) opacity-50">{t('wardNote')}</span>
-              </div>
+              <Form.Label className={LABEL_CLASS}>{t('province')}</Form.Label>
               <Combobox
-                items={initialDistricts}
-                value={form.district}
+                items={initialProvinces}
+                value={form.province}
                 onSelect={(item) => {
-                  const newDistrictId = item.id as number;
-                  const districtChanged = newDistrictId !== form.districtId;
+                  const newProvinceCode = String(item.id);
+                  const provinceChanged = newProvinceCode !== form.provinceCode;
                   setForm((prev) => ({
                     ...prev,
-                    district: item.name,
-                    districtId: newDistrictId,
+                    province: item.name,
+                    provinceCode: newProvinceCode,
                     ward: '',
                     wardCode: '',
                   }));
-                  if (districtChanged) {
+                  if (provinceChanged) {
                     setWards([]);
                     setWardsLoading(true);
                   }
                   setShippingFee(null);
                   setShippingLoading(false);
-                  setErrors((prev) => ({ ...prev, district: undefined, ward: undefined }));
+                  setErrors((prev) => ({ ...prev, province: undefined, ward: undefined }));
                 }}
-                error={errors.district}
-                placeholder={t('districtPlaceholder')}
-                emptyText={t('districtEmpty')}
-                inputClassName={`${FIELD_CLASS}${errors.district ? ' aria-invalid' : ''}`}
+                error={errors.province}
+                placeholder={t('provincePlaceholder')}
+                emptyText={t('provinceEmpty')}
+                inputClassName={`${FIELD_CLASS}${errors.province ? ' aria-invalid' : ''}`}
               />
-              {errors.district && (
-                <Form.Message className="text-[12px] text-red-500">{errors.district}</Form.Message>
+              {errors.province && (
+                <Form.Message className="text-[12px] text-red-500">{errors.province}</Form.Message>
               )}
             </Form.Field>
 
@@ -417,7 +445,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
                   setForm((prev) => ({ ...prev, ward: item.name, wardCode: newWardCode }));
                   setErrors((prev) => ({ ...prev, ward: undefined }));
                 }}
-                disabled={!form.districtId}
+                disabled={!form.provinceCode}
                 loading={wardsLoading}
                 error={errors.ward}
                 placeholder={t('wardPlaceholder')}
@@ -464,32 +492,39 @@ export default function CheckoutForm({ initialDistricts }: Props) {
             </Form.Control>
           </Form.Field>
 
+          {/* Shipping method */}
+          <OptionCards
+            label={t('shippingMethod')}
+            value={form.shippingMethod}
+            onChange={(value) => {
+              if (value !== form.shippingMethod) setShippingLoading(true);
+              setForm((prev) => ({ ...prev, shippingMethod: value }));
+            }}
+            options={[
+              {
+                value: 'standard',
+                label: t('shippingStandard'),
+                desc: t('shippingStandardDesc'),
+              },
+              {
+                value: 'express',
+                label: t('shippingExpress'),
+                desc: t('shippingExpressDesc'),
+                disabled: !expressEligible,
+              },
+            ]}
+          />
+
           {/* Payment method */}
-          <div className="flex flex-col gap-2">
-            <span className={LABEL_CLASS}>{t('paymentMethod')}</span>
-            <div className="grid grid-cols-2 gap-2">
-              {(
-                [
-                  { value: 'payos', label: t('paymentOnline'), desc: t('paymentOnlineDesc') },
-                  { value: 'cod', label: t('paymentCod'), desc: t('paymentCodDesc') },
-                ] as const
-              ).map(({ value, label, desc }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setForm((prev) => ({ ...prev, paymentMethod: value }))}
-                  className={`flex cursor-pointer flex-col gap-0.5 border px-4 py-3 text-left transition-colors duration-150 ${
-                    form.paymentMethod === value
-                      ? 'border-(--green-deep) bg-(--green-deep)/5'
-                      : 'border-(--green-deep)/20 hover:border-(--green-deep)/40'
-                  }`}
-                >
-                  <span className="text-[13px] font-semibold text-(--green-deep)">{label}</span>
-                  <span className="text-[11px] text-(--green-deep) opacity-50">{desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <OptionCards
+            label={t('paymentMethod')}
+            value={form.paymentMethod}
+            onChange={(value) => setForm((prev) => ({ ...prev, paymentMethod: value }))}
+            options={[
+              { value: 'payos', label: t('paymentOnline'), desc: t('paymentOnlineDesc') },
+              { value: 'cod', label: t('paymentCod'), desc: t('paymentCodDesc') },
+            ]}
+          />
 
           {serverError && <p className={FORM_ERROR_CLASS}>{serverError}</p>}
 
@@ -534,7 +569,7 @@ export default function CheckoutForm({ initialDistricts }: Props) {
             <span className="font-semibold">{confirmedCustomer.name}</span>
             <span className="opacity-60">{confirmedCustomer.phone}</span>
             <span className="opacity-60">
-              {confirmedCustomer.street}, {confirmedCustomer.ward}, {confirmedCustomer.district}
+              {confirmedCustomer.street}, {confirmedCustomer.ward}, {confirmedCustomer.province}
             </span>
           </div>
         )}

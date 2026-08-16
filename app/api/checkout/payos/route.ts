@@ -29,7 +29,7 @@ function signPayload(data: Record<string, string | number>, checksumKey: string)
 export async function POST(req: NextRequest) {
   const validated = await validateCheckoutRequest(req, getRatelimit());
   if (validated instanceof Response) return validated;
-  const { siteUrl, customer, pendingItems, shippingFee, amount } = validated;
+  const { siteUrl, customer, pendingItems, shippingFee, shippingMethod, amount } = validated;
 
   const clientId = process.env.PAYOS_CLIENT_ID;
   const apiKey = process.env.PAYOS_API_KEY;
@@ -54,7 +54,8 @@ export async function POST(req: NextRequest) {
       pendingItems,
       orderCode,
       'payos',
-      shippingFee
+      shippingFee,
+      shippingMethod
     ));
     log.info({ orderCode, haravanOrderId, orderName }, 'Haravan order created (pending)');
   } catch (e) {

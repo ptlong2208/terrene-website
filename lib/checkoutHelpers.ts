@@ -7,10 +7,12 @@ import {
   type CheckoutCustomer,
   checkoutCustomerSchema,
   CheckoutErrorCode,
+  resolveShippingFee,
+  type ShippingMethod,
+  shippingMethodSchema,
   SLUG_PATTERN,
 } from '@/lib/checkout';
-import { DEFAULT_ITEM_WEIGHT_GRAMS, GHN_MAX_ORDER_WEIGHT } from '@/lib/config';
-import { getShippingFee } from '@/lib/ghn';
+import { DEFAULT_ITEM_WEIGHT_GRAMS, SHIPPING_MAX_ORDER_WEIGHT } from '@/lib/config';
 import { fetchProductData, type HaravanProduct } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
@@ -30,6 +32,7 @@ export const checkoutBodySchema = z.object({
   customer: checkoutCustomerSchema,
   items: z.array(itemSchema).min(1).max(20),
   shippingFee: z.number().int().nonnegative().nullable(),
+  shippingMethod: shippingMethodSchema,
 });
 
 export function errResponse(status: number, code: string, extra?: Record<string, string>) {
@@ -96,6 +99,7 @@ export async function validateCheckoutRequest(
       pendingItems: PendingOrderItem[];
       subtotal: number;
       shippingFee: number;
+      shippingMethod: ShippingMethod;
       amount: number;
     }
   | Response
@@ -118,7 +122,7 @@ export async function validateCheckoutRequest(
     return errResponse(400, 'Invalid request.');
   }
 
-  const { customer, items, shippingFee: clientFee } = parsed.data;
+  const { customer, items, shippingFee: clientFee, shippingMethod } = parsed.data;
 
   const productMap = await fetchProductMap(items);
   const itemResult = verifyItems(items, productMap);
@@ -134,24 +138,39 @@ export async function validateCheckoutRequest(
     return sum + variant.grams * item.quantity;
   }, 0);
 
-  if (totalWeightGrams > GHN_MAX_ORDER_WEIGHT) {
-    log.warn({ totalWeightGrams, limit: GHN_MAX_ORDER_WEIGHT }, 'Order exceeds max weight');
+  if (totalWeightGrams > SHIPPING_MAX_ORDER_WEIGHT) {
+    log.warn({ totalWeightGrams, limit: SHIPPING_MAX_ORDER_WEIGHT }, 'Order exceeds max weight');
     return errResponse(422, CheckoutErrorCode.OrderTooHeavy, {
-      limit: String(Math.round(GHN_MAX_ORDER_WEIGHT / 1000)),
+      limit: String(Math.round(SHIPPING_MAX_ORDER_WEIGHT / 1000)),
     });
   }
 
-  const shippingFee: number = await getShippingFee(
-    customer.districtId,
-    customer.wardCode,
-    totalWeightGrams
-  );
+  const shippingFee = await resolveShippingFee({
+    province: customer.province,
+    ward: customer.ward,
+    wardCode: customer.wardCode,
+    weightGrams: totalWeightGrams,
+    subtotal,
+    method: shippingMethod,
+  });
+  if (shippingFee === null) {
+    log.warn({ wardCode: customer.wardCode, subtotal }, 'Express shipping not available');
+    return errResponse(422, CheckoutErrorCode.ExpressNotAvailable);
+  }
   if (clientFee !== null && clientFee !== shippingFee) {
     log.warn({ clientFee, shippingFee }, 'Shipping fee mismatch');
     return errResponse(409, CheckoutErrorCode.ShippingFeeChanged, { fee: String(shippingFee) });
   }
 
-  return { siteUrl, customer, pendingItems, subtotal, shippingFee, amount: subtotal + shippingFee };
+  return {
+    siteUrl,
+    customer,
+    pendingItems,
+    subtotal,
+    shippingFee,
+    shippingMethod,
+    amount: subtotal + shippingFee,
+  };
 }
 
 /**

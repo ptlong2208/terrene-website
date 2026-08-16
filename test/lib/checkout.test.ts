@@ -6,10 +6,9 @@ const validCustomer = {
   name: 'Nguyễn Văn A',
   phone: '0901234567',
   email: 'customer@example.com',
-  district: 'Quận 1',
-  districtId: 1,
+  province: 'TP Hồ Chí Minh',
   ward: 'Phường Bến Nghé',
-  wardCode: '1',
+  wardCode: '26740',
   street: '12 Nguyễn Huệ',
 };
 
@@ -36,10 +35,16 @@ describe('checkoutCustomerSchema', () => {
     );
   });
 
-  it('rejects a non-positive districtId', () => {
-    expect(checkoutCustomerSchema.safeParse({ ...validCustomer, districtId: 0 }).success).toBe(
+  it('rejects an empty province', () => {
+    expect(checkoutCustomerSchema.safeParse({ ...validCustomer, province: '' }).success).toBe(
       false
     );
+  });
+
+  it('rejects a malformed wardCode', () => {
+    expect(
+      checkoutCustomerSchema.safeParse({ ...validCustomer, wardCode: 'not-a-code' }).success
+    ).toBe(false);
   });
 
   it('accepts an optional note, and accepts its absence', () => {

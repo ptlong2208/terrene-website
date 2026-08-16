@@ -1,4 +1,4 @@
-import type { CheckoutCustomer } from '@/lib/checkout';
+import type { CheckoutCustomer, ShippingMethod } from '@/lib/checkout';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
 
@@ -43,7 +43,8 @@ export async function createHaravanOrder(
   items: PendingOrderItem[],
   orderCode: number | null,
   paymentMethod: 'payos' | 'cod' = 'payos',
-  shippingFee: number = 0
+  shippingFee: number = 0,
+  shippingMethod: ShippingMethod = 'standard'
 ): Promise<{ haravanOrderId: number; orderName: string }> {
   const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
@@ -75,7 +76,7 @@ export async function createHaravanOrder(
           phone: phone,
           address1: customer.street,
           city: customer.ward,
-          province: 'Hồ Chí Minh',
+          province: customer.province,
           country: 'Việt Nam',
           country_code: 'VN',
         },
@@ -86,8 +87,13 @@ export async function createHaravanOrder(
           quantity: item.quantity,
           price: String(item.price),
         })),
-        shipping_lines:
-          shippingFee > 0 ? [{ title: 'GHN', price: String(shippingFee), code: 'GHN' }] : undefined,
+        shipping_lines: [
+          {
+            title: shippingMethod === 'express' ? 'GHTK Hoả tốc' : 'GHTK Tiêu chuẩn',
+            price: String(shippingFee),
+            code: shippingMethod === 'express' ? 'GHTK_XFAST' : 'GHTK',
+          },
+        ],
       },
     }),
   });
