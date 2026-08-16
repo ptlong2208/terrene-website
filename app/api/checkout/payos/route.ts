@@ -68,6 +68,9 @@ export async function POST(req: NextRequest) {
     quantity: item.quantity,
     price: item.price,
   }));
+  if (shippingFee > 0) {
+    payosItems.push({ name: 'Phí vận chuyển', quantity: 1, price: shippingFee });
+  }
 
   const payload = {
     orderCode,

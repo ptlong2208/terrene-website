@@ -16,6 +16,7 @@ interface OrderItem {
 interface OrderData {
   orderCode: string;
   total: number;
+  shippingFee: number;
   items: OrderItem[];
   customer: { name: string; phone: string };
 }
@@ -69,6 +70,13 @@ export default function OrderConfirmation() {
         </ul>
 
         <div className="border-line mt-6 flex items-center justify-between border-t pt-6">
+          <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>
+          <span className="text-[13px] font-semibold text-(--green-deep)">
+            {order.shippingFee === 0 ? t('shippingFree') : formatPrice(order.shippingFee)}
+          </span>
+        </div>
+
+        <div className="mt-2 flex items-center justify-between">
           <span className="text-[13px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
             {t('total')}
           </span>

@@ -254,6 +254,7 @@ export default function CheckoutForm({ initialProvinces }: Props) {
           JSON.stringify({
             orderCode: data.orderName,
             total: data.total,
+            shippingFee: shippingFee ?? 0,
             items: data.items,
             customer: { name: customer.name, phone: customer.phone },
           })
@@ -279,6 +280,7 @@ export default function CheckoutForm({ initialProvinces }: Props) {
           JSON.stringify({
             orderCode: data.orderName,
             total,
+            shippingFee: shippingFee ?? 0,
             items: items.map((i) => ({
               productTitle: i.productTitle,
               variantTitle: i.variantTitle,
