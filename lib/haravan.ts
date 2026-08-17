@@ -198,6 +198,7 @@ export interface OrderStatus {
   cancelledAt: string | null;
   createdAt: string;
   paymentMethod: 'payos' | 'cod' | null;
+  customer: { name: string; phone: string; address: string };
   items: Array<{ title: string; variantTitle: string | null; price: number; quantity: number }>;
   subtotal: number;
   shippingFee: number;
@@ -237,6 +238,11 @@ export async function getOrderStatus(haravanOrderId: number): Promise<OrderStatu
     cancelledAt: o.cancelled_at,
     createdAt: o.created_at,
     paymentMethod: o.tags === 'cod' || o.tags === 'payos' ? o.tags : null,
+    customer: {
+      name: o.shipping_address?.first_name ?? '',
+      phone: o.shipping_address?.phone ?? '',
+      address: o.shipping_address?.address1 ?? '',
+    },
     items: (o.line_items ?? []).map((item: Record<string, unknown>) => ({
       title: item.title as string,
       variantTitle: (item.variant_title as string) || null,

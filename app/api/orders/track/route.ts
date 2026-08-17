@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
     orderName: order.orderName,
     stage: resolveOrderStage(order, shipment),
     createdAt: order.createdAt,
+    customer: order.customer,
     items: order.items,
     subtotal: order.subtotal,
     shippingFee: order.shippingFee,

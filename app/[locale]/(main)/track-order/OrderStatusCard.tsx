@@ -20,6 +20,7 @@ export interface TrackedOrder {
   orderName: string;
   stage: Stage;
   createdAt: string;
+  customer: { name: string; phone: string; address: string };
   items: Array<{ title: string; variantTitle: string | null; price: number; quantity: number }>;
   subtotal: number;
   shippingFee: number;
@@ -54,6 +55,12 @@ export default function OrderStatusCard({ order, onReset }: OrderStatusCardProps
           {t('orderCodeLabel')}
         </p>
         <p className="mb-4 text-[15px] font-semibold text-(--green-deep)">{order.orderName}</p>
+
+        <div className="border-line mb-5 flex flex-col gap-1 border-t pt-4 text-[13px] text-(--green-deep)">
+          <span className="font-semibold">{order.customer.name}</span>
+          <span className="opacity-60">{order.customer.phone}</span>
+          <span className="opacity-60">{order.customer.address}</span>
+        </div>
 
         {EXCEPTION_STAGES.includes(order.stage) ? (
           <p
