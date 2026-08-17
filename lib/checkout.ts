@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { EXPRESS_SUBSIDY_CAP, FREESHIP_THRESHOLD } from '@/lib/config';
 import { getShippingFee } from '@/lib/ghtk';
 import { isExpressEligible } from '@/lib/oldSaigonWards';
-import { personEmailSchema, personNameSchema } from '@/lib/validation';
+import { personEmailSchema, personNameSchema, vnPhoneSchema } from '@/lib/validation';
 
 export const SLUG_PATTERN = /^[a-z0-9-]+$/;
 
@@ -22,7 +22,7 @@ export enum CheckoutErrorCode {
 
 export const checkoutCustomerSchema = z.object({
   name: personNameSchema,
-  phone: z.string().regex(/^(0|\+84)\d{9}$/),
+  phone: vnPhoneSchema,
   email: personEmailSchema,
   province: z.string().min(1).max(100),
   ward: z.string().min(1).max(100),

@@ -7,6 +7,7 @@ import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
+import { saveOrderLookup } from '@/lib/orderLookup';
 import { saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
@@ -23,8 +24,9 @@ export async function POST(req: NextRequest) {
   const { customer, pendingItems, shippingFee, shippingMethod, amount } = validated;
 
   let orderName: string;
+  let haravanOrderId: number;
   try {
-    ({ orderName } = await createHaravanOrder(
+    ({ haravanOrderId, orderName } = await createHaravanOrder(
       customer,
       pendingItems,
       null,
@@ -39,7 +41,13 @@ export async function POST(req: NextRequest) {
   }
 
   const successToken = randomUUID();
-  await saveSuccessToken(successToken, SUCCESS_TOKEN_BUFFER_SECONDS);
+  await Promise.all([
+    saveSuccessToken(successToken, SUCCESS_TOKEN_BUFFER_SECONDS),
+    saveOrderLookup(orderName, haravanOrderId, customer.phone).catch((e: unknown) => {
+      log.error({ orderName, e }, 'Failed to save order lookup');
+      Sentry.captureException(e, { tags: { orderName } });
+    }),
+  ]);
 
   return Response.json({
     orderName,

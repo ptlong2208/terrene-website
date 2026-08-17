@@ -128,6 +128,37 @@
     "shippingLoading": "Đang tính...",
     "shipsFrom": "Địa chỉ shop: {address}"
   },
+  "trackOrder": {
+    "title": "Tra cứu đơn hàng",
+    "subtitle": "Nhập mã đơn hàng và số điện thoại đã dùng khi đặt hàng để xem trạng thái.",
+    "orderCode": "Mã đơn hàng",
+    "orderCodePlaceholder": "VD: 10008 hoặc #10008",
+    "phone": "Số điện thoại",
+    "phonePlaceholder": "0901 234 567",
+    "submit": "Tra cứu",
+    "errorOrderCodeRequired": "Vui lòng nhập mã đơn hàng.",
+    "errorPhoneInvalid": "Số điện thoại không hợp lệ.",
+    "errorNotFound": "Không tìm thấy đơn hàng khớp với mã và số điện thoại bạn nhập.",
+    "errorRateLimited": "Bạn thao tác quá nhanh, vui lòng thử lại sau ít phút.",
+    "errorGeneric": "Có lỗi xảy ra, vui lòng thử lại.",
+    "orderCodeLabel": "Mã đơn hàng",
+    "createdAt": "Ngày đặt",
+    "shipping": "Phí vận chuyển",
+    "shippingFree": "Miễn phí",
+    "total": "Tổng cộng",
+    "trackingNumber": "Mã vận đơn",
+    "searchAgain": "Tra cứu đơn khác",
+    "stage": {
+      "awaiting_payment": "Chờ thanh toán",
+      "preparing": "Đang chuẩn bị hàng",
+      "handed_to_carrier": "Đã bàn giao vận chuyển",
+      "picked_up": "Đã lấy hàng",
+      "in_transit": "Đang giao hàng",
+      "delivered": "Đã giao thành công",
+      "delivery_failed": "Giao hàng thất bại",
+      "cancelled": "Đơn hàng đã huỷ"
+    }
+  },
   "reviews": {
     "title": "Đánh giá khách hàng",
     "count": "{count} đánh giá",

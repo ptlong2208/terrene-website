@@ -7,6 +7,7 @@ import { CheckoutErrorCode } from '@/lib/checkout';
 import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
+import { saveOrderLookup } from '@/lib/orderLookup';
 import { savePendingOrder, saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
 
 let _ratelimit: Ratelimit | null = null;
@@ -133,6 +134,10 @@ export async function POST(req: NextRequest) {
       orderName,
     }),
     saveSuccessToken(successToken, SESSION_MINUTES * 60 + SUCCESS_TOKEN_BUFFER_SECONDS),
+    saveOrderLookup(orderName, haravanOrderId, customer.phone).catch((e: unknown) => {
+      log.error({ orderCode, orderName, e }, 'Failed to save order lookup');
+      Sentry.captureException(e, { tags: { orderCode } });
+    }),
   ]);
 
   return Response.json({

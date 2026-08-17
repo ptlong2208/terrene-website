@@ -128,6 +128,37 @@
     "shippingLoading": "Calculating...",
     "shipsFrom": "Shop address: {address}"
   },
+  "trackOrder": {
+    "title": "Track your order",
+    "subtitle": "Enter your order code and the phone number used at checkout to see its status.",
+    "orderCode": "Order code",
+    "orderCodePlaceholder": "e.g. 10008 or #10008",
+    "phone": "Phone number",
+    "phonePlaceholder": "0901 234 567",
+    "submit": "Track order",
+    "errorOrderCodeRequired": "Please enter your order code.",
+    "errorPhoneInvalid": "Invalid phone number.",
+    "errorNotFound": "No order found matching that code and phone number.",
+    "errorRateLimited": "Too many attempts — please try again in a few minutes.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "orderCodeLabel": "Order code",
+    "createdAt": "Placed on",
+    "shipping": "Shipping",
+    "shippingFree": "Free",
+    "total": "Total",
+    "trackingNumber": "Tracking number",
+    "searchAgain": "Track another order",
+    "stage": {
+      "awaiting_payment": "Awaiting payment",
+      "preparing": "Preparing your order",
+      "handed_to_carrier": "Handed to carrier",
+      "picked_up": "Picked up",
+      "in_transit": "Out for delivery",
+      "delivered": "Delivered",
+      "delivery_failed": "Delivery failed",
+      "cancelled": "Order cancelled"
+    }
+  },
   "reviews": {
     "title": "Customer reviews",
     "count": "{count} reviews",

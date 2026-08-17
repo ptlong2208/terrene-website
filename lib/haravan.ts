@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 import type { CheckoutCustomer, ShippingMethod } from '@/lib/checkout';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
@@ -34,7 +36,7 @@ export async function fetchProductPricesBySlugs(slugs: string[]): Promise<Record
   return Object.fromEntries(entries);
 }
 
-function localPhone(phone: string): string {
+export function localPhone(phone: string): string {
   return phone.startsWith('+84') ? '0' + phone.slice(3) : phone;
 }
 
@@ -186,5 +188,65 @@ export async function fetchProductData(slug: string): Promise<HaravanProduct> {
   return {
     variants,
     optionName: rawOptionName === 'Title' ? null : rawOptionName,
+  };
+}
+
+export interface OrderStatus {
+  orderName: string;
+  financialStatus: string;
+  fulfillmentStatus: string | null;
+  cancelledAt: string | null;
+  createdAt: string;
+  paymentMethod: 'payos' | 'cod' | null;
+  items: Array<{ title: string; variantTitle: string | null; price: number; quantity: number }>;
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  trackingNumber: string | null;
+  trackingCompany: string | null;
+}
+
+export async function getOrderStatus(haravanOrderId: number): Promise<OrderStatus | null> {
+  const [orderRes, fulfillmentsRes] = await Promise.all([
+    fetch(`${BASE}/orders/${haravanOrderId}.json`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+    }),
+    fetch(`${BASE}/orders/${haravanOrderId}/fulfillments.json`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+    }),
+  ]);
+
+  if (!orderRes.ok) {
+    log.warn({ haravanOrderId, status: orderRes.status }, 'getOrderStatus: order fetch failed');
+    Sentry.captureMessage(`getOrderStatus: order fetch failed (${orderRes.status})`, {
+      level: 'warning',
+      tags: { haravanOrderId },
+    });
+    return null;
+  }
+
+  const orderData = await orderRes.json();
+  const o = orderData.order;
+  const fulfillmentsData = fulfillmentsRes.ok ? await fulfillmentsRes.json() : { fulfillments: [] };
+  const fulfillment = fulfillmentsData.fulfillments?.[0] ?? null;
+
+  return {
+    orderName: o.name,
+    financialStatus: o.financial_status,
+    fulfillmentStatus: o.fulfillment_status,
+    cancelledAt: o.cancelled_at,
+    createdAt: o.created_at,
+    paymentMethod: o.tags === 'cod' || o.tags === 'payos' ? o.tags : null,
+    items: (o.line_items ?? []).map((item: Record<string, unknown>) => ({
+      title: item.title as string,
+      variantTitle: (item.variant_title as string) || null,
+      price: Number(item.price),
+      quantity: item.quantity as number,
+    })),
+    subtotal: Number(o.subtotal_price ?? 0),
+    shippingFee: Number(o.shipping_lines?.[0]?.price ?? 0),
+    total: Number(o.total_price ?? 0),
+    trackingNumber: fulfillment?.tracking_number ?? null,
+    trackingCompany: fulfillment?.tracking_company ?? null,
   };
 }

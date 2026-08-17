@@ -72,3 +72,39 @@ export async function getShippingFee(
     return SHIPPING_FALLBACK_FEE;
   }
 }
+
+export interface ShipmentStatus {
+  statusId: number;
+  statusText: string;
+}
+
+/** Live status lookup by GHTK label_id (tracking number). Returns null if not found/unavailable. */
+export async function getShipmentStatus(labelId: string): Promise<ShipmentStatus | null> {
+  try {
+    const res = await fetch(`${GHTK_BASE}/services/shipment/v2/${encodeURIComponent(labelId)}`, {
+      headers: ghtkHeaders(),
+    });
+
+    if (!res.ok) {
+      log.warn({ labelId, status: res.status }, 'GHTK status API returned non-OK');
+      Sentry.captureMessage(`GHTK status API returned non-OK: ${res.status}`, {
+        level: 'warning',
+        tags: { labelId },
+      });
+      return null;
+    }
+
+    const data = (await res.json()) as {
+      success?: boolean;
+      order?: { status?: string; status_text?: string };
+    };
+    const statusId = Number(data.order?.status);
+    if (!data.success || Number.isNaN(statusId)) return null;
+
+    return { statusId, statusText: data.order?.status_text ?? '' };
+  } catch (err) {
+    log.error({ err, labelId }, 'GHTK status API call failed');
+    Sentry.captureException(err, { level: 'warning', tags: { labelId } });
+    return null;
+  }
+}
