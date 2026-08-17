@@ -23,7 +23,7 @@ export default async function CheckoutCancelPage({
   const order = await getPendingOrder(orderCode);
   if (order) {
     await Promise.all([
-      cancelHaravanOrder(order.haravanOrderId).catch(() => {}),
+      cancelHaravanOrder(order.haravanOrderId, 'customer').catch(() => {}),
       deletePendingOrder(orderCode),
     ]);
   }

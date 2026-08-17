@@ -142,14 +142,19 @@ export async function updateHaravanOrderPaid(
   }
 }
 
-export async function cancelHaravanOrder(haravanOrderId: number): Promise<void> {
+export type CancelReason = 'customer' | 'fraud' | 'inventory' | 'declined' | 'other';
+
+export async function cancelHaravanOrder(
+  haravanOrderId: number,
+  reason?: CancelReason
+): Promise<void> {
   const res = await fetch(`${BASE}/orders/${haravanOrderId}/cancel.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${TOKEN}`,
     },
-    body: JSON.stringify({}),
+    body: JSON.stringify(reason ? { reason } : {}),
   });
 
   if (!res.ok) {
