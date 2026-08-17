@@ -36,7 +36,19 @@ export const shopProduct = defineType({
             `count(*[_type == "shopProduct" && slug == $slug && language == $language && _id != $id && !(_id in path("drafts.**"))])`,
             { slug, language, id: currentId }
           );
-          return count > 0 ? `A "${language}" product with slug "${slug}" already exists` : true;
+          if (count > 0) return `A "${language}" product with slug "${slug}" already exists`;
+
+          try {
+            const res = await fetch(`/api/haravan/check-handle?slug=${encodeURIComponent(slug)}`);
+            const { exists } = (await res.json()) as { exists: boolean };
+            if (!exists) {
+              return `No Haravan product found with handle "${slug}" — check it matches exactly`;
+            }
+          } catch {
+            // Haravan check unreachable — don't block publishing on a network blip
+          }
+
+          return true;
         }),
     }),
     defineField({

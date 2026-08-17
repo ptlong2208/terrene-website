@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -40,6 +41,16 @@ export default async function ProductDetailPage({
   ]);
 
   if (!product) notFound();
+
+  if (variants.length === 0) {
+    // Sanity has content for this slug but Haravan returned no matching product —
+    // likely the Haravan handle was changed/deleted without updating the Sanity slug.
+    // The page still renders (content looks fine) but nothing is purchasable.
+    Sentry.captureMessage(`Product "${slug}" has Sanity content but no Haravan variants`, {
+      level: 'warning',
+      tags: { slug },
+    });
+  }
 
   const fallbackImage = product.image ? [product.image] : [];
   const galleryImages = product.gallery?.length ? product.gallery : fallbackImage;
