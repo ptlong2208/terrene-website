@@ -23,6 +23,7 @@ interface OrderData {
 
 export default function OrderConfirmation() {
   const t = useTranslations('checkout');
+  const tCommon = useTranslations('common');
   const [order, setOrder] = useState<OrderData | null>(null);
 
   useEffect(() => {
@@ -70,15 +71,15 @@ export default function OrderConfirmation() {
         </ul>
 
         <div className="border-line mt-6 flex items-center justify-between border-t pt-6">
-          <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>
+          <span className="text-[13px] text-(--green-deep) opacity-60">{tCommon('shipping')}</span>
           <span className="text-[13px] font-semibold text-(--green-deep)">
-            {order.shippingFee === 0 ? t('shippingFree') : formatPrice(order.shippingFee)}
+            {order.shippingFee === 0 ? tCommon('shippingFree') : formatPrice(order.shippingFee)}
           </span>
         </div>
 
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[13px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
-            {t('total')}
+            {tCommon('total')}
           </span>
           <span className="font-sans text-[20px] font-extrabold text-(--green-deep)">
             {formatPrice(order.total)}

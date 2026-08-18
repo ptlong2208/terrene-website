@@ -74,6 +74,7 @@ function readDraftForm(): Partial<DraftForm> | null {
 export default function CheckoutForm({ initialProvinces }: Props) {
   const t = useTranslations('checkout');
   const tField = useTranslations('fieldErrors');
+  const tCommon = useTranslations('common');
   const mounted = useIsMounted();
   const { items, count } = useCartStore();
   const [form, setForm] = useState<DraftForm>(() => {
@@ -365,12 +366,12 @@ export default function CheckoutForm({ initialProvinces }: Props) {
           </Form.Field>
 
           <Form.Field name="phone" serverInvalid={!!errors.phone} className="flex flex-col gap-1.5">
-            <Form.Label className={LABEL_CLASS}>{t('phone')}</Form.Label>
+            <Form.Label className={LABEL_CLASS}>{tCommon('phone')}</Form.Label>
             <Form.Control asChild>
               <input
                 type="tel"
                 autoComplete="tel"
-                placeholder={t('phonePlaceholder')}
+                placeholder={tCommon('phonePlaceholder')}
                 value={form.phone}
                 onChange={handleChange}
                 className={FIELD_CLASS}
@@ -599,15 +600,17 @@ export default function CheckoutForm({ initialProvinces }: Props) {
         <div className="border-line mt-4 flex flex-col gap-2 border-t pt-4">
           {shippingFee !== null && (
             <div className="mb-1 flex items-center justify-between">
-              <span className="text-[12px] text-(--green-deep) opacity-60">{t('shipping')}</span>
+              <span className="text-[12px] text-(--green-deep) opacity-60">
+                {tCommon('shipping')}
+              </span>
               <span className="text-[12px] font-semibold text-(--green-deep)">
-                {shippingFee === 0 ? t('shippingFree') : formatPrice(shippingFee)}
+                {shippingFee === 0 ? tCommon('shippingFree') : formatPrice(shippingFee)}
               </span>
             </div>
           )}
           <div className="mb-5 flex items-center justify-between">
             <span className="text-[12px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
-              {t('total')}
+              {tCommon('total')}
             </span>
             <span className="text-[18px] font-extrabold text-(--green-deep)">
               {formatPrice(total)}

@@ -46,6 +46,7 @@ interface OrderStatusCardProps {
 
 export default function OrderStatusCard({ order, onReset }: OrderStatusCardProps) {
   const t = useTranslations('trackOrder');
+  const tCommon = useTranslations('common');
   const locale = useLocale();
 
   return (
@@ -127,22 +128,22 @@ export default function OrderStatusCard({ order, onReset }: OrderStatusCardProps
         </ul>
 
         <div className="mt-5 flex items-center justify-between border-t border-(--green-deep)/10 pt-4">
-          <span className="text-[13px] text-(--green-deep) opacity-60">{t('subtotal')}</span>
+          <span className="text-[13px] text-(--green-deep) opacity-60">{tCommon('subtotal')}</span>
           <span className="text-[13px] font-semibold text-(--green-deep)">
             {formatPrice(order.subtotal)}
           </span>
         </div>
 
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>
+          <span className="text-[13px] text-(--green-deep) opacity-60">{tCommon('shipping')}</span>
           <span className="text-[13px] font-semibold text-(--green-deep)">
-            {order.shippingFee === 0 ? t('shippingFree') : formatPrice(order.shippingFee)}
+            {order.shippingFee === 0 ? tCommon('shippingFree') : formatPrice(order.shippingFee)}
           </span>
         </div>
 
         <div className="mt-2 flex items-center justify-between">
           <span className="text-[12px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
-            {t('total')}
+            {tCommon('total')}
           </span>
           <span className="text-[18px] font-extrabold text-(--green-deep)">
             {formatPrice(order.total)}

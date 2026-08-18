@@ -12,6 +12,7 @@ import OrderStatusCard, { type TrackedOrder } from './OrderStatusCard';
 
 export default function TrackOrderForm() {
   const t = useTranslations('trackOrder');
+  const tCommon = useTranslations('common');
   const [orderCode, setOrderCode] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -98,11 +99,11 @@ export default function TrackOrderForm() {
         serverInvalid={!!fieldErrors.phone}
         className="flex flex-col gap-1.5"
       >
-        <Form.Label className={LABEL_CLASS}>{t('phone')}</Form.Label>
+        <Form.Label className={LABEL_CLASS}>{tCommon('phone')}</Form.Label>
         <Form.Control asChild>
           <input
             type="tel"
-            placeholder={t('phonePlaceholder')}
+            placeholder={tCommon('phonePlaceholder')}
             value={phone}
             onChange={(e) => {
               setPhone(e.target.value);

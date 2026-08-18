@@ -221,7 +221,7 @@ export default function CartDrawer() {
         {items.length > 0 && (
           <div className="border-line px-gutter shrink-0 border-t pt-5 pb-[calc(20px+env(safe-area-inset-bottom))]">
             <div className="text-ink mb-4 flex items-baseline justify-between text-[13px]">
-              <span>{t('subtotal')}</span>
+              <span>{tCommon('subtotal')}</span>
               <span className="font-sans text-[18px] font-extrabold text-(--green-deep)">
                 {formatPrice(subtotal)}
               </span>

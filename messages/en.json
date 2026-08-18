@@ -1,6 +1,12 @@
 {
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "shipping": "Shipping",
+    "shippingFree": "Free",
+    "phone": "Phone number",
+    "phonePlaceholder": "0901 234 567"
   },
   "nav": {
     "mainLabel": "Main navigation",
@@ -54,7 +60,6 @@
     "title": "cart",
     "empty": "Your cart is empty.",
     "continueShopping": "Continue shopping",
-    "subtotal": "Subtotal",
     "checkout": "Checkout",
     "decreaseQty": "Decrease quantity",
     "increaseQty": "Increase quantity",
@@ -63,12 +68,9 @@
   "checkout": {
     "title": "Checkout",
     "orderSummary": "Order summary",
-    "subtotal": "Subtotal",
     "customerInfo": "Your information",
     "name": "Full name",
     "namePlaceholder": "Nguyen Van A",
-    "phone": "Phone number",
-    "phonePlaceholder": "0901 234 567",
     "email": "Email",
     "emailPlaceholder": "your@email.com",
     "note": "Note (optional)",
@@ -114,7 +116,6 @@
     "errorShippingFeeChanged": "The shipping fee has changed. Please review the new fee and place your order again.",
     "errorOrderTooHeavy": "We don't ship orders over {limit}kg. Please contact the shop for bulk orders.",
     "errorPriceChanged": "The price of {product} has changed. Please review your cart.",
-    "total": "Total",
     "successTitle": "Order confirmed",
     "successMessage": "Thank you for your order. We'll prepare it with care and be in touch soon.",
     "orderCode": "Order code",
@@ -124,8 +125,6 @@
     "cancelMessage": "Your payment was not completed. Your cart is saved — you can try again whenever you're ready.",
     "cancelCta": "Return to checkout",
     "cancelShop": "Back to shop",
-    "shipping": "Shipping",
-    "shippingFree": "Free",
     "shippingLoading": "Calculating...",
     "shipsFrom": "Shop address: {address}"
   },
@@ -134,8 +133,6 @@
     "subtitle": "Enter your order code and the phone number used at checkout to see its status.",
     "orderCode": "Order code",
     "orderCodePlaceholder": "e.g. 10008 or #10008",
-    "phone": "Phone number",
-    "phonePlaceholder": "0901 234 567",
     "submit": "Track order",
     "errorOrderCodeRequired": "Please enter your order code.",
     "errorPhoneInvalid": "Invalid phone number.",
@@ -144,10 +141,6 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "orderCodeLabel": "Order code",
     "createdAt": "Placed on",
-    "subtotal": "Subtotal",
-    "shipping": "Shipping",
-    "shippingFree": "Free",
-    "total": "Total",
     "trackingNumber": "Tracking number",
     "searchAgain": "Track another order",
     "stage": {

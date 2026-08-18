@@ -1,6 +1,12 @@
 {
   "common": {
-    "close": "Đóng"
+    "close": "Đóng",
+    "subtotal": "Tạm tính",
+    "total": "Tổng cộng",
+    "shipping": "Phí vận chuyển",
+    "shippingFree": "Miễn phí",
+    "phone": "Số điện thoại",
+    "phonePlaceholder": "0901 234 567"
   },
   "nav": {
     "mainLabel": "Điều hướng chính",
@@ -54,7 +60,6 @@
     "title": "giỏ hàng",
     "empty": "Giỏ hàng của bạn đang trống.",
     "continueShopping": "Tiếp tục mua sắm",
-    "subtotal": "Tạm tính",
     "checkout": "Thanh toán",
     "decreaseQty": "Giảm số lượng",
     "increaseQty": "Tăng số lượng",
@@ -63,12 +68,9 @@
   "checkout": {
     "title": "Thanh toán",
     "orderSummary": "Đơn hàng",
-    "subtotal": "Tạm tính",
     "customerInfo": "Thông tin của bạn",
     "name": "Họ và tên",
     "namePlaceholder": "Nguyễn Văn A",
-    "phone": "Số điện thoại",
-    "phonePlaceholder": "0901 234 567",
     "email": "Email",
     "emailPlaceholder": "ban@email.com",
     "note": "Ghi chú (tuỳ chọn)",
@@ -114,7 +116,6 @@
     "errorShippingFeeChanged": "Phí vận chuyển vừa thay đổi. Vui lòng kiểm tra lại và đặt hàng.",
     "errorOrderTooHeavy": "Không hỗ trợ giao hàng quá {limit}kg. Vui lòng liên hệ shop để đặt số lượng lớn.",
     "errorPriceChanged": "Giá {product} vừa thay đổi, vui lòng kiểm tra lại giỏ hàng.",
-    "total": "Tổng cộng",
     "successTitle": "Đặt hàng thành công",
     "successMessage": "Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ chuẩn bị đơn hàng cẩn thận và liên hệ với bạn sớm.",
     "orderCode": "Mã đơn hàng",
@@ -124,8 +125,6 @@
     "cancelMessage": "Thanh toán chưa hoàn tất. Giỏ hàng của bạn vẫn được lưu — bạn có thể thử lại bất cứ lúc nào.",
     "cancelCta": "Quay lại thanh toán",
     "cancelShop": "Về cửa hàng",
-    "shipping": "Phí vận chuyển",
-    "shippingFree": "Miễn phí",
     "shippingLoading": "Đang tính...",
     "shipsFrom": "Địa chỉ shop: {address}"
   },
@@ -134,8 +133,6 @@
     "subtitle": "Nhập mã đơn hàng và số điện thoại đã dùng khi đặt hàng để xem trạng thái.",
     "orderCode": "Mã đơn hàng",
     "orderCodePlaceholder": "VD: 10008 hoặc #10008",
-    "phone": "Số điện thoại",
-    "phonePlaceholder": "0901 234 567",
     "submit": "Tra cứu",
     "errorOrderCodeRequired": "Vui lòng nhập mã đơn hàng.",
     "errorPhoneInvalid": "Số điện thoại không hợp lệ.",
@@ -144,10 +141,6 @@
     "errorGeneric": "Có lỗi xảy ra, vui lòng thử lại.",
     "orderCodeLabel": "Mã đơn hàng",
     "createdAt": "Ngày đặt",
-    "subtotal": "Tạm tính",
-    "shipping": "Phí vận chuyển",
-    "shippingFree": "Miễn phí",
-    "total": "Tổng cộng",
     "trackingNumber": "Mã vận đơn",
     "searchAgain": "Tra cứu đơn khác",
     "stage": {

@@ -54,6 +54,7 @@ export default function ProductDetailContent({
         stagger: 0.06,
         ease: 'power3.out',
         delay: 0.1,
+        onComplete: () => gsap.set(children, { clearProps: 'opacity,transform' }),
       });
     }
 

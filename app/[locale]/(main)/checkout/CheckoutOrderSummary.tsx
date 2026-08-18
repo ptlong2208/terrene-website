@@ -20,6 +20,7 @@ export default function CheckoutOrderSummary({
   shippingLoading,
 }: CheckoutOrderSummaryProps) {
   const t = useTranslations('checkout');
+  const tCommon = useTranslations('common');
 
   const wardSelected = shippingFee !== null || shippingLoading;
   const total = subtotal + (shippingFee ?? 0);
@@ -31,7 +32,9 @@ export default function CheckoutOrderSummary({
       );
     if (shippingFee === 0)
       return (
-        <span className="text-[13px] font-semibold text-emerald-600">{t('shippingFree')}</span>
+        <span className="text-[13px] font-semibold text-emerald-600">
+          {tCommon('shippingFree')}
+        </span>
       );
     return (
       <span className="text-[13px] font-semibold text-(--green-deep)">
@@ -66,7 +69,7 @@ export default function CheckoutOrderSummary({
 
       <div className="border-line mt-6 flex flex-col gap-3 border-t pt-5">
         <div className="flex items-center justify-between">
-          <span className="text-[13px] text-(--green-deep) opacity-60">{t('subtotal')}</span>
+          <span className="text-[13px] text-(--green-deep) opacity-60">{tCommon('subtotal')}</span>
           <span className="text-[13px] font-semibold text-(--green-deep)">
             {formatPrice(subtotal)}
           </span>
@@ -74,14 +77,16 @@ export default function CheckoutOrderSummary({
 
         {wardSelected && (
           <div className="flex items-center justify-between">
-            <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>
+            <span className="text-[13px] text-(--green-deep) opacity-60">
+              {tCommon('shipping')}
+            </span>
             {renderShippingValue()}
           </div>
         )}
 
         <div className="flex items-center justify-between">
           <span className="text-[13px] font-semibold tracking-[0.04em] text-(--green-deep) uppercase">
-            {t('total')}
+            {tCommon('total')}
           </span>
           <span className="font-sans text-[20px] font-extrabold text-(--green-deep)">
             {formatPrice(total)}
