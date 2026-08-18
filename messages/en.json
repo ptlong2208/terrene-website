@@ -63,6 +63,7 @@
   "checkout": {
     "title": "Checkout",
     "orderSummary": "Order summary",
+    "subtotal": "Subtotal",
     "customerInfo": "Your information",
     "name": "Full name",
     "namePlaceholder": "Nguyen Van A",
@@ -143,6 +144,7 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "orderCodeLabel": "Order code",
     "createdAt": "Placed on",
+    "subtotal": "Subtotal",
     "shipping": "Shipping",
     "shippingFree": "Free",
     "total": "Total",

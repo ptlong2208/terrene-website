@@ -65,6 +65,13 @@ export default function CheckoutOrderSummary({
       </ul>
 
       <div className="border-line mt-6 flex flex-col gap-3 border-t pt-5">
+        <div className="flex items-center justify-between">
+          <span className="text-[13px] text-(--green-deep) opacity-60">{t('subtotal')}</span>
+          <span className="text-[13px] font-semibold text-(--green-deep)">
+            {formatPrice(subtotal)}
+          </span>
+        </div>
+
         {wardSelected && (
           <div className="flex items-center justify-between">
             <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>

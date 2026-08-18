@@ -127,6 +127,13 @@ export default function OrderStatusCard({ order, onReset }: OrderStatusCardProps
         </ul>
 
         <div className="mt-5 flex items-center justify-between border-t border-(--green-deep)/10 pt-4">
+          <span className="text-[13px] text-(--green-deep) opacity-60">{t('subtotal')}</span>
+          <span className="text-[13px] font-semibold text-(--green-deep)">
+            {formatPrice(order.subtotal)}
+          </span>
+        </div>
+
+        <div className="mt-2 flex items-center justify-between">
           <span className="text-[13px] text-(--green-deep) opacity-60">{t('shipping')}</span>
           <span className="text-[13px] font-semibold text-(--green-deep)">
             {order.shippingFee === 0 ? t('shippingFree') : formatPrice(order.shippingFee)}

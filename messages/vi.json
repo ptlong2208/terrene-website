@@ -63,6 +63,7 @@
   "checkout": {
     "title": "Thanh toán",
     "orderSummary": "Đơn hàng",
+    "subtotal": "Tạm tính",
     "customerInfo": "Thông tin của bạn",
     "name": "Họ và tên",
     "namePlaceholder": "Nguyễn Văn A",
@@ -143,6 +144,7 @@
     "errorGeneric": "Có lỗi xảy ra, vui lòng thử lại.",
     "orderCodeLabel": "Mã đơn hàng",
     "createdAt": "Ngày đặt",
+    "subtotal": "Tạm tính",
     "shipping": "Phí vận chuyển",
     "shippingFree": "Miễn phí",
     "total": "Tổng cộng",
