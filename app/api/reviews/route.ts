@@ -3,6 +3,7 @@ import { type Ratelimit } from '@upstash/ratelimit';
 import { randomUUID } from 'crypto';
 import { type NextRequest } from 'next/server';
 
+import { sendReviewPendingAlert } from '@/lib/alert';
 import { SLUG_PATTERN } from '@/lib/checkout';
 import { checkOrigin, errResponse, makeRatelimit } from '@/lib/checkoutHelpers';
 import logger from '@/lib/logger';
@@ -168,6 +169,21 @@ export async function POST(req: NextRequest) {
     }
 
     log.info({ productSlug, reviewerEmail }, 'Review submitted, pending moderation');
+
+    try {
+      await sendReviewPendingAlert({
+        productSlug,
+        rating,
+        reviewerName,
+        reviewerEmail,
+        comment,
+        photoCount: photoUrls.length,
+      });
+    } catch (alertErr) {
+      log.error({ alertErr, productSlug }, 'Failed to send review pending alert');
+      Sentry.captureException(alertErr, { tags: { productSlug, alertFailed: true } });
+    }
+
     return Response.json({ success: true });
   } catch (err) {
     log.error({ err, productSlug }, 'Unexpected error submitting review');
