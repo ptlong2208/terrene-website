@@ -40,12 +40,15 @@ export const shopProduct = defineType({
 
           try {
             const res = await fetch(`/api/haravan/check-handle?slug=${encodeURIComponent(slug)}`);
+            if (!res.ok) {
+              return 'Could not verify this slug against Haravan (request failed) — try again before publishing';
+            }
             const { exists } = (await res.json()) as { exists: boolean };
             if (!exists) {
               return `No Haravan product found with handle "${slug}" — check it matches exactly`;
             }
           } catch {
-            // Haravan check unreachable — don't block publishing on a network blip
+            return 'Could not verify this slug against Haravan (network error) — try again before publishing';
           }
 
           return true;
