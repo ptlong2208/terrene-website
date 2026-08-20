@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useLocale } from 'next-intl';
 
 import StarRating from '@/app/components/ui/StarRating';
 import type { ProductReview } from '@/lib/types';
@@ -9,6 +10,8 @@ interface ReviewItemProps {
 }
 
 export default function ReviewItem({ review }: ReviewItemProps) {
+  const locale = useLocale();
+
   return (
     <article className="border-line border-b py-5 first:pt-0 last:border-b-0 last:pb-0">
       <div className="mb-2.5 flex items-center gap-3">
@@ -19,7 +22,12 @@ export default function ReviewItem({ review }: ReviewItemProps) {
           {review.reviewerName.charAt(0).toUpperCase()}
         </span>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[14px] font-bold text-(--green-deep)">{review.reviewerName}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[14px] font-bold text-(--green-deep)">{review.reviewerName}</span>
+            <span className="text-ink-soft text-[12px]">
+              {new Date(review.createdAt).toLocaleDateString(locale)}
+            </span>
+          </div>
           <StarRating value={review.rating} size={12} />
         </div>
       </div>

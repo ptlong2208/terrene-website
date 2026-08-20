@@ -57,6 +57,7 @@ export async function sendPaymentFailureAlert(
 
 interface SendReviewPendingAlertParams {
   productSlug: string;
+  productTitle: string;
   rating: number;
   reviewerName: string;
   reviewerEmail: string;

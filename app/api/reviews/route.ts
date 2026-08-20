@@ -11,6 +11,7 @@ import { isImageFlagged, isTextFlagged } from '@/lib/moderation';
 import { containsVietnameseProfanity } from '@/lib/profanityFilter';
 import { reviewSubmitSchema } from '@/lib/reviews';
 import { supabasePublic } from '@/lib/supabase';
+import { getProductTitlesBySlugs } from '@/sanity/lib/queries';
 
 const log = logger.child({ module: 'reviews' });
 
@@ -171,8 +172,10 @@ export async function POST(req: NextRequest) {
     log.info({ productSlug, reviewerEmail }, 'Review submitted, pending moderation');
 
     try {
+      const titles = await getProductTitlesBySlugs([productSlug]);
       await sendReviewPendingAlert({
         productSlug,
+        productTitle: titles[productSlug] ?? productSlug,
         rating,
         reviewerName,
         reviewerEmail,

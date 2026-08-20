@@ -170,6 +170,15 @@ export async function getShopProductBySlug(
   );
 }
 
+export async function getProductTitlesBySlugs(slugs: string[]): Promise<Record<string, string>> {
+  if (slugs.length === 0) return {};
+  const rows = await sanityFetch<{ slug: string; title: string }[]>(
+    `*[_type == "shopProduct" && slug in $slugs && language == "vi"]{ slug, title }`,
+    { slugs }
+  );
+  return Object.fromEntries(rows.map((r) => [r.slug, r.title]));
+}
+
 export async function getShopCategories(locale: string): Promise<ShopCategory[]> {
   return sanityFetch<ShopCategory[]>(
     `*[_type == "shopCategory"]{

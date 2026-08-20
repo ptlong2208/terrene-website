@@ -41,6 +41,7 @@ export function paymentFailureTemplate({
 
 interface ReviewPendingAlertParams {
   productSlug: string;
+  productTitle: string;
   rating: number;
   reviewerName: string;
   reviewerEmail: string;
@@ -50,27 +51,28 @@ interface ReviewPendingAlertParams {
 
 export function reviewPendingTemplate({
   productSlug,
+  productTitle,
   rating,
   reviewerName,
   reviewerEmail,
   comment,
   photoCount,
 }: ReviewPendingAlertParams): { subject: string; html: string } {
-  const subject = `[Terrene Review] Đánh giá mới cho ${productSlug} đang chờ duyệt`;
+  const subject = `[Terrene Review] Đánh giá mới cho ${productTitle} đang chờ duyệt`;
   const timestamp = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
   const productUrl = `${SITE_URL}/shop/${productSlug}`;
 
   const html = `
     <h2>Có đánh giá mới đang chờ duyệt</h2>
     <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
-      <tr><td>Sản phẩm</td><td><a href="${productUrl}">${productSlug}</a></td></tr>
+      <tr><td>Sản phẩm</td><td><a href="${productUrl}">${productTitle}</a></td></tr>
       <tr><td>Đánh giá</td><td>${rating}/5 sao</td></tr>
       <tr><td>Người đánh giá</td><td>${reviewerName} — ${reviewerEmail}</td></tr>
       <tr><td>Nội dung</td><td>${comment}</td></tr>
       <tr><td>Số ảnh đính kèm</td><td>${photoCount}</td></tr>
       <tr><td>Thời gian</td><td>${timestamp}</td></tr>
     </table>
-    <p><b>Cần làm:</b> vào Supabase Studio, bảng <code>reviews</code>, duyệt (đổi <code>status</code> thành <code>approved</code>) hoặc xoá nếu không phù hợp.</p>
+    <p><b>Cần làm:</b> vào <a href="${SITE_URL}/admin/reviews">trang duyệt review</a> để duyệt hoặc từ chối.</p>
   `;
 
   return { subject, html };
