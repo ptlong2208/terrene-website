@@ -1,5 +1,4 @@
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
+import { type Ratelimit } from '@upstash/ratelimit';
 import { type NextRequest } from 'next/server';
 import { z } from 'zod';
 
@@ -60,18 +59,6 @@ export function checkOrigin(req: NextRequest): { siteUrl: string } | Response {
     return errResponse(403, CheckoutErrorCode.Forbidden);
   }
   return { siteUrl };
-}
-
-/** Creates a sliding-window rate limiter (5 req / 1 min) with the given Redis prefix. */
-export function makeRatelimit(prefix: string): Ratelimit {
-  return new Ratelimit({
-    redis: new Redis({
-      url: process.env.KV_REST_API_URL!,
-      token: process.env.KV_REST_API_TOKEN!,
-    }),
-    limiter: Ratelimit.slidingWindow(5, '1 m'),
-    prefix,
-  });
 }
 
 /** Fetches Haravan product data for all unique slugs in the item list. */

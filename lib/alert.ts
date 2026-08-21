@@ -43,7 +43,7 @@ interface SendPaymentFailureAlertParams {
   orderCode: number;
   haravanOrderId: number;
   orderName: string;
-  customer: CheckoutCustomer;
+  customer: Pick<CheckoutCustomer, 'name' | 'phone' | 'email'>;
   amount: number;
   error: unknown;
 }

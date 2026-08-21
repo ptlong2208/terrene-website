@@ -5,10 +5,11 @@ import { type NextRequest } from 'next/server';
 
 import { sendReviewPendingAlert } from '@/lib/alert';
 import { SLUG_PATTERN } from '@/lib/checkout';
-import { checkOrigin, errResponse, makeRatelimit } from '@/lib/checkoutHelpers';
+import { checkOrigin, errResponse } from '@/lib/checkoutHelpers';
 import logger from '@/lib/logger';
 import { isImageFlagged, isTextFlagged } from '@/lib/moderation';
 import { containsVietnameseProfanity } from '@/lib/profanityFilter';
+import { makeRatelimit } from '@/lib/redis';
 import { reviewSubmitSchema } from '@/lib/reviews';
 import { supabasePublic } from '@/lib/supabase';
 import { getProductTitlesBySlugs } from '@/sanity/lib/queries';

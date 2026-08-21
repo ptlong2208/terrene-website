@@ -1,6 +1,11 @@
 import * as Sentry from '@sentry/nextjs';
 
 import type { CheckoutCustomer, ShippingMethod } from '@/lib/checkout';
+import {
+  type HaravanNoteAttribute,
+  parsePayosOrderCode,
+  payosOrderCodeAttribute,
+} from '@/lib/haravanNoteAttributes';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
 
@@ -68,6 +73,8 @@ export async function createHaravanOrder(
           ]
             .filter(Boolean)
             .join(' | ') || undefined,
+        note_attributes:
+          paymentMethod === 'payos' && orderCode ? [payosOrderCodeAttribute(orderCode)] : undefined,
         customer: {
           first_name: customer.name,
           email: customer.email,
@@ -162,6 +169,50 @@ export async function cancelHaravanOrder(
     log.error({ haravanOrderId, status: res.status, body }, 'Haravan order cancel failed');
     throw new Error(`Haravan order cancel failed: ${res.status} ${body}`);
   }
+}
+
+export interface PendingPayosOrder {
+  haravanOrderId: number;
+  orderName: string;
+  createdAt: string;
+  payosOrderCode: number | null;
+  totalPrice: number;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+}
+
+/** Pending orders created via our PayOS checkout, for the cleanup cron to inspect. */
+export async function listPendingPayosOrders(): Promise<PendingPayosOrder[]> {
+  const res = await fetch(`${BASE}/orders.json?financial_status=pending&limit=250`, {
+    headers: { Authorization: `Bearer ${TOKEN}` },
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    log.error({ status: res.status, body }, 'Failed to list pending orders');
+    throw new Error(`Haravan list pending orders failed: ${res.status} ${body}`);
+  }
+
+  const data = await res.json();
+  const orders = (data.orders ?? []) as Array<Record<string, unknown>>;
+
+  // Haravan's own `tags` query param is silently ignored server-side (confirmed live), so filter here
+  return orders
+    .filter((o) => o.tags === 'payos')
+    .map((o) => {
+      const customer = (o.customer ?? {}) as Record<string, unknown>;
+      return {
+        haravanOrderId: o.id as number,
+        orderName: o.name as string,
+        createdAt: o.created_at as string,
+        payosOrderCode: parsePayosOrderCode(o.note_attributes as HaravanNoteAttribute[] | null),
+        totalPrice: Number(o.total_price),
+        customerName: (customer.first_name as string | null) ?? '',
+        customerPhone: (customer.phone as string | null) ?? '',
+        customerEmail: (o.email as string | null) ?? (customer.email as string | null) ?? '',
+      };
+    });
 }
 
 export async function fetchProductData(slug: string): Promise<HaravanProduct> {

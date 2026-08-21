@@ -1,5 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 
+const PAYOS_BASE_URL = 'https://api-merchant.payos.vn';
+
 export interface PayOSWebhookData {
   orderCode: number;
   amount: number;
@@ -34,4 +36,33 @@ export function verifySignature(
   const received = Buffer.from(signature, 'hex');
   if (expected.length !== received.length) return false;
   return timingSafeEqual(expected, received);
+}
+
+export interface PayOSPaymentInfo {
+  status: 'PENDING' | 'PAID' | 'CANCELLED' | 'EXPIRED';
+  amount: number;
+}
+
+export async function getPaymentStatus(orderCode: number): Promise<PayOSPaymentInfo> {
+  const clientId = process.env.PAYOS_CLIENT_ID;
+  const apiKey = process.env.PAYOS_API_KEY;
+  if (!clientId || !apiKey) {
+    throw new Error('PayOS credentials are not configured');
+  }
+
+  const res = await fetch(`${PAYOS_BASE_URL}/v2/payment-requests/${orderCode}`, {
+    headers: { 'x-client-id': clientId, 'x-api-key': apiKey },
+  });
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`PayOS get payment status failed: ${res.status} ${body}`);
+  }
+
+  const data = await res.json();
+  if (data.code !== '00') {
+    throw new Error(`PayOS error ${data.code}: ${data.desc}`);
+  }
+
+  return { status: data.data.status, amount: data.data.amount };
 }

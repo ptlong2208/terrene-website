@@ -4,11 +4,12 @@ import { createHmac, randomInt, randomUUID } from 'crypto';
 import { type NextRequest } from 'next/server';
 
 import { CheckoutErrorCode } from '@/lib/checkout';
-import { errResponse, makeRatelimit, validateCheckoutRequest } from '@/lib/checkoutHelpers';
+import { errResponse, validateCheckoutRequest } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { saveOrderLookup } from '@/lib/orderLookup';
 import { savePendingOrder, saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
+import { makeRatelimit } from '@/lib/redis';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {

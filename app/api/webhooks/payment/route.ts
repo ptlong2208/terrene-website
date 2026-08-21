@@ -3,11 +3,11 @@ import { type Ratelimit } from '@upstash/ratelimit';
 import { type NextRequest } from 'next/server';
 
 import { sendPaymentFailureAlert } from '@/lib/alert';
-import { makeRatelimit } from '@/lib/checkoutHelpers';
 import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 import { type PayOSWebhookData, verifySignature } from '@/lib/payos';
+import { makeRatelimit } from '@/lib/redis';
 
 const log = logger.child({ module: 'webhook/payment' });
 

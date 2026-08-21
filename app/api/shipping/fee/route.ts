@@ -1,18 +1,15 @@
 import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
 import { type NextRequest } from 'next/server';
 
 import { CheckoutErrorCode, resolveShippingFee, shippingMethodSchema } from '@/lib/checkout';
 import { SHIPPING_MAX_ORDER_WEIGHT } from '@/lib/config';
+import { getRedis } from '@/lib/redis';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {
   if (!_ratelimit)
     _ratelimit = new Ratelimit({
-      redis: new Redis({
-        url: process.env.KV_REST_API_URL!,
-        token: process.env.KV_REST_API_TOKEN!,
-      }),
+      redis: getRedis(),
       limiter: Ratelimit.slidingWindow(30, '1 m'),
       prefix: 'ratelimit:shipping-fee',
     });

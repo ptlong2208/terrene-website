@@ -1,12 +1,13 @@
 import { type Ratelimit } from '@upstash/ratelimit';
 import { type NextRequest } from 'next/server';
 
-import { checkOrigin, makeRatelimit } from '@/lib/checkoutHelpers';
+import { checkOrigin } from '@/lib/checkoutHelpers';
 import { getShipmentStatus } from '@/lib/ghtk';
 import { getOrderStatus } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { verifyOrderLookup } from '@/lib/orderLookup';
 import { resolveOrderStage, trackOrderSchema } from '@/lib/orderTracking';
+import { makeRatelimit } from '@/lib/redis';
 
 let _ratelimit: Ratelimit | null = null;
 function getRatelimit() {

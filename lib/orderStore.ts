@@ -1,6 +1,5 @@
-import { Redis } from '@upstash/redis';
-
 import type { CheckoutCustomer } from '@/lib/checkout';
+import { getRedis } from '@/lib/redis';
 
 export interface PendingOrderItem {
   variantId: number;
@@ -17,17 +16,6 @@ export interface PendingOrder {
   expiresAt: number; // ms
   haravanOrderId: number;
   orderName: string;
-}
-
-let _redis: Redis | null = null;
-function getRedis() {
-  if (!_redis) {
-    _redis = new Redis({
-      url: process.env.KV_REST_API_URL!,
-      token: process.env.KV_REST_API_TOKEN!,
-    });
-  }
-  return _redis;
 }
 
 const key = (orderCode: number) => `order:${orderCode}`;
