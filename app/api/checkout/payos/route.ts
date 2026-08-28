@@ -143,6 +143,8 @@ export async function POST(req: NextRequest) {
       expiresAt: expiredAt * 1000,
       haravanOrderId,
       orderName,
+      promoCode: promoCode ?? undefined,
+      discountAmount: promoCode ? discountAmount : undefined,
     }),
     saveSuccessToken(successToken, SESSION_MINUTES * 60 + SUCCESS_TOKEN_BUFFER_SECONDS),
     saveOrderLookup(orderName, haravanOrderId, customer.phone).catch((e: unknown) => {

@@ -9,6 +9,7 @@ import { createHaravanOrder } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { saveOrderLookup } from '@/lib/orderLookup';
 import { saveSuccessToken, SUCCESS_TOKEN_BUFFER_SECONDS } from '@/lib/orderStore';
+import { recordRedemption } from '@/lib/promoRedemptions';
 import { makeRatelimit } from '@/lib/redis';
 
 let _ratelimit: Ratelimit | null = null;
@@ -50,6 +51,20 @@ export async function POST(req: NextRequest) {
       log.error({ orderName, e }, 'Failed to save order lookup');
       Sentry.captureException(e, { tags: { orderName } });
     }),
+    // COD has no separate "paid" step — order creation IS payment confirmation — so the
+    // redemption is recorded right here, unlike PayOS which waits for the webhook.
+    promoCode
+      ? recordRedemption({
+          code: promoCode,
+          email: customer.email,
+          haravanOrderId,
+          discountAmount,
+          paymentMethod: 'cod',
+        }).catch((e: unknown) => {
+          log.error({ orderName, e }, 'Failed to record promo redemption');
+          Sentry.captureException(e, { tags: { orderName } });
+        })
+      : Promise.resolve(),
   ]);
 
   return Response.json({

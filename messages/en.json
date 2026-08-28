@@ -140,6 +140,7 @@
     "promoErrorQuantityNotMet": "Your cart doesn't meet the quantity requirement for this code.",
     "promoErrorMinimumNotMet": "Your order doesn't meet the minimum amount for this code.",
     "promoErrorNotEligible": "This email isn't eligible for this code.",
+    "promoErrorAlreadyRedeemed": "You've already used this code.",
     "promoErrorGeneric": "Couldn't apply this code, please try again.",
     "promoDescDiscountPercent": "{value}% off",
     "promoDescDiscountFixed": "{value} off",

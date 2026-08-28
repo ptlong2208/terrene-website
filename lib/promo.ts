@@ -1,6 +1,7 @@
 import { isEmailOnWishlist } from '@/lib/brevo';
 import logger from '@/lib/logger';
 import { isScoped, type PromoLineItem } from '@/lib/promoMath';
+import { countRedemptions } from '@/lib/promoRedemptions';
 
 const log = logger.child({ module: 'promo' });
 const BASE = 'https://apis.haravan.com/com';
@@ -30,6 +31,71 @@ interface HaravanDiscount {
   max_amount_apply: number | null;
   minimum_order_amount: number;
   applies_once: boolean;
+  once_per_customer: boolean;
+  rule_customs: Array<{ name: string; value: string }>;
+}
+
+function getPerCustomerLimit(discount: HaravanDiscount): number | null {
+  const rule = discount.rule_customs.find((r) => r.name === 'customer_limit_used');
+  const parsed = rule ? Number(rule.value) : NaN;
+  if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  return discount.once_per_customer ? 1 : null;
+}
+
+/** Every gate that depends only on the discount + who's asking, not on cart contents. */
+async function checkEligibility(
+  discount: HaravanDiscount,
+  code: string,
+  email: string
+): Promise<PromoErrorCode | null> {
+  const now = Date.now();
+  if (
+    discount.status !== 'enabled' ||
+    (discount.starts_at && new Date(discount.starts_at).getTime() > now)
+  ) {
+    return 'invalid_code';
+  }
+  if (discount.ends_at && new Date(discount.ends_at).getTime() < now) {
+    return 'expired';
+  }
+  if (discount.usage_limit !== null && discount.times_used >= discount.usage_limit) {
+    return 'usage_limit_reached';
+  }
+  const perCustomerLimit = getPerCustomerLimit(discount);
+  if (perCustomerLimit !== null && (await countRedemptions(code, email)) >= perCustomerLimit) {
+    return 'already_redeemed';
+  }
+  return null;
+}
+
+// Haravan Admin's "Sản phẩm áp dụng" writes to *either* entitled_product_ids ("Sản phẩm") or
+// entitled_variant_ids ("Biến thể") depending which radio was picked — products_selection says
+// which one is actually in effect (see isScoped). "all" means the whole cart counts. Per
+// Haravan's own Admin UI ("Áp dụng cho Nhóm sản phẩm đã chọn" vs "Áp dụng cho tất cả sản phẩm"),
+// BOTH the minimum-value and minimum-quantity conditions are checked against this same scope —
+// a product-scoped code's minimum applies to that product's share of the cart, not the whole order.
+function checkCartConditions(
+  discount: HaravanDiscount,
+  items: PromoLineItem[]
+): PromoErrorCode | null {
+  const promoScope = {
+    productsSelection: discount.products_selection,
+    entitledVariantIds: discount.entitled_variant_ids,
+    entitledProductIds: discount.entitled_product_ids,
+  };
+  const scopedItems = items.filter((i) => isScoped(promoScope, i));
+
+  const scopedSubtotal = scopedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  if (discount.minimum_order_amount > 0 && scopedSubtotal < discount.minimum_order_amount) {
+    return 'minimum_not_met';
+  }
+
+  const minQuantity = discount.applies_to_quantity > 0 ? discount.applies_to_quantity : 1;
+  const targetQuantity = scopedItems.reduce((sum, i) => sum + i.quantity, 0);
+  if (targetQuantity < minQuantity) {
+    return 'quantity_not_met';
+  }
+  return null;
 }
 
 async function fetchDiscountByCode(code: string): Promise<HaravanDiscount | null> {
@@ -51,7 +117,8 @@ export type PromoErrorCode =
   | 'usage_limit_reached'
   | 'quantity_not_met'
   | 'minimum_not_met'
-  | 'not_eligible';
+  | 'not_eligible'
+  | 'already_redeemed';
 
 export type PromoValidationResult =
   | {
@@ -78,43 +145,18 @@ export async function validatePromoCode(params: {
   const code = params.code.trim().toUpperCase();
 
   const discount = await fetchDiscountByCode(code);
-  const now = Date.now();
-  if (
-    !discount ||
-    discount.status !== 'enabled' ||
-    (discount.starts_at && new Date(discount.starts_at).getTime() > now)
-  ) {
+  if (!discount) {
     return { valid: false, error: 'invalid_code' };
   }
-  if (discount.ends_at && new Date(discount.ends_at).getTime() < now) {
-    return { valid: false, error: 'expired' };
-  }
-  if (discount.usage_limit !== null && discount.times_used >= discount.usage_limit) {
-    return { valid: false, error: 'usage_limit_reached' };
-  }
 
-  // Haravan Admin's "Sản phẩm áp dụng" writes to *either* entitled_product_ids ("Sản phẩm") or
-  // entitled_variant_ids ("Biến thể") depending which radio was picked — products_selection says
-  // which one is actually in effect (see isScoped). "all" means the whole cart counts. Per
-  // Haravan's own Admin UI ("Áp dụng cho Nhóm sản phẩm đã chọn" vs "Áp dụng cho tất cả sản phẩm"),
-  // BOTH the minimum-value and minimum-quantity conditions are checked against this same scope —
-  // a product-scoped code's minimum applies to that product's share of the cart, not the whole order.
-  const promoScope = {
-    productsSelection: discount.products_selection,
-    entitledVariantIds: discount.entitled_variant_ids,
-    entitledProductIds: discount.entitled_product_ids,
-  };
-  const scopedItems = items.filter((i) => isScoped(promoScope, i));
-
-  const scopedSubtotal = scopedItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  if (discount.minimum_order_amount > 0 && scopedSubtotal < discount.minimum_order_amount) {
-    return { valid: false, error: 'minimum_not_met' };
+  const eligibilityError = await checkEligibility(discount, code, email);
+  if (eligibilityError) {
+    return { valid: false, error: eligibilityError };
   }
 
-  const minQuantity = discount.applies_to_quantity > 0 ? discount.applies_to_quantity : 1;
-  const targetQuantity = scopedItems.reduce((sum, i) => sum + i.quantity, 0);
-  if (targetQuantity < minQuantity) {
-    return { valid: false, error: 'quantity_not_met' };
+  const cartError = checkCartConditions(discount, items);
+  if (cartError) {
+    return { valid: false, error: cartError };
   }
 
   if (WISHLIST_EMAIL_REQUIRED_CODES.has(code) && !(await isEmailOnWishlist(email))) {

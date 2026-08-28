@@ -27,6 +27,7 @@ const PROMO_ERROR_KEYS: Record<string, string> = {
   quantity_not_met: 'promoErrorQuantityNotMet',
   minimum_not_met: 'promoErrorMinimumNotMet',
   not_eligible: 'promoErrorNotEligible',
+  already_redeemed: 'promoErrorAlreadyRedeemed',
 };
 
 interface CheckoutOrderSummaryProps {

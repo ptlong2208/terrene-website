@@ -140,6 +140,7 @@
     "promoErrorQuantityNotMet": "Chưa đủ điều kiện số lượng để áp mã này.",
     "promoErrorMinimumNotMet": "Đơn hàng chưa đạt giá trị tối thiểu để áp mã này.",
     "promoErrorNotEligible": "Email này chưa đủ điều kiện dùng mã.",
+    "promoErrorAlreadyRedeemed": "Bạn đã sử dụng mã này rồi.",
     "promoErrorGeneric": "Không thể áp mã, vui lòng thử lại.",
     "promoDescDiscountPercent": "giảm {value}%",
     "promoDescDiscountFixed": "giảm {value}",

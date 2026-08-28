@@ -17,6 +17,8 @@ export interface PendingOrder {
   expiresAt: number; // ms
   haravanOrderId: number;
   orderName: string;
+  promoCode?: string;
+  discountAmount?: number;
 }
 
 const key = (orderCode: number) => `order:${orderCode}`;

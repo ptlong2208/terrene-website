@@ -7,6 +7,7 @@ import { cancelHaravanOrder, updateHaravanOrderPaid } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import { deletePendingOrder, getPendingOrder } from '@/lib/orderStore';
 import { type PayOSWebhookData, verifySignature } from '@/lib/payos';
+import { recordRedemption } from '@/lib/promoRedemptions';
 import { makeRatelimit } from '@/lib/redis';
 
 const log = logger.child({ module: 'webhook/payment' });
@@ -96,6 +97,19 @@ export async function POST(req: NextRequest) {
     }
     // Return 500 so PayOS retries
     return Response.json({ error: 'Order update failed.' }, { status: 500 });
+  }
+
+  if (order.promoCode) {
+    await recordRedemption({
+      code: order.promoCode,
+      email: order.customer.email,
+      haravanOrderId: order.haravanOrderId,
+      discountAmount: order.discountAmount ?? 0,
+      paymentMethod: 'payos',
+    }).catch((e: unknown) => {
+      log.error({ orderCode: data.orderCode, e }, 'Failed to record promo redemption');
+      Sentry.captureException(e, { tags: { orderCode: data.orderCode } });
+    });
   }
 
   await deletePendingOrder(data.orderCode);
