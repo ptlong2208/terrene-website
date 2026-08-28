@@ -48,6 +48,7 @@ export default function VariantPicker({
     addItem({
       productSlug,
       productTitle,
+      productId: selected.product_id,
       variantId: selected.id,
       variantTitle: selected.title,
       price: selected.price,

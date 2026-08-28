@@ -4,16 +4,17 @@ import { forwardRef } from 'react';
 
 import SlotText from '@/app/components/ui/SlotText';
 
-type PrimaryButtonSize = 'default' | 'compact' | 'hero';
+type PrimaryButtonSize = 'default' | 'compact' | 'hero' | 'small';
 
 const SIZE_CLASS: Record<PrimaryButtonSize, string> = {
-  default: 'py-3.75',
-  compact: 'px-4.5 py-3',
-  hero: 'p-[clamp(13px,1.6vh,15px)]',
+  default: 'py-3.75 text-[16px]',
+  compact: 'px-4.5 py-3 text-[16px]',
+  hero: 'p-[clamp(13px,1.6vh,15px)] text-[16px]',
+  small: 'px-3 py-2 text-[13px]',
 };
 
 const BASE_CLASS =
-  'group text-cream flex cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) text-[16px] tracking-[-0.02em] no-underline transition-opacity hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40';
+  'text-cream flex cursor-pointer items-center justify-center overflow-hidden border-0 bg-(--green-deep) tracking-[-0.02em] no-underline transition-opacity enabled:hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-40';
 
 interface CommonProps {
   children: string;
@@ -50,7 +51,9 @@ const PrimaryButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, PrimaryB
     },
     ref
   ) => {
-    const classes = `${BASE_CLASS} ${SIZE_CLASS[size]} ${fullWidth ? 'w-full' : 'shrink-0'}${className ? ` ${className}` : ''}`;
+    const isDisabled =
+      href === undefined && Boolean((rest as ButtonHTMLAttributes<HTMLButtonElement>).disabled);
+    const classes = `${isDisabled ? '' : 'group '}${BASE_CLASS} ${SIZE_CLASS[size]} ${fullWidth ? 'w-full' : 'shrink-0'}${className ? ` ${className}` : ''}`;
     const content = loading && loadingText ? loadingText : <SlotText text={children} />;
 
     if (href !== undefined) {

@@ -15,6 +15,7 @@ const BASE = 'https://apis.haravan.com/com';
 
 export interface ProductVariant {
   id: number;
+  product_id: number;
   title: string;
   price: number;
   compare_at_price: number | null;
@@ -51,7 +52,8 @@ export async function createHaravanOrder(
   orderCode: number | null,
   paymentMethod: 'payos' | 'cod' = 'payos',
   shippingFee: number = 0,
-  shippingMethod: ShippingMethod = 'standard'
+  shippingMethod: ShippingMethod = 'standard',
+  discount?: { code: string; amount: number }
 ): Promise<{ haravanOrderId: number; orderName: string }> {
   const phone = localPhone(customer.phone);
   const res = await fetch(`${BASE}/orders.json`, {
@@ -107,6 +109,13 @@ export async function createHaravanOrder(
             code: shippingMethod === 'express' ? 'GHTK_XFAST' : 'GHTK',
           },
         ],
+        // Always "fixed_amount": the app already computed this exact currency amount (needed for
+        // the PayOS charge anyway) — sending "percentage" instead would have Haravan independently
+        // recompute a percentage off its own subtotal, which can disagree with the app's number by
+        // a rounding difference. fixed_amount makes Haravan just subtract, guaranteeing they match.
+        discount_codes: discount
+          ? [{ code: discount.code, amount: discount.amount, type: 'fixed_amount' }]
+          : undefined,
       },
     }),
   });

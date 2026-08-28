@@ -15,6 +15,8 @@ import { DEFAULT_ITEM_WEIGHT_GRAMS, SHIPPING_MAX_ORDER_WEIGHT } from '@/lib/conf
 import { fetchProductData, type HaravanProduct } from '@/lib/haravan';
 import logger from '@/lib/logger';
 import type { PendingOrderItem } from '@/lib/orderStore';
+import { validatePromoCode } from '@/lib/promo';
+import { computeDiscountAmount } from '@/lib/promoMath';
 
 const log = logger.child({ module: 'checkout' });
 
@@ -32,6 +34,7 @@ export const checkoutBodySchema = z.object({
   items: z.array(itemSchema).min(1).max(20),
   shippingFee: z.number().int().nonnegative().nullable(),
   shippingMethod: shippingMethodSchema,
+  promoCode: z.string().max(200).optional(),
 });
 
 export function errResponse(status: number, code: string, extra?: Record<string, string>) {
@@ -88,6 +91,8 @@ export async function validateCheckoutRequest(
       shippingFee: number;
       shippingMethod: ShippingMethod;
       amount: number;
+      promoCode: string | null;
+      discountAmount: number;
     }
   | Response
 > {
@@ -109,7 +114,13 @@ export async function validateCheckoutRequest(
     return errResponse(400, 'Invalid request.');
   }
 
-  const { customer, items, shippingFee: clientFee, shippingMethod } = parsed.data;
+  const {
+    customer,
+    items,
+    shippingFee: clientFee,
+    shippingMethod,
+    promoCode: rawPromoCode,
+  } = parsed.data;
 
   const productMap = await fetchProductMap(items);
   const itemResult = verifyItems(items, productMap);
@@ -118,6 +129,25 @@ export async function validateCheckoutRequest(
 
   const subtotal = pendingItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
   if (subtotal <= 0) return errResponse(422, CheckoutErrorCode.ZeroTotal);
+
+  let promoCode: string | null = null;
+  let discountAmount = 0;
+  if (rawPromoCode?.trim()) {
+    const promoResult = await validatePromoCode({
+      code: rawPromoCode,
+      email: customer.email,
+      items: pendingItems,
+    });
+    if (!promoResult.valid) {
+      log.warn(
+        { rawPromoCode, error: promoResult.error },
+        'Promo re-validation failed at checkout'
+      );
+      return errResponse(422, CheckoutErrorCode.PromoInvalid);
+    }
+    promoCode = rawPromoCode.trim().toUpperCase();
+    discountAmount = computeDiscountAmount(promoResult, pendingItems);
+  }
 
   const totalWeightGrams = items.reduce((sum, item) => {
     const variant = productMap[item.productSlug]?.variants.find((v) => v.id === item.variantId);
@@ -156,7 +186,9 @@ export async function validateCheckoutRequest(
     subtotal,
     shippingFee,
     shippingMethod,
-    amount: subtotal + shippingFee,
+    amount: subtotal - discountAmount + shippingFee,
+    promoCode,
+    discountAmount,
   };
 }
 
@@ -190,6 +222,7 @@ export function verifyItems(
 
     pendingItems.push({
       variantId: item.variantId,
+      productId: variant.product_id,
       productTitle: item.productTitle,
       variantTitle: item.variantTitle,
       quantity: item.quantity,

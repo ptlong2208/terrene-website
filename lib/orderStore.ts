@@ -3,6 +3,7 @@ import { getRedis } from '@/lib/redis';
 
 export interface PendingOrderItem {
   variantId: number;
+  productId: number;
   productTitle: string;
   variantTitle: string;
   quantity: number;

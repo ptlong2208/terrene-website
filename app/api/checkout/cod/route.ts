@@ -22,7 +22,8 @@ const log = logger.child({ module: 'checkout/cod' });
 export async function POST(req: NextRequest) {
   const validated = await validateCheckoutRequest(req, getRatelimit());
   if (validated instanceof Response) return validated;
-  const { customer, pendingItems, shippingFee, shippingMethod, amount } = validated;
+  const { customer, pendingItems, shippingFee, shippingMethod, amount, promoCode, discountAmount } =
+    validated;
 
   let orderName: string;
   let haravanOrderId: number;
@@ -33,7 +34,8 @@ export async function POST(req: NextRequest) {
       null,
       'cod',
       shippingFee,
-      shippingMethod
+      shippingMethod,
+      promoCode ? { code: promoCode, amount: discountAmount } : undefined
     ));
     log.info({ orderName }, 'Haravan COD order created');
   } catch (e) {

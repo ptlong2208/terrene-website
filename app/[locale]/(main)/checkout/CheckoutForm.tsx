@@ -24,9 +24,10 @@ import {
   type ShippingMethod,
 } from '@/lib/checkout';
 import { isExpressEligible } from '@/lib/oldSaigonWards';
+import { computeDiscountAmount } from '@/lib/promoMath';
 import { formatPrice } from '@/lib/utils';
 
-import CheckoutOrderSummary from './CheckoutOrderSummary';
+import CheckoutOrderSummary, { type AppliedPromo } from './CheckoutOrderSummary';
 
 interface Props {
   initialProvinces: ComboboxItem[];
@@ -100,6 +101,7 @@ export default function CheckoutForm({ initialProvinces }: Props) {
   });
   const [wards, setWards] = useState<ComboboxItem[]>([]);
   const [wardsLoading, setWardsLoading] = useState(() => Boolean(readDraftForm()?.provinceCode));
+  const [appliedPromo, setAppliedPromo] = useState<AppliedPromo | null>(null);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const expressEligible = isExpressEligible(form.wardCode, subtotal);
   // Falls back to standard if the user had picked express but it's no longer eligible
@@ -172,7 +174,8 @@ export default function CheckoutForm({ initialProvinces }: Props) {
 
   if (!mounted) return null;
 
-  const total = subtotal + (shippingFee ?? 0);
+  const discountAmount = appliedPromo ? computeDiscountAmount(appliedPromo, items) : 0;
+  const total = subtotal - discountAmount + (shippingFee ?? 0);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
@@ -228,6 +231,7 @@ export default function CheckoutForm({ initialProvinces }: Props) {
           items,
           shippingFee,
           shippingMethod: effectiveShippingMethod,
+          promoCode: appliedPromo?.code,
         }),
       });
 
@@ -237,6 +241,12 @@ export default function CheckoutForm({ initialProvinces }: Props) {
           const newFee = Number(body.fee);
           if (!isNaN(newFee)) setShippingFee(newFee);
           setServerError(t('errorShippingFeeChanged'));
+          setLoading(false);
+          return;
+        }
+        if (body.error === CheckoutErrorCode.PromoInvalid) {
+          setAppliedPromo(null);
+          setServerError(t('errorPromoInvalid'));
           setLoading(false);
           return;
         }
@@ -549,6 +559,9 @@ export default function CheckoutForm({ initialProvinces }: Props) {
             subtotal={subtotal}
             shippingFee={shippingFee}
             shippingLoading={shippingLoading}
+            email={form.email}
+            appliedPromo={appliedPromo}
+            onPromoApplied={setAppliedPromo}
           />
         </div>
       </div>

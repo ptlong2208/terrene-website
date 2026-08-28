@@ -6,7 +6,8 @@
     "shipping": "Shipping",
     "shippingFree": "Free",
     "phone": "Phone number",
-    "phonePlaceholder": "0901 234 567"
+    "phonePlaceholder": "0901 234 567",
+    "discount": "Discount"
   },
   "nav": {
     "mainLabel": "Main navigation",
@@ -114,6 +115,7 @@
     "errorNotFound": "{product} is no longer available.",
     "errorPaymentUnavailable": "Our payment service is temporarily unavailable. Please try again in a moment.",
     "errorShippingFeeChanged": "The shipping fee has changed. Please review the new fee and place your order again.",
+    "errorPromoInvalid": "That promo code is no longer valid and was removed from your order. Please review and place your order again.",
     "errorOrderTooHeavy": "We don't ship orders over {limit}kg. Please contact the shop for bulk orders.",
     "errorPriceChanged": "The price of {product} has changed. Please review your cart.",
     "successTitle": "Order confirmed",
@@ -126,7 +128,26 @@
     "cancelCta": "Return to checkout",
     "cancelShop": "Back to shop",
     "shippingLoading": "Calculating...",
-    "shipsFrom": "Shop address: {address}"
+    "shipsFrom": "Shop address: {address}",
+    "promoCodePlaceholder": "Promo code",
+    "promoApply": "Apply",
+    "promoApplying": "Applying...",
+    "promoRemove": "Remove",
+    "promoErrorEmailRequired": "Please enter your email before applying a code.",
+    "promoErrorInvalidCode": "Invalid promo code.",
+    "promoErrorExpired": "This promo code has expired.",
+    "promoErrorUsageLimitReached": "This promo code has reached its usage limit.",
+    "promoErrorQuantityNotMet": "Your cart doesn't meet the quantity requirement for this code.",
+    "promoErrorMinimumNotMet": "Your order doesn't meet the minimum amount for this code.",
+    "promoErrorNotEligible": "This email isn't eligible for this code.",
+    "promoErrorGeneric": "Couldn't apply this code, please try again.",
+    "promoDescDiscountPercent": "{value}% off",
+    "promoDescDiscountFixed": "{value} off",
+    "promoDescDiscountFixedPerUnit": "{value} off per qualifying item",
+    "promoDescMaxAmount": "up to {amount}",
+    "promoDescScoped": "only counts certain items in your cart",
+    "promoDescMinAmount": "minimum order of {amount}",
+    "promoDescMinQuantity": "minimum {quantity} qualifying items"
   },
   "trackOrder": {
     "title": "Track your order",

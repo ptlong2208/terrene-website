@@ -18,6 +18,7 @@ export enum CheckoutErrorCode {
   OrderTooHeavy = 'order_too_heavy',
   PriceChanged = 'price_changed',
   ExpressNotAvailable = 'express_not_available',
+  PromoInvalid = 'promo_invalid',
 }
 
 export const checkoutCustomerSchema = z.object({

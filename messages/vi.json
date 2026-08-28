@@ -6,7 +6,8 @@
     "shipping": "Phí vận chuyển",
     "shippingFree": "Miễn phí",
     "phone": "Số điện thoại",
-    "phonePlaceholder": "0901 234 567"
+    "phonePlaceholder": "0901 234 567",
+    "discount": "Giảm giá"
   },
   "nav": {
     "mainLabel": "Điều hướng chính",
@@ -114,6 +115,7 @@
     "errorNotFound": "{product} không còn có sẵn.",
     "errorPaymentUnavailable": "Dịch vụ thanh toán tạm thời không khả dụng. Vui lòng thử lại sau.",
     "errorShippingFeeChanged": "Phí vận chuyển vừa thay đổi. Vui lòng kiểm tra lại và đặt hàng.",
+    "errorPromoInvalid": "Mã giảm giá không còn hợp lệ, đã được gỡ khỏi đơn hàng. Vui lòng kiểm tra lại và đặt hàng.",
     "errorOrderTooHeavy": "Không hỗ trợ giao hàng quá {limit}kg. Vui lòng liên hệ shop để đặt số lượng lớn.",
     "errorPriceChanged": "Giá {product} vừa thay đổi, vui lòng kiểm tra lại giỏ hàng.",
     "successTitle": "Đặt hàng thành công",
@@ -126,7 +128,26 @@
     "cancelCta": "Quay lại thanh toán",
     "cancelShop": "Về cửa hàng",
     "shippingLoading": "Đang tính...",
-    "shipsFrom": "Địa chỉ shop: {address}"
+    "shipsFrom": "Địa chỉ shop: {address}",
+    "promoCodePlaceholder": "Mã giảm giá",
+    "promoApply": "Áp dụng",
+    "promoApplying": "Đang áp dụng...",
+    "promoRemove": "Bỏ mã",
+    "promoErrorEmailRequired": "Vui lòng nhập email trước khi áp mã.",
+    "promoErrorInvalidCode": "Mã giảm giá không hợp lệ.",
+    "promoErrorExpired": "Mã giảm giá đã hết hạn.",
+    "promoErrorUsageLimitReached": "Mã giảm giá đã hết lượt sử dụng.",
+    "promoErrorQuantityNotMet": "Chưa đủ điều kiện số lượng để áp mã này.",
+    "promoErrorMinimumNotMet": "Đơn hàng chưa đạt giá trị tối thiểu để áp mã này.",
+    "promoErrorNotEligible": "Email này chưa đủ điều kiện dùng mã.",
+    "promoErrorGeneric": "Không thể áp mã, vui lòng thử lại.",
+    "promoDescDiscountPercent": "giảm {value}%",
+    "promoDescDiscountFixed": "giảm {value}",
+    "promoDescDiscountFixedPerUnit": "giảm {value} cho mỗi sản phẩm áp dụng",
+    "promoDescMaxAmount": "tối đa {amount}",
+    "promoDescScoped": "chỉ tính cho một số sản phẩm trong giỏ hàng",
+    "promoDescMinAmount": "đơn tối thiểu {amount}",
+    "promoDescMinQuantity": "tối thiểu {quantity} sản phẩm áp dụng"
   },
   "trackOrder": {
     "title": "Tra cứu đơn hàng",
