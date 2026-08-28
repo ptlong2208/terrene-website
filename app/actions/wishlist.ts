@@ -2,14 +2,11 @@
 
 import { emailSchema } from '@/lib/validateEmail';
 
-export type WishlistState =
-  | { success: true }
-  | { error: string }
-  | null;
+export type WishlistState = { success: true } | { error: string } | null;
 
 export async function subscribeToWishlist(
   _prevState: WishlistState,
-  formData: FormData,
+  formData: FormData
 ): Promise<WishlistState> {
   const result = emailSchema.safeParse({ email: formData.get('email') });
   if (!result.success) return { error: result.error.issues[0].message };
@@ -25,7 +22,7 @@ export async function subscribeToWishlist(
       headers: {
         'api-key': apiKey,
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
       body: JSON.stringify({
         email,
@@ -34,7 +31,6 @@ export async function subscribeToWishlist(
       }),
       cache: 'no-store',
     });
-
 
     if (!res.ok) {
       console.log('Brevo API error:', res.status, await res.text());

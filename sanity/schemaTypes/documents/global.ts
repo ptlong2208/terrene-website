@@ -1,5 +1,5 @@
-import { defineField, defineType } from 'sanity'
-import { CogIcon } from '@sanity/icons/Cog'
+import { CogIcon } from '@sanity/icons/Cog';
+import { defineField, defineType } from 'sanity';
 
 export const global = defineType({
   name: 'global',
@@ -17,8 +17,16 @@ export const global = defineType({
       options: { accept: 'audio/*' },
     }),
     defineField({ name: 'music_consent_text', title: 'Music Consent Text', type: 'localizedText' }),
-    defineField({ name: 'music_consent_accept', title: 'Music Consent Accept', type: 'localizedString' }),
-    defineField({ name: 'music_consent_decline', title: 'Music Consent Decline', type: 'localizedString' }),
+    defineField({
+      name: 'music_consent_accept',
+      title: 'Music Consent Accept',
+      type: 'localizedString',
+    }),
+    defineField({
+      name: 'music_consent_decline',
+      title: 'Music Consent Decline',
+      type: 'localizedString',
+    }),
     defineField({
       name: 'nav_links',
       title: 'Nav Links',
@@ -40,8 +48,16 @@ export const global = defineType({
       type: 'array',
       of: [{ type: 'socialLink' }],
     }),
-    defineField({ name: 'footer_newsletter_label', title: 'Footer Newsletter Label', type: 'localizedString' }),
-    defineField({ name: 'footer_newsletter_placeholder', title: 'Footer Newsletter Placeholder', type: 'localizedString' }),
+    defineField({
+      name: 'footer_newsletter_label',
+      title: 'Footer Newsletter Label',
+      type: 'localizedString',
+    }),
+    defineField({
+      name: 'footer_newsletter_placeholder',
+      title: 'Footer Newsletter Placeholder',
+      type: 'localizedString',
+    }),
     defineField({
       name: 'footer_legal_links',
       title: 'Footer Legal Links',
@@ -54,7 +70,7 @@ export const global = defineType({
   preview: {
     select: { title: 'site_name' },
     prepare({ title }: { title?: string }) {
-      return { title: title ?? 'Global Settings' }
+      return { title: title ?? 'Global Settings' };
     },
   },
-})
+});

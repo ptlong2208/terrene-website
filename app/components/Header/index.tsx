@@ -1,26 +1,29 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
-import { strapiMediaUrl } from '@/lib/strapi';
-import type { NavLink, StrapiMedia } from '@/lib/types';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import MenuOverlay, { type MenuState } from '@/app/components/MenuOverlay';
 import MusicConsentBanner from '@/app/components/MusicConsentBanner';
 import { useBodyScrollLock } from '@/app/hooks/useBodyScrollLock';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
+import type { MediaAsset, NavLink } from '@/lib/types';
+
 import HeaderLeft from './HeaderLeft';
 import HeaderLogo from './HeaderLogo';
 import HeaderRight from './HeaderRight';
 
 interface HeaderProps {
   siteName: string;
-  ambientAudio?: StrapiMedia;
+  ambientAudio?: MediaAsset;
   navLinks?: NavLink[];
   navShopLink?: NavLink;
   navCartLabel?: string;
-  cartCount?: number;
+  navOverlayImage?: MediaAsset | null;
   musicConsentText?: string | null;
   musicConsentAccept?: string | null;
   musicConsentDecline?: string | null;
@@ -32,29 +35,34 @@ export default function Header({
   navLinks = [],
   navShopLink,
   navCartLabel,
-  cartCount = 0,
+  navOverlayImage,
   musicConsentText,
   musicConsentAccept,
   musicConsentDecline,
 }: HeaderProps) {
   const t = useTranslations('audio');
+  const pathname = usePathname();
+  const isHomepage = /^\/[a-z]{2}\/?$/.test(pathname);
   const [menuState, setMenuState] = useState<MenuState>('closed');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [hasBg, setHasBg] = useState(false);
+  const [scrolledPast60, setScrolledPast60] = useState(false);
+  const hasBg = !isHomepage || scrolledPast60;
   const [showConsent, setShowConsent] = useState(false);
+  const preloaderDone = usePreloaderDone();
 
   const headerRef = useRef<HTMLElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hideHeaderAnimRef = useRef<gsap.core.Timeline | null>(null);
   const isOverFooterRef = useRef(false);
-  const audioSrc = ambientAudio ? strapiMediaUrl(ambientAudio.url) : '';
+  const audioSrc = ambientAudio?.url ?? '';
 
   useEffect(() => {
     if (!headerRef.current) return;
     gsap.registerPlugin(ScrollTrigger, CustomEase);
     CustomEase.create('headerSlide', 'M0,0 C0.77,0 0.175,1 1,1');
 
-    const hideHeaderAnim = gsap.timeline({ paused: true })
+    const hideHeaderAnim = gsap
+      .timeline({ paused: true })
       .to(headerRef.current, { opacity: 0, duration: 0.8, ease: 'power1.inOut' }, 0)
       .to(headerRef.current, { yPercent: -110, duration: 0.8, ease: 'headerSlide' }, 0);
 
@@ -68,18 +76,19 @@ export default function Header({
 
         if (isOverFooterRef.current) {
           hideHeaderAnim.reverse();
-          setHasBg(true);
+          setScrolledPast60(true);
           return;
         }
 
-        setHasBg(currentScroll > 60);
+        setScrolledPast60(currentScroll > 60);
 
         if (currentScroll <= 0) {
           hideHeaderAnim.reverse();
           return;
         }
 
-        const isTimelineTrapped = (window as Window & { isTimelineTrapped?: boolean }).isTimelineTrapped;
+        const isTimelineTrapped = (window as Window & { isTimelineTrapped?: boolean })
+          .isTimelineTrapped;
         if (isTimelineTrapped) return;
 
         if (self.direction === 1) {
@@ -97,6 +106,10 @@ export default function Header({
     };
   }, []);
 
+  useEffect(() => {
+    hideHeaderAnimRef.current?.reverse();
+  }, [pathname]);
+
   useBodyScrollLock(menuState !== 'closed');
 
   const openMenu = () => setMenuState('open');
@@ -104,10 +117,28 @@ export default function Header({
   const handleMenuClosed = useCallback(() => setMenuState('closed'), []);
 
   useEffect(() => {
-    if (!audioSrc || !musicConsentText || !musicConsentAccept || !musicConsentDecline) return;
+    if (
+      !preloaderDone ||
+      !audioSrc ||
+      !musicConsentText ||
+      !musicConsentAccept ||
+      !musicConsentDecline
+    )
+      return;
     const timer = setTimeout(() => setShowConsent(true), 2000);
     return () => clearTimeout(timer);
-  }, [audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
+  }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
+
+  // If no music is configured, fire music-consent:done so CookieConsent can show.
+  useEffect(() => {
+    if (!preloaderDone) return;
+    if (audioSrc && musicConsentText && musicConsentAccept && musicConsentDecline) return;
+    const timer = setTimeout(
+      () => window.dispatchEvent(new CustomEvent('music-consent:done')),
+      2000
+    );
+    return () => clearTimeout(timer);
+  }, [preloaderDone, audioSrc, musicConsentText, musicConsentAccept, musicConsentDecline]);
 
   const playMusic = async () => {
     const audio = audioRef.current;
@@ -134,14 +165,17 @@ export default function Header({
   const handleConsentAccept = () => {
     setShowConsent(false);
     void playMusic();
+    window.dispatchEvent(new CustomEvent('music-consent:done'));
   };
 
   return (
     <>
       <header
         ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-1000 grid grid-cols-[1fr_auto_1fr] items-center h-22 md:h-16 px-5 md:px-gutter transition-colors duration-400 ${
-          hasBg ? 'bg-cream text-(--green-deep)' : 'bg-transparent text-cream'
+        className={`md:px-gutter fixed top-0 right-0 left-0 z-1000 grid h-22 grid-cols-[1fr_auto_1fr] items-center px-5 transition-colors duration-400 md:h-16 ${
+          hasBg
+            ? 'bg-cream border-b border-(--green-deep)/10 text-(--green-deep)'
+            : 'text-cream bg-transparent'
         }`}
       >
         <audio ref={audioRef} src={audioSrc} loop preload="metadata" />
@@ -155,16 +189,13 @@ export default function Header({
 
         <HeaderLogo siteName={siteName} />
 
-        <HeaderRight
-          navShopLink={navShopLink}
-          navCartLabel={navCartLabel}
-          cartCount={cartCount}
-        />
+        <HeaderRight navShopLink={navShopLink} navCartLabel={navCartLabel} />
       </header>
 
       <MenuOverlay
         menuState={menuState}
         navLinks={navLinks}
+        overlayImage={navOverlayImage}
         onClose={closeMenu}
         onClosed={handleMenuClosed}
       />
@@ -176,7 +207,10 @@ export default function Header({
         acceptLabel={musicConsentAccept ?? ''}
         declineLabel={musicConsentDecline ?? ''}
         onAccept={handleConsentAccept}
-        onDecline={() => setShowConsent(false)}
+        onDecline={() => {
+          setShowConsent(false);
+          window.dispatchEvent(new CustomEvent('music-consent:done'));
+        }}
       />
     </>
   );

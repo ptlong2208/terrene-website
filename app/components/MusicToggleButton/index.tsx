@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
+
 import styles from './MusicToggleButton.module.css';
 
 interface MusicToggleButtonProps {

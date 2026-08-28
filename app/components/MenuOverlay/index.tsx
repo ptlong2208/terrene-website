@@ -1,13 +1,16 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Link from 'next/link';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { CustomEase } from 'gsap/CustomEase';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import type { NavLink } from '@/lib/types';
-import SlotText from '@/app/components/SlotText';
+import { useEffect, useRef } from 'react';
+
+import SlotText from '@/app/components/ui/SlotText';
+import type { MediaAsset, NavLink } from '@/lib/types';
+
 import styles from './MenuOverlay.module.css';
 
 export type MenuState = 'closed' | 'open' | 'closing';
@@ -29,6 +32,7 @@ const linkVariants = {
 interface MenuOverlayProps {
   menuState: MenuState;
   navLinks: NavLink[];
+  overlayImage?: MediaAsset | null;
   onClose: () => void;
   onClosed: () => void;
 }
@@ -36,6 +40,7 @@ interface MenuOverlayProps {
 export default function MenuOverlay({
   menuState,
   navLinks,
+  overlayImage,
   onClose,
   onClosed,
 }: MenuOverlayProps) {
@@ -47,8 +52,11 @@ export default function MenuOverlay({
   const footerRef = useRef<HTMLDivElement | null>(null);
 
   const t = useTranslations('nav');
+  const tCommon = useTranslations('common');
   const onClosedRef = useRef(onClosed);
-  useEffect(() => { onClosedRef.current = onClosed; });
+  useEffect(() => {
+    onClosedRef.current = onClosed;
+  });
 
   useEffect(() => {
     const overlay = overlayRef.current;
@@ -84,7 +92,11 @@ export default function MenuOverlay({
       gsap.to(curtains[2], { yPercent: 0, duration: 0.74, ease, delay: 0.16 });
 
       gsap.fromTo(content, { y: 18 }, { y: 0, duration: 0.7, ease, delay: 0.38 });
-      gsap.fromTo(content, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power1.inOut', delay: 0.42 });
+      gsap.fromTo(
+        content,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power1.inOut', delay: 0.42 }
+      );
 
       if (footer) gsap.to(footer, { autoAlpha: 1, duration: 0.6, ease: 'power2.out', delay: 0.7 });
     }
@@ -120,31 +132,28 @@ export default function MenuOverlay({
     const content = contentRef.current;
     const footer = footerRef.current;
     return () => {
-      gsap.killTweensOf(
-        [overlay, curtain1, curtain2, curtain3, content, footer].filter(Boolean),
-      );
+      gsap.killTweensOf([overlay, curtain1, curtain2, curtain3, content, footer].filter(Boolean));
     };
   }, []);
 
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-1100 text-(--brown) invisible"
+      className="invisible fixed inset-0 z-1100 text-(--brown)"
       aria-hidden={menuState === 'closed'}
     >
-      <div ref={curtain1Ref} className="absolute inset-0 z-1 bg-(--brown) origin-top" />
-      <div ref={curtain2Ref} className="absolute inset-0 z-2 bg-(--green-deep) origin-top" />
-      <div ref={curtain3Ref} className="absolute inset-0 z-3 bg-cream origin-top" />
+      <div ref={curtain1Ref} className="absolute inset-0 z-1 origin-top bg-(--brown)" />
+      <div ref={curtain2Ref} className="absolute inset-0 z-2 origin-top bg-(--green-deep)" />
+      <div ref={curtain3Ref} className="bg-cream absolute inset-0 z-3 origin-top" />
 
-      <div ref={contentRef} className="relative z-4 h-full flex flex-col overflow-hidden">
-
-        <div className="flex items-center justify-center px-gutter h-16 shrink-0">
-          <button type="button" className={styles.closeBtn} onClick={onClose}>
-            {t('overlayClose')}
+      <div ref={contentRef} className="relative z-4 flex h-full flex-col overflow-hidden">
+        <div className="px-gutter flex h-16 shrink-0 items-center justify-center">
+          <button type="button" className={`${styles.closeBtn} group`} onClick={onClose}>
+            <SlotText text={tCommon('close')} />
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 flex flex-col items-center justify-center gap-12 px-gutter pb-5">
+        <div className="px-gutter flex min-h-0 flex-1 flex-col items-center justify-center gap-12 pb-5">
           <nav className="flex flex-col items-center gap-2" aria-label={t('overlayLabel')}>
             {navLinks.map((link, i) => (
               <motion.div
@@ -162,10 +171,20 @@ export default function MenuOverlay({
           </nav>
         </div>
 
-        <div
-          ref={footerRef}
-          className="h-[clamp(300px,42vh,520px)] shrink-0 overflow-hidden"
-        />
+        {overlayImage && (
+          <div
+            ref={footerRef}
+            className="relative h-[clamp(300px,42vh,520px)] shrink-0 overflow-hidden"
+          >
+            <Image
+              src={overlayImage.url}
+              alt={overlayImage.alternativeText ?? ''}
+              fill
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

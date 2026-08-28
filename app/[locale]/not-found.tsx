@@ -6,23 +6,23 @@ export default async function NotFound() {
   const t = await getTranslations({ locale, namespace: 'notFound' });
 
   return (
-    <main className="min-h-screen bg-cream text-dark font-sans flex flex-col items-center justify-center px-6 text-center">
+    <main className="bg-cream text-dark flex min-h-screen flex-col items-center justify-center px-6 text-center font-sans">
       <h1
-        className="font-sans leading-none tracking-[-0.04em] text-matcha select-none"
+        className="text-matcha font-sans leading-none tracking-[-0.04em] select-none"
         style={{ fontSize: 'clamp(120px, 22vw, 320px)' }}
       >
         404
       </h1>
 
-      <div className="w-12 h-px bg-dark opacity-20 my-8" />
+      <div className="bg-dark my-8 h-px w-12 opacity-20" />
 
-      <p className="text-[18px] sm:text-[20px] text-muted leading-relaxed max-w-sm mb-10">
+      <p className="text-muted mb-10 max-w-sm text-[18px] leading-relaxed sm:text-[20px]">
         {t('message')}
       </p>
 
       <Link
         href="/"
-        className="inline-flex items-center gap-2 px-7 py-3 rounded-full border border-dark/20 text-[14px] tracking-[0.08em] uppercase font-medium hover:bg-dark hover:text-cream transition-colors duration-300"
+        className="border-dark/20 hover:bg-dark hover:text-cream inline-flex items-center gap-2 rounded-full border px-7 py-3 text-[14px] font-medium tracking-[0.08em] uppercase transition-colors duration-300"
       >
         <span>←</span>
         <span>{t('backHome')}</span>

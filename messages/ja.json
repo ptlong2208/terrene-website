@@ -1,10 +1,12 @@
 {
+  "common": {
+    "close": "閉じる"
+  },
   "nav": {
     "mainLabel": "ナビゲーション",
     "overlayLabel": "ナビゲーション",
     "menuOpen": "メニューを開く",
-    "menuClose": "メニューを閉じる",
-    "overlayClose": "閉じる"
+    "menuClose": "メニューを閉じる"
   },
   "audio": {
     "play": "音楽を再生",
@@ -16,7 +18,12 @@
     "emailInvalid": "有効なメールアドレスを入力してください。",
     "alreadySubscribed": "このメールアドレスはすでに登録されています。",
     "serverError": "エラーが発生しました。もう一度お試しください。",
-    "networkError": "接続エラーです。もう一度お試しください。"
+    "networkError": "接続エラーです。もう一度お試しください。",
+    "subscribeSuccess": "ご登録ありがとうございます！"
+  },
+  "fieldErrors": {
+    "nameInvalid": "お名前は2〜100文字で入力してください",
+    "emailInvalid": "有効なメールアドレスを入力してください"
   },
   "comingSoon": {
     "seoTitle": "Terrene — もうすぐオープン",
@@ -25,8 +32,87 @@
   "preloader": {
     "quote": "ゆっくりと点てて——朝はまだ待っている。"
   },
+  "shop": {
+    "viewProduct": "詳細を見る",
+    "viewAll": "すべての商品を見る",
+    "tasteNotesTitle": "テイスティングノート",
+    "backToAll": "すべての商品",
+    "shippingNote": "🚚 300,000₫以上のご注文で送料無料",
+    "contactUs": "お問い合わせ",
+    "addToCart": "カートに追加",
+    "stockRemaining": "残り{count}点",
+    "cartLimit": "購入可能な最大数量に達しました",
+    "productInfoTitle": "商品情報",
+    "allProducts": "すべての商品",
+    "noProducts": "このカテゴリにはまだ商品がありません。",
+    "sort": "並び替え",
+    "sortDefault": "デフォルト",
+    "sortPriceAsc": "価格：安い順",
+    "sortPriceDesc": "価格：高い順"
+  },
+  "cart": {
+    "title": "カート",
+    "empty": "カートに商品がありません。",
+    "continueShopping": "お買い物を続ける",
+    "subtotal": "小計",
+    "checkout": "チェックアウト",
+    "decreaseQty": "数量を減らす",
+    "increaseQty": "数量を増やす",
+    "editQty": "数量を編集"
+  },
+  "checkout": {
+    "title": "チェックアウト",
+    "orderSummary": "注文内容",
+    "customerInfo": "お客様情報",
+    "name": "お名前",
+    "namePlaceholder": "山田 太郎",
+    "phone": "電話番号",
+    "phonePlaceholder": "090-1234-5678",
+    "email": "メールアドレス",
+    "emailPlaceholder": "your@email.com",
+    "note": "備考（任意）",
+    "notePlaceholder": "配送の注意事項、ギフトメッセージなど",
+    "codConfirmTitle": "代金引換注文の確認",
+    "codConfirmDesc": "確認する前に注文内容をご確認ください。確認後すぐに処理されます。",
+    "codConfirmDelivery": "お届け先",
+    "codConfirmAction": "注文を確定する",
+    "codConfirmBack": "戻る",
+    "paymentMethod": "お支払い方法",
+    "paymentOnline": "オンライン決済",
+    "paymentOnlineDesc": "QRコード / 銀行振込",
+    "paymentCod": "代金引換（COD）",
+    "paymentCodDesc": "配達時に現金でお支払い",
+    "placeOrder": "注文を確定する",
+    "processing": "処理中...",
+    "emptyCart": "カートに商品がありません。",
+    "backToShop": "ショップに戻る",
+    "backToForm": "注文情報に戻る",
+    "errorPhoneInvalid": "電話番号の形式が正しくありません",
+    "total": "合計",
+    "successTitle": "ご注文が確定しました",
+    "successMessage": "ご注文ありがとうございます。丁寧に準備してお届けします。近日中にご連絡いたします。",
+    "orderCode": "注文番号",
+    "successContact": "{phone} にご連絡して配送の確認をいたします。",
+    "successCta": "お買い物を続ける",
+    "cancelTitle": "お支払いがキャンセルされました",
+    "cancelMessage": "お支払いが完了しませんでした。カートは保存されていますので、いつでもやり直せます。",
+    "cancelCta": "チェックアウトに戻る",
+    "cancelShop": "ショップに戻る"
+  },
+  "partners": {
+    "visit": "訪問する"
+  },
+  "testimonials": {
+    "prev": "前のレビュー",
+    "next": "次のレビュー"
+  },
   "notFound": {
     "message": "このページは見つかりませんでした。トップページに戻りましょう。",
     "backHome": "トップへ戻る"
+  },
+  "cookies": {
+    "message": "より良い体験のためにCookieを使用しています。同意しますか？",
+    "accept": "同意する",
+    "decline": "断る"
   }
 }

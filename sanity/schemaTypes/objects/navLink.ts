@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+import { defineField, defineType } from 'sanity';
 
 export const navLink = defineType({
   name: 'navLink',
@@ -11,4 +11,4 @@ export const navLink = defineType({
   preview: {
     select: { title: 'label.vi', subtitle: 'href' },
   },
-})
+});

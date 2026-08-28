@@ -1,0 +1,149 @@
+'use client';
+
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslations } from 'next-intl';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import ProductCard from '@/app/components/FeaturedProductsSection/ProductCard';
+import Dropdown from '@/app/components/ui/Dropdown';
+import type { ShopCategory, ShopProduct } from '@/lib/types';
+
+import CategoryBar from './CategoryBar';
+import { CategoryFilter, SortMode } from './constants';
+
+export { CategoryFilter, SortMode } from './constants';
+
+// Persists across SPA navigations; resets only on hard refresh.
+// Used to skip entrance animations when navigating back to this page.
+let entranceAnimated = false;
+
+interface ShopCatalogProps {
+  products: ShopProduct[];
+  categories: ShopCategory[];
+  prices: Record<string, number>;
+  locale: string;
+}
+
+export default function ShopCatalog({ products, categories, prices, locale }: ShopCatalogProps) {
+  const t = useTranslations('shop');
+  const [activeCategory, setActiveCategory] = useState<string>(CategoryFilter.All);
+  const [sortMode, setSortMode] = useState<SortMode>(SortMode.Default);
+
+  const barRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) {
+      const id = p.category?.documentId;
+      if (id) counts[id] = (counts[id] ?? 0) + 1;
+    }
+    return counts;
+  }, [products]);
+
+  const filtered = useMemo(() => {
+    let list =
+      activeCategory === CategoryFilter.All
+        ? products
+        : products.filter((p) => p.category?.documentId === activeCategory);
+
+    if (sortMode === SortMode.PriceAsc) {
+      list = [...list].sort((a, b) => (prices[a.slug] ?? 0) - (prices[b.slug] ?? 0));
+    } else if (sortMode === SortMode.PriceDesc) {
+      list = [...list].sort((a, b) => (prices[b.slug] ?? 0) - (prices[a.slug] ?? 0));
+    }
+
+    return list;
+  }, [products, prices, activeCategory, sortMode]);
+
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    if (entranceAnimated) return;
+    gsap.from(Array.from(bar.children), {
+      opacity: 0,
+      y: 18,
+      duration: 0.8,
+      stagger: 0.08,
+      ease: 'power3.out',
+      delay: 0.1,
+    });
+  }, []);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      gsap.registerPlugin(ScrollTrigger);
+      const cards = grid.querySelectorAll('article');
+
+      if (entranceAnimated) {
+        // Back navigation — skip entrance, show cards immediately
+        gsap.set(cards, { opacity: 1, y: 0 });
+      } else {
+        entranceAnimated = true;
+        gsap.set(cards, { opacity: 0, y: 30 });
+        ScrollTrigger.create({
+          trigger: grid,
+          start: 'top 85%',
+          once: true,
+          onEnter: () =>
+            gsap.to(cards, { opacity: 1, y: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out' }),
+        });
+      }
+    } else {
+      gsap.fromTo(grid, { opacity: 0.5 }, { opacity: 1, duration: 0.35, ease: 'power2.out' });
+    }
+  }, [filtered]);
+
+  const sortOptions = [
+    { value: SortMode.Default, label: t('sortDefault') },
+    { value: SortMode.PriceAsc, label: t('sortPriceAsc') },
+    { value: SortMode.PriceDesc, label: t('sortPriceDesc') },
+  ] as const satisfies { value: SortMode; label: string }[];
+
+  return (
+    <div className="pt-16">
+      <div
+        ref={barRef}
+        className="px-gutter relative z-10 flex flex-wrap items-center justify-between gap-4 pt-[clamp(48px,8vh,100px)] pb-[clamp(32px,5vh,56px)]"
+      >
+        <CategoryBar
+          categories={categories}
+          categoryCounts={categoryCounts}
+          totalCount={products.length}
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+          allProductsLabel={t('allProducts')}
+        />
+        <Dropdown label={t('sort')} value={sortMode} options={sortOptions} onChange={setSortMode} />
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="px-gutter pt-10 pb-[clamp(80px,12vh,160px)] text-center text-(--green-deep) opacity-50">
+          <p className="text-[15px]">{t('noProducts')}</p>
+        </div>
+      ) : (
+        <div
+          ref={gridRef}
+          className="px-gutter mx-auto grid max-w-365 grid-cols-2 gap-x-[clamp(20px,2.4vw,40px)] gap-y-[clamp(28px,3.5vh,48px)] pb-[clamp(80px,12vh,160px)] max-[520px]:grid-cols-1"
+        >
+          {filtered.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              href={`/${locale}/shop/${product.slug}`}
+              minPrice={prices[product.slug]}
+              className="flex flex-col"
+              sizes="(max-width: 520px) 100vw, 50vw"
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

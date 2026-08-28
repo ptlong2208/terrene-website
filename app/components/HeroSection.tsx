@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+
 import { useHeroAnimation } from '@/app/hooks/useHeroAnimation';
 
 interface HeroSectionProps {
@@ -28,12 +29,12 @@ export default function HeroSection({
   return (
     <section
       ref={sectionRef}
-      className="sticky top-0 z-0 min-h-svh overflow-hidden flex items-end pt-27 lg:pt-24 pb-[clamp(28px,5vh,56px)] px-gutter"
+      className="px-gutter sticky top-0 z-0 flex min-h-svh items-end overflow-hidden pt-27 pb-[clamp(28px,5vh,56px)] lg:pt-24"
     >
       {videoUrl ? (
         <video
           ref={videoRef}
-          className="absolute left-0 top-[-10%] w-full h-[120%] object-cover z-1 will-change-transform"
+          className="absolute top-[-10%] left-0 z-1 h-[120%] w-full object-cover will-change-transform"
           autoPlay
           muted
           loop
@@ -43,7 +44,7 @@ export default function HeroSection({
           <source src={videoUrl} type="video/mp4" />
         </video>
       ) : (
-        <div className="absolute inset-0 z-1 bg-cream" />
+        <div className="bg-cream absolute inset-0 z-1" />
       )}
 
       <div
@@ -54,11 +55,11 @@ export default function HeroSection({
         }}
       />
 
-      <div className="relative z-3 w-full grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(280px,46ch)] items-start lg:items-end gap-4.5 lg:gap-[clamp(24px,5vw,90px)] text-cream">
+      <div className="text-cream relative z-3 grid w-full grid-cols-1 items-start gap-4.5 lg:grid-cols-[minmax(0,1fr)_minmax(280px,46ch)] lg:items-end lg:gap-[clamp(24px,5vw,90px)]">
         {title ? (
           <h1
             ref={titleRef}
-            className="max-w-[16ch] text-balance break-keep hyphens-none font-[380] tracking-[-0.02em] text-[2.25rem] sm:text-[2.875rem] lg:text-[3.5rem] xl:text-[4.25rem] leading-[1.1] lg:leading-[1.08]"
+            className="max-w-[16ch] text-[2.25rem] leading-[1.1] tracking-[-0.02em] text-balance break-keep hyphens-none opacity-0 sm:text-[2.875rem] lg:text-[3.5rem] xl:text-[4.25rem]"
           >
             {title}
           </h1>
@@ -69,7 +70,7 @@ export default function HeroSection({
         {description ? (
           <p
             ref={descRef}
-            className="max-w-152 lg:max-w-[46ch] lg:justify-self-end text-pretty text-[0.875rem] sm:text-[0.9375rem] lg:text-[1rem] leading-[1.58] lg:leading-[1.62] text-cream/86"
+            className="text-cream/86 max-w-152 text-[0.875rem] leading-normal text-pretty opacity-0 sm:text-[0.9375rem] lg:max-w-[46ch] lg:justify-self-end lg:text-[1rem]"
           >
             {description}
           </p>

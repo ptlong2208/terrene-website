@@ -1,12 +1,16 @@
+import '@fontsource-variable/mona-sans/index.css';
+import '../globals.css';
+
 import type { Metadata } from 'next';
+import { Faculty_Glyphic } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { Faculty_Glyphic } from 'next/font/google';
-import '@fontsource-variable/mona-sans/index.css';
-import SmoothScroll from '@/app/components/SmoothScroll';
+
+import CookieConsent from '@/app/components/CookieConsent';
+import SmoothScroll from '@/app/components/ui/SmoothScroll';
 import { routing } from '@/i18n/routing';
-import '../globals.css';
+import { getGlobal } from '@/sanity/lib/queries';
 
 const facultyGlyphic = Faculty_Glyphic({
   variable: '--font-faculty-glyphic',
@@ -15,10 +19,18 @@ const facultyGlyphic = Faculty_Glyphic({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  title: 'Terrene | The Ritual of Matcha',
-  description: 'The Ritual of Matcha',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const global = await getGlobal(locale);
+  return {
+    title: global.site_name,
+    description: global.site_description ?? undefined,
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -38,6 +50,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll />
           {children}
+          <CookieConsent gaId={process.env.NEXT_PUBLIC_GA_ID ?? ''} />
         </NextIntlClientProvider>
       </body>
     </html>

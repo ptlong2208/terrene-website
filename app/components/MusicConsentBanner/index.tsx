@@ -1,6 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
+
 import styles from './MusicConsentBanner.module.css';
 
 interface MusicConsentBannerProps {
@@ -27,7 +28,7 @@ export default function MusicConsentBanner({
       className={clsx(styles.banner, show && styles.visible)}
       role="dialog"
       aria-label={dialogLabel}
-      aria-hidden={!show}
+      inert={!show || undefined}
     >
       <p className={styles.text}>{text}</p>
       <div className={styles.actions}>

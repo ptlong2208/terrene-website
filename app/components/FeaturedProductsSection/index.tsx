@@ -1,0 +1,104 @@
+'use client';
+
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslations } from 'next-intl';
+import { useEffect, useRef } from 'react';
+
+import CtaLink from '@/app/components/ui/CtaLink';
+import Section from '@/app/components/ui/Section';
+import { usePreloaderDone } from '@/app/hooks/usePreloaderDone';
+import type { SectionHeaderData, ShopProduct } from '@/lib/types';
+
+import styles from './index.module.css';
+import ProductCard from './ProductCard';
+
+interface FeaturedProductsSectionProps {
+  header?: SectionHeaderData | null;
+  products?: ShopProduct[];
+  productPrices?: Record<string, number>;
+  viewAllHref?: string;
+}
+
+export default function FeaturedProductsSection({
+  header,
+  products = [],
+  productPrices = {},
+  viewAllHref = '/shop',
+}: FeaturedProductsSectionProps) {
+  const t = useTranslations('shop');
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const preloaderDone = usePreloaderDone();
+
+  useEffect(() => {
+    if (!preloaderDone || !marqueeRef.current || !ctaRef.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const marquee = marqueeRef.current;
+    const cta = ctaRef.current;
+    const cards = marquee.querySelectorAll('article');
+
+    gsap.set(cards, { y: 46, opacity: 0 });
+
+    const tl = gsap
+      .timeline({
+        scrollTrigger: { trigger: marquee, start: 'top 78%', once: true },
+      })
+      .to(marquee, { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' })
+      .to(cards, { y: 0, opacity: 1, duration: 0.85, stagger: 0.045, ease: 'power3.out' }, '-=0.35')
+      .to(cta, { y: 0, opacity: 1, duration: 0.55, ease: 'power2.out' }, '-=0.45');
+
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+      gsap.set([marquee, cta, ...Array.from(cards)], { clearProps: 'all' });
+    };
+  }, [preloaderDone]);
+
+  if (!products.length) return null;
+
+  return (
+    <Section
+      kicker={header?.kicker}
+      title={header?.title}
+      titleClassName="mb-[clamp(18px,2.5vw,32px)]"
+      className="overflow-hidden max-md:min-h-0"
+    >
+      <div
+        ref={marqueeRef}
+        className="-mx-gutter group/marquee translate-y-6 overflow-hidden opacity-0"
+      >
+        <div
+          className={`flex w-max group-hover/marquee:[animation-play-state:paused] motion-reduce:animate-none ${styles.track}`}
+        >
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              href={`/shop/${product.slug}`}
+              minPrice={productPrices[product.slug]}
+            />
+          ))}
+          {products.map((product) => (
+            <ProductCard
+              key={`dup-${product.id}`}
+              product={product}
+              href={`/shop/${product.slug}`}
+              minPrice={productPrices[product.slug]}
+              tabIndex={-1}
+              ariaHidden={true}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div
+        ref={ctaRef}
+        className="mt-[clamp(14px,1.8vw,22px)] flex translate-y-4.5 justify-center pt-[clamp(14px,1.8vw,24px)] opacity-0"
+      >
+        <CtaLink href={viewAllHref} label={t('viewAll')} />
+      </div>
+    </Section>
+  );
+}

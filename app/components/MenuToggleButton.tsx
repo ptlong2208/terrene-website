@@ -12,7 +12,7 @@ export default function MenuToggleButton({ isOpen, onToggle }: MenuToggleButtonP
     <button
       type="button"
       onClick={onToggle}
-      className="group inline-flex h-4 w-6.5 flex-col items-center justify-center gap-1.25 border-0 bg-transparent p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92] cursor-pointer"
+      className="group inline-flex h-4 w-6.5 cursor-pointer flex-col items-center justify-center gap-1.25 border-0 bg-transparent p-0 text-inherit transition-transform duration-120 ease-out active:scale-[0.92]"
       aria-label={isOpen ? t('menuClose') : t('menuOpen')}
       aria-expanded={isOpen}
     >

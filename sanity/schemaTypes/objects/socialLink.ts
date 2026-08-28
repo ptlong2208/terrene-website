@@ -1,4 +1,4 @@
-import { defineField, defineType } from 'sanity'
+import { defineField, defineType } from 'sanity';
 
 export const socialLink = defineType({
   name: 'socialLink',
@@ -19,4 +19,4 @@ export const socialLink = defineType({
   preview: {
     select: { title: 'platform', subtitle: 'url' },
   },
-})
+});
